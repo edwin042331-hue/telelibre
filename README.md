@@ -67,6 +67,8 @@ Teclas en la PC: flechas, `Enter` (OK), `Esc` o `Backspace` (Atrás), `F` (botó
 
 En el navegador de la PC algunos canales fallan por CORS (el servidor no deja que una web los lea). En la TV eso no aplica.
 
+> **¿Vas a instalar en las TVs (persona o agente)?** Sigue [docs/INSTALAR-EN-TV.md](docs/INSTALAR-EN-TV.md): identificar cada TV, reglas de la firma e instalación automática por ADB con verificación del certificado.
+
 ## Instalar en Android TV / Google TV (TCL y similares)
 
 1. **En la TV:** ve a *Ajustes → Sistema → Información* y presiona 7 veces *Compilación del SO* para activar las opciones de desarrollador.
