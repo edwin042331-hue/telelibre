@@ -14,13 +14,52 @@ export function load(name, fallback) {
   }
 }
 
-export function save(name, value) {
-  try {
-    localStorage.setItem(PREFIX + name, JSON.stringify(value));
-    return true;
-  } catch (e) {
-    return false;
+// Cachés que se pueden volver a descargar. Los datos del usuario (Mi lista, progreso, ajustes, gustos) no.
+const CACHE_RE = /^telelibre:(cache:|vod:|pluto:series|epg:|verified)/;
+
+function cacheKeysBySize() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (CACHE_RE.test(k)) keys.push([k, (localStorage.getItem(k) || '').length]);
   }
+  return keys.sort((a, b) => b[1] - a[1]).map(x => x[0]);
+}
+
+// Si no cabe (cuota de ~5 MB en las TVs): una caché solo falla; un dato del usuario libera cachés
+// (de la más grande a la más chica) y reintenta, para que Mi lista o el progreso nunca se pierdan.
+export function save(name, value) {
+  const key = PREFIX + name;
+  let text;
+  try { text = JSON.stringify(value); } catch (e) { return false; }
+  const isCache = CACHE_RE.test(key);
+  for (let attempt = 0; attempt < 12; attempt++) {
+    try {
+      localStorage.setItem(key, text);
+      return true;
+    } catch (e) {
+      if (isCache) return false;
+      const victims = cacheKeysBySize();
+      if (!victims.length) return false;
+      try { localStorage.removeItem(victims[0]); } catch (err) { return false; }
+    }
+  }
+  return false;
+}
+
+// Uso aproximado de localStorage en bytes (para la pantalla de diagnóstico).
+export function storageUsage() {
+  let total = 0;
+  let caches = 0;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      const n = (k.length + (localStorage.getItem(k) || '').length) * 2;
+      total += n;
+      if (CACHE_RE.test(k)) caches += n;
+    }
+  } catch (e) { /* sin almacenamiento */ }
+  return { total, caches };
 }
 
 export function remove(name) {

@@ -144,3 +144,17 @@ test('películas de la API de Pluto: año, género y fila "Estrenos" primero', a
   assert.equal(rows[0].id, 'mv:new');
   assert.deepEqual(rows[0].items.map(m => m.name), ['Pa', 'Pc', 'Pd', 'Pb']);
 });
+
+test('caché de series v3: compacta y sin perder lo que se muestra', async () => {
+  const { toSeries, toPlutoMovie } = await import('../src/pluto.js');
+  const s = toSeries({ _id: 's1', name: 'El Capo', genre: 'Telenovela', summary: 'x'.repeat(500), seasonsNumbers: [1, 2],
+    covers: [{ aspectRatio: '347:500', url: 'https://images.pluto.tv/series/s1/poster_1.jpg?fill=blur&h=1000&w=694' }],
+    featuredImage: { path: 'https://images.pluto.tv/series/s1/featuredImage_1.jpg?fill=blur&w=1600&h=900' } }, 'Series Latinas');
+  // La imagen de fondo ya no lleva dos "?" en la URL.
+  assert.equal((s.art.match(/\?/g) || []).length, 1);
+  assert.match(s.poster, /^https:\/\/images\.pluto\.tv\/series\/s1\/poster_1\.jpg\?/);
+  const m = toPlutoMovie({ _id: 'm1', name: 'Amor', genre: 'Romance', duration: 6000000, clip: { originalReleaseDate: '2026-01-20T00:00:00Z' },
+    stitched: { path: '/stitch/hls/episode/m1/master.m3u8' }, covers: [{ aspectRatio: '347:500', url: 'https://images.pluto.tv/episodes/m1/poster.jpg?w=694&h=1000' }] });
+  assert.equal((m.poster.match(/\?/g) || []).length, 1);
+  assert.equal(m.year, '2026');
+});

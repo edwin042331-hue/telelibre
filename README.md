@@ -62,7 +62,7 @@ scripts/               empaquetadores, iconos, smoke test
 Requisitos: Node 20 o superior (en esta PC: Node 24 vía nvm).
 
 ```powershell
-cd "D:\iptv para mi tv"
+cd "C:\Users\Edwin Villa\repos\telelibre"
 npm install
 npm run dev          # abre http://localhost:5173
 npm test             # tests del núcleo
@@ -89,14 +89,14 @@ La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de fi
 1. **En la TV:** abre LG Content Store, busca e instala **Developer Mode**. Inicia sesión con una cuenta gratuita de [LG Developer](https://webostv.developer.lge.com) y activa *Dev Mode Status* (la TV se reinicia). Luego activa *Key Server* y anota la **IP** y la **passphrase** que muestra.
 2. **En la PC** (una sola vez):
    ```powershell
-   cd "D:\iptv para mi tv"
+   cd "C:\Users\Edwin Villa\repos\telelibre"
    npx ares-setup-device -a tv -i "host=IP_DE_LA_TV" -i "port=9922" -i "username=prisoner"
    npx ares-novacom --device tv --getkey      # pide la passphrase de la TV
    ```
 3. **Empaquetar e instalar:**
    ```powershell
    npm run package:webos
-   npx ares-install --device tv release\com.telelibre.tv_0.5.0_all.ipk
+   npx ares-install --device tv release\com.telelibre.tv_1.0.0_all.ipk
    npx ares-launch --device tv com.telelibre.tv
    ```
 
@@ -107,16 +107,16 @@ La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de fi
 1. **En la TV:** ve a *Apps*, marca **1 2 3 4 5** con el control, activa **Developer mode** y en *Host PC IP* pon la IP de tu PC (`ipconfig`). Reinicia la TV.
 2. **En la PC:**
    ```powershell
-   npm run package:tizen      # genera release\TeleLibre-0.5.0-unsigned.wgt
+   npm run package:tizen      # genera release\TeleLibre-1.0.0-unsigned.wgt
    ```
 3. Abre [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung/releases) y elige tu TV, luego **Custom WGT** y selecciona el `.wgt`. La primera vez te pide entrar con tu cuenta Samsung en el navegador para crear el certificado. Después firma e instala solo.
 
 **Ruta oficial (alternativa):** instala la extensión *Tizen TV* de Samsung en VS Code y crea un perfil de certificado llamado `TeleLibre`. Luego:
 ```powershell
 $env:TIZEN_CLI = "C:\tizen-studio\tools\ide\bin\tizen.bat"   # ruta de tu instalación
-npm run package:tizen      # ahora sale firmado: release\TeleLibre-0.5.0.wgt
+npm run package:tizen      # ahora sale firmado: release\TeleLibre-1.0.0.wgt
 sdb connect IP_DE_LA_TV
-tizen install -n release\TeleLibre-0.5.0.wgt -t NOMBRE_DEL_DISPOSITIVO
+tizen install -n release\TeleLibre-1.0.0.wgt -t NOMBRE_DEL_DISPOSITIVO
 ```
 
 En esta PC está activado **Control inteligente de aplicaciones**. Si bloquea algún `.exe` sin firma (Apps2Samsung o `sdb`), **no lo desactives**: no se puede volver a activar sin reinstalar Windows. Usa la otra ruta o instala desde otra computadora.

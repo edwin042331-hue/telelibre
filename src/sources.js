@@ -3,7 +3,7 @@
 import { parseM3U } from './m3u.js';
 import { toChannel, mergeChannels } from './catalog.js';
 import { getText } from './net.js';
-import { load, save } from './store.js';
+import { load, save, remove } from './store.js';
 
 const IPTV_ORG = 'https://iptv-org.github.io/iptv/';
 // Listas de servicios gratuitos con anuncios (Pluto TV, Plex, Samsung TV Plus), regeneradas a diario por la comunidad.
@@ -100,20 +100,41 @@ export function activeSources(settings) {
   return builtins.concat(custom);
 }
 
-function readCache(id) {
-  return load('cache:' + id, null);
+// Caché compacta: cada canal como lista en vez de objeto (los nombres de campo repetidos miles de veces
+// eran ~40 % del tamaño). La cuota de localStorage en las TVs ronda 5 MB para todo.
+export function packChannels(channels) {
+  return channels.map(c => [c.key, c.name, c.logo, c.country, c.cats.join('|'), c.quality, c.geo ? 1 : 0, c.not247 ? 1 : 0, c.urls.join(' '), c.lang]);
+}
+
+export function unpackChannels(rows, srcId) {
+  return rows.map(r => ({
+    key: r[0], name: r[1], logo: r[2], country: r[3], cats: r[4] ? r[4].split('|') : ['other'], quality: r[5],
+    geo: r[6] === 1, not247: r[7] === 1, urls: r[8].split(' '), src: srcId, lang: r[9]
+  }));
+}
+
+function readCache(source) {
+  const c = load('cache:' + source.id, null);
+  if (!c || !c.packed) return null;
+  return { t: c.t, channels: unpackChannels(c.packed, source.id) };
+}
+
+// Las listas en inglés son un extra grande (~2.7 MB): no se guardan, así el espacio queda para lo que más se usa.
+function shouldCache(source) {
+  return !source.noCache && source.lang !== 'en';
 }
 
 function loadSource(source, force) {
-  const cached = source.noCache ? null : readCache(source.id);
+  // Limpia cachés viejas de fuentes que ya no se guardan (versiones anteriores sí las guardaban).
+  if (!shouldCache(source)) remove('cache:' + source.id);
+  const cached = shouldCache(source) ? readCache(source) : null;
   if (!force && cached && Date.now() - cached.t < CACHE_TTL) {
     return Promise.resolve({ source, channels: cached.channels, fromCache: true });
   }
   return getText(source.url, 45000).then(text => {
     const channels = parseM3U(text).map(e => toChannel(e, source)).filter(Boolean);
-    // Si no cabe en localStorage (cuota de ~5 MB) simplemente no se cachea.
-    // Las listas enormes ni se intentan: llenarían la cuota y dejarían sin caché a las demás.
-    if (!source.noCache) save('cache:' + source.id, { t: Date.now(), channels });
+    // Si no cabe en localStorage simplemente no se cachea (save() nunca sacrifica datos del usuario por una caché).
+    if (shouldCache(source)) save('cache:' + source.id, { t: Date.now(), packed: packChannels(channels) });
     return { source, channels, fromCache: false };
   }, err => {
     // Sin internet o GitHub caído: se usa la última copia buena aunque esté vieja.

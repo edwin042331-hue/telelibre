@@ -7,7 +7,9 @@ import { resetHealth, tasteSummary, resetTaste } from '../smart.js';
 import { BUILTIN_SOURCES, isSourceOn } from '../sources.js';
 import { VOD_SOURCES, isVodSourceOn } from '../vod.js';
 import { platform, platformLabel } from '../platform.js';
-import { load } from '../store.js';
+import { load, storageUsage } from '../store.js';
+import { recentErrors, clearErrors } from '../diag.js';
+import { formatClock } from './format.js';
 
 function item(label, value, onEnter, extraClass) {
   const valueEl = h('span', { class: 'setting-value', text: value });
@@ -119,6 +121,19 @@ export function createSettingsScreen(app) {
     list.appendChild(item('Revisión nocturna de canales', v ? v.keys.length + ' canales funcionaron (' + new Date(v.t).toLocaleDateString('es') + ')' : 'Sin datos todavía', () => {}));
     list.appendChild(item('Volver a probar los canales escondidos', 'Olvida lo aprendido sobre canales caídos', () => { resetHealth(); app.rebuild(); app.toast('Listo: se volverán a mostrar todos'); }));
     list.appendChild(item('Borrar canales recientes', state.recents.length + ' guardados', () => { clearRecents(); app.rebuild(); app.toast('Recientes borrados'); }));
+
+    section('Diagnóstico (para soporte)');
+    const mb = n => (n / 1048576).toFixed(1) + ' MB';
+    const use = storageUsage();
+    list.appendChild(item('Versión y equipo', 'TeleLibre ' + __APP_VERSION__ + ' · ' + platformLabel + ' · ' + window.innerWidth + '×' + window.innerHeight + ' @' + (window.devicePixelRatio || 1) + 'x', () => {}));
+    list.appendChild(item('Memoria local', mb(use.total) + ' usados (' + mb(use.caches) + ' son cachés que se pueden borrar)', () => {}));
+    const failing = Object.keys(app.data.sourceErrors || {});
+    list.appendChild(item('Fuentes con problemas', failing.length ? failing.length + ': ' + failing.map(id => app.data.sourceErrors[id]).join(' · ') : 'Ninguna', () => {}));
+    const errs = recentErrors();
+    list.appendChild(item('Errores recientes', errs.length ? errs.length + ' (OK para borrarlos)' : 'Ninguno', () => { clearErrors(); app.toast('Errores borrados'); screen.refresh(); }));
+    errs.slice(0, 8).forEach(e => {
+      list.appendChild(item(formatClock(new Date(e.at)) + (e.n > 1 ? ' ×' + e.n : ''), e.m.slice(0, 90) + (e.w ? ' · ' + e.w : ''), () => {}, 'diag-row'));
+    });
 
     section('Acerca de');
     list.appendChild(h('p', { class: 'about', text:

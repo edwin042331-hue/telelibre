@@ -21,6 +21,10 @@ import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels
 import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise } from './smart.js';
 import { loadVerified, checkUpdate } from './remote.js';
 import { dueReminders } from './reminders.js';
+import { installErrorCapture } from './diag.js';
+
+// Lo primero: capturar errores para verlos en Ajustes → Diagnóstico.
+installErrorCapture();
 import { buildDominicanRows } from './dominican.js';
 import { loadEpg } from './epg.js';
 import { formatClock } from './ui/format.js';
@@ -412,6 +416,9 @@ function progressLine(r, unit) {
   const note = r.stale ? ' (sin conexión: usando copia guardada)' : r.error ? ' (' + r.error + ')' : '';
   loadingLines.appendChild(h('div', { class: 'loading-line' + (ok ? ' ok' : ' bad'), text: (ok ? '✓ ' : '✕ ') + r.source.name + ' — ' + n + ' ' + unit + note }));
   app.data.stats[r.source.id] = n;
+  app.data.sourceErrors = app.data.sourceErrors || {};
+  if (!ok) app.data.sourceErrors[r.source.id] = r.source.name + (r.error ? ' (' + r.error + ')' : '');
+  else delete app.data.sourceErrors[r.source.id];
   sourcesDone++;
   splashFill.style.width = Math.round(100 * sourcesDone / sourcesTotal) + '%';
   splashStatus.textContent = (ok ? 'Listo: ' : 'Sin respuesta: ') + r.source.name + '  ·  ' + sourcesDone + ' de ' + sourcesTotal;

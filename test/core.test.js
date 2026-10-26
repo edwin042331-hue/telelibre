@@ -121,3 +121,10 @@ test('idioma y anime: listas multilingües por país, variantes regionales y gam
   assert.deepEqual(esports.cats, ['entertainment']);
   assert.equal(ch('Ghost Hunters', 'g1', ['Reality'], en).cats.indexOf('anime'), -1);
 });
+
+test('caché compacta de canales: ida y vuelta sin perder datos', async () => {
+  const { packChannels, unpackChannels } = await import('../src/sources.js');
+  const chans = mergeChannels([parseM3U(IPTV_ORG).map(e => toChannel(e, SRC)).filter(Boolean)]);
+  const back = unpackChannels(JSON.parse(JSON.stringify(packChannels(chans))), SRC.id);
+  assert.deepEqual(back, chans);
+});

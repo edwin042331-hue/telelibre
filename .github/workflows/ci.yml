@@ -30,6 +30,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # Las TVs viejas (webOS 3 / Tizen 3) solo entienden ES5: si algo moderno se cuela, se frena aquí.
+      - run: node scripts/check-es5.mjs
 
       - name: Fuentes en vivo (smoke test)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

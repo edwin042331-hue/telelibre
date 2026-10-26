@@ -85,8 +85,23 @@ export function toSeries(item, category) {
     category,
     kids: KIDS_CATEGORY_RE.test(category) || /infantil|niños|children|kids/i.test(item.genre || ''),
     poster: poster(item.covers, 300),
-    art: item.featuredImage && item.featuredImage.path ? item.featuredImage.path + '?w=1200' : poster(item.covers, 700)
+    art: item.featuredImage && item.featuredImage.path ? artUrl(imgPath(item.featuredImage.path)) : poster(item.covers, 700)
   };
+}
+
+// Imágenes de Pluto: en caché se guarda solo la ruta ("series/<id>/poster_<n>.jpg") y la URL se arma al leer.
+const IMG = 'https://images.pluto.tv/';
+
+function imgPath(url) {
+  return url ? url.replace(IMG, '').split('?')[0] : '';
+}
+
+function posterUrl(path) {
+  return path ? IMG + path + '?fill=blur&fit=fill&fm=jpg&q=75&w=300&h=432' : '';
+}
+
+function artUrl(path) {
+  return path ? IMG + path + '?fm=jpg&q=75&w=1200&h=675' : '';
 }
 
 // Géneros de películas de Pluto -> géneros de la app (vod.js).
@@ -116,7 +131,7 @@ export function toPlutoMovie(item) {
     direct: true,
     path: item.stitched && item.stitched.path,
     poster: poster(item.covers, 300),
-    art: item.featuredImage && item.featuredImage.path ? item.featuredImage.path.replace(/([?&])w=\d+/, '$1w=1200').replace(/([?&])h=\d+/, '$1h=675') : poster(item.covers, 700),
+    art: item.featuredImage && item.featuredImage.path ? artUrl(imgPath(item.featuredImage.path)) : poster(item.covers, 700),
     src: 'pluto-api'
   };
 }
@@ -138,7 +153,7 @@ export function rowOrder(name, index) {
 // el resultado resumido se guarda 12 h. onRow(fila) permite ir mostrando filas mientras llegan.
 export function loadSeriesCatalog(force, onRow) {
   const cached = load('pluto:series', null);
-  if (!force && cached && Date.now() - cached.t < CATALOG_TTL) { lastMovies = cached.movies || []; return Promise.resolve(cached.rows); }
+  if (!force && cached && cached.v === 3 && Date.now() - cached.t < CATALOG_TTL) { lastMovies = cached.movies.map(unpackMovie); return Promise.resolve(unpackRows(cached)); }
   return plutoSession().then(s => getJson(s.vod + '/v4/vod/categories?includeItems=false&offset=1000&page=1', s.token).then(list => {
     const cats = list.categories || list;
     const rows = [];
@@ -163,13 +178,50 @@ export function loadSeriesCatalog(force, onRow) {
       rows.sort((a, b) => a.order - b.order);
       // Para la caché se guardan las 1,200 películas más recientes (localStorage tiene ~5 MB para todo).
       lastMovies = Object.keys(movieMap).map(k => movieMap[k]).sort((a, b) => b.released - a.released);
-      save('pluto:series', { t: Date.now(), rows, movies: lastMovies.slice(0, 1200) });
+      save('pluto:series', packRows(rows, lastMovies.slice(0, 500)));
       return rows;
     });
   })).catch(err => {
-    if (cached) { lastMovies = cached.movies || []; return cached.rows; }
+    if (cached && cached.v === 3) { lastMovies = cached.movies.map(unpackMovie); return unpackRows(cached); }
     throw err;
   });
+}
+
+// Caché compacta: cada serie se guarda una vez aunque aparezca en varias categorías; las filas guardan solo claves.
+// Además cada serie/película va como lista corta en vez de objeto (de ~3.4 MB a ~1 MB en localStorage).
+function packSeries(s) {
+  return [s.plutoId, s.name, s.genre, s.summary.slice(0, 200), s.seasons, s.category, s.kids ? 1 : 0, imgPath(s.poster), imgPath(s.art)];
+}
+
+function unpackSeries(a) {
+  return { type: 'series', key: 'pls:' + a[0], plutoId: a[0], name: a[1], genre: a[2], summary: a[3], seasons: a[4], category: a[5], kids: a[6] === 1, poster: posterUrl(a[7]), art: artUrl(a[8]) };
+}
+
+function packMovie(m) {
+  return [m.key.slice(6), m.name, m.released, m.genres[0] || '', m.runtime, m.summary.slice(0, 200), imgPath(m.poster), imgPath(m.art), m.path];
+}
+
+function unpackMovie(a) {
+  return {
+    type: 'movie', key: 'pluto:' + a[0], name: a[1], released: a[2], year: a[2] ? String(new Date(a[2]).getUTCFullYear()) : '',
+    genres: a[3] ? [a[3]] : [], regions: [], runtime: a[4], subs: false, lang: 'es', summary: a[5], direct: true,
+    path: a[8], poster: posterUrl(a[6]), art: artUrl(a[7]), src: 'pluto-api'
+  };
+}
+
+function packRows(rows, movies) {
+  const series = {};
+  const packed = rows.map(r => {
+    r.items.forEach(s => { if (!series[s.plutoId]) series[s.plutoId] = packSeries(s); });
+    return [r.id, r.title, r.order, r.items.map(s => s.plutoId)];
+  });
+  return { v: 3, t: Date.now(), series, rows: packed, movies: movies.map(packMovie) };
+}
+
+function unpackRows(c) {
+  const cache = {};
+  const get = id => cache[id] || (cache[id] = c.series[id] ? unpackSeries(c.series[id]) : null);
+  return c.rows.map(r => ({ id: r[0], title: r[1], order: r[2], items: r[3].map(get).filter(Boolean) }));
 }
 
 // Películas que vinieron con el último catálogo (ordenadas de la más nueva a la más vieja).

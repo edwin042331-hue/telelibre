@@ -2,6 +2,13 @@
 
 Esta guía es para la persona o el agente que instala TeleLibre en las dos TVs de 55" de Edwin. Síguela en orden y no improvises con la firma.
 
+## Dónde está el proyecto
+
+- **Copia de trabajo:** `C:\Users\Edwin Villa\repos\telelibre`. El disco externo `D:` (donde estaba `D:\iptv para mi tv`) se desconectó el 2026-10-26; no dependas de él.
+- **Si no existe la carpeta**, clónala: `git clone https://github.com/edwin042331-hue/telelibre.git "C:\Users\Edwin Villa\repos\telelibre"`, y luego `npm ci` dentro.
+- **Para instalar en las TVs no hace falta compilar nada.** Los instaladores ya están publicados (ver abajo). Solo necesitas el repo por los scripts.
+- **Versión a instalar:** la última de https://github.com/edwin042331-hue/telelibre/releases. Comprueba que coincida con `https://edwin042331-hue.github.io/telelibre/version.json`.
+
 ## Reglas de la firma (Android)
 
 1. **No necesitas la llave de firma.** GitHub Actions compila y firma la APK con los *secrets* del repositorio. Tú solo descargas la APK ya firmada:
@@ -30,7 +37,7 @@ En la TV: *Ajustes → Sistema → Información* muestra el sistema y la versió
 1. Ve a *Ajustes → Sistema → Información* y presiona 7 veces *Compilación del SO* (sale "Ahora eres desarrollador").
 2. En *Ajustes → Sistema → Opciones de desarrollador*, activa **Depuración por USB** y, si existe, **Depuración por red** o **Depuración inalámbrica**.
 
-**En la PC** (PowerShell, dentro de `D:\iptv para mi tv`):
+**En la PC** (PowerShell, dentro de `C:\Users\Edwin Villa\repos\telelibre`):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\instalar-android-tv.ps1 -TvIp IP_DE_LA_TV
@@ -54,7 +61,7 @@ En esta PC está activado **Control inteligente de aplicaciones**. Si bloquea `A
 ## C. LG (webOS)
 
 1. En la TV: instala *Developer Mode* desde LG Content Store. Inicia sesión con una cuenta LG Developer y activa *Dev Mode Status* y *Key Server*.
-2. En la PC, dentro de `D:\iptv para mi tv`:
+2. En la PC, dentro de `C:\Users\Edwin Villa\repos\telelibre` (después de `npm ci`):
    ```powershell
    npx ares-setup-device -a tv -i "host=IP_DE_LA_TV" -i "port=9922" -i "username=prisoner"
    npx ares-novacom --device tv --getkey
@@ -75,3 +82,16 @@ En cada TV:
 5. En **Series**, espera a que carguen las filas (unos 10 segundos la primera vez). Abre una serie y reproduce un episodio: debe salir el título "Serie · T1:E1". Al volver, el botón debe ofrecer continuar ese episodio.
 
 Reporta a Edwin, por cada TV: marca, modelo, sistema, cómo se instaló y el resultado de estas 5 comprobaciones.
+
+## Si algo falla
+
+| Síntoma | Qué hacer |
+|---|---|
+| Pantalla negra al abrir | Revisa *Ajustes → Diagnóstico* si llega a abrir. En Android: `adb -s IP:5555 logcat -s chromium` muestra los errores de la app. |
+| Un canal no carga | Es normal en algunos: la emisora lo cambió o lo limita por país. La app lo salta y, si falla 3 veces, lo esconde. **No es un error de instalación.** |
+| Series vacía o "No se pudo cargar" | Necesita internet y la app instalada (no la versión web). Espera 20 segundos y vuelve a entrar. |
+| No aparece "Ahora:" en RD | La guía llega unos segundos después de abrir. Si nunca aparece, revisa *Diagnóstico → Fuentes con problemas*. |
+| `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | La TV tiene una TeleLibre con otra firma. **Pregúntale a Edwin antes de desinstalar**: se pierden Mi lista y el progreso. |
+| Control inteligente de aplicaciones bloquea un `.exe` | No lo desactives. `adb.exe` (firmado por Google) sí funciona; para Samsung, avísale a Edwin. |
+
+**Pantalla de diagnóstico** (*Ajustes → Diagnóstico*): muestra la versión, la plataforma, la resolución, la memoria usada, las fuentes que fallaron y los últimos errores con su hora. Toma una foto de esa pantalla y adjúntala al reporte.

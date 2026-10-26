@@ -511,3 +511,6 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 /* El reproductor siempre es oscuro con texto blanco, aunque la app esté en tema claro. */
 .player, .player-ui { color: #f2f2f5; }
 .player.next-on .state-icon { display: none; }
+.setting.diag-row { height: 64px; line-height: 64px; }
+.setting.diag-row .setting-label { font-size: 22px; color: #a0a0ad; }
+.setting.diag-row .setting-value { font-size: 20px; max-width: 1200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
