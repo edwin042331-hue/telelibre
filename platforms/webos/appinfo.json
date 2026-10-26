@@ -1,0 +1,15 @@
+{
+  "id": "com.telelibre.tv",
+  "version": "0.1.0",
+  "vendor": "Edwin Villa",
+  "type": "web",
+  "main": "index.html",
+  "title": "TeleLibre",
+  "icon": "icons/icon-80.png",
+  "largeIcon": "icons/icon-130.png",
+  "bgColor": "#0b0b10",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": true,
+  "uiRevision": 2,
+  "requiredACG": []
+}

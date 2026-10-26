@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://telelibre.tv/app" version="0.1.0" viewmodes="maximized">
+    <tizen:application id="TLbre2026x.TeleLibre" package="TLbre2026x" required_version="3.0"/>
+    <content src="index.html"/>
+    <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
+    <icon src="icons/icon-117.png"/>
+    <name>TeleLibre</name>
+    <author>Edwin Villa</author>
+    <description>Canales gratis en vivo y películas de dominio público, estilo streaming.</description>
+    <!-- Las listas y los streams vienen de muchos dominios distintos. -->
+    <access origin="*" subdomains="true"/>
+    <tizen:allow-navigation>*</tizen:allow-navigation>
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:profile name="tv-samsung"/>
+    <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+</widget>

@@ -1,0 +1,31 @@
+{
+  "name": "telelibre",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TeleLibre: TV gratis y legal estilo streaming para Samsung (Tizen) y LG (webOS)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "test": "node --test \"test/*.test.js\"",
+    "icons": "node scripts/make-icons.mjs",
+    "package:webos": "vite build && node scripts/package-webos.mjs",
+    "package:tizen": "vite build && node scripts/package-tizen.mjs",
+    "package": "vite build && node scripts/package-webos.mjs && node scripts/package-tizen.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "hls.js": "1.7.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "8.2.3",
+    "@webos-tools/cli": "3.2.6",
+    "terser": "5.51.2",
+    "vite": "8.3.4"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  # Revisión diaria: las listas de la comunidad cambian y conviene enterarse si una fuente se cae.
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+      - name: Fuentes en vivo (smoke test)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: node scripts/smoke.mjs
+
+      - name: Empaquetar para LG y Samsung
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          node scripts/package-webos.mjs
+          node scripts/package-tizen.mjs
+
+      - name: Publicar release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/* --title "TeleLibre $GITHUB_REF_NAME" --generate-notes
