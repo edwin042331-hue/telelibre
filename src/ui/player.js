@@ -56,7 +56,11 @@ export function createPlayer(app) {
     h('div', { class: 'osd-top' }, [logo, h('div', { class: 'osd-heading' }, [title, sub]), clock]),
     h('div', { class: 'osd-bottom' }, [timeline, liveBar, hints])
   ]);
-  const ui = h('div', { class: 'player-ui' }, [spinner, stateIcon, errorBox, osd]);
+  // Tarjeta de "siguiente episodio" al terminar uno.
+  const nextTitle = h('div', { class: 'next-title' });
+  const nextCount = h('div', { class: 'next-count' });
+  const nextUp = h('div', { class: 'next-up' }, [h('div', { class: 'next-kicker', text: 'SIGUIENTE EPISODIO' }), nextTitle, nextCount, h('div', { class: 'next-hint', text: 'OK: verlo ya  ·  Atrás: salir' })]);
+  const ui = h('div', { class: 'player-ui' }, [spinner, stateIcon, errorBox, osd, nextUp]);
   const el = h('div', { class: 'player' }, [video, ui]);
 
   let open = false;
@@ -208,9 +212,42 @@ export function createPlayer(app) {
     if (seekTarget == null) updateTimeline(video.currentTime);
     if (Date.now() - lastSave > SAVE_EVERY) persist();
   });
+  // nextFn/nextLabel: lo que sigue al terminar (episodios). Cuenta regresiva de 10 s, OK para adelantarla.
+  let nextFn = null;
+  let nextLabel = '';
+  let nextTimer = null;
+  let nextLeft = 0;
+
+  function cancelNext() {
+    clearInterval(nextTimer);
+    nextTimer = null;
+    el.classList.remove('next-on');
+  }
+
+  function goNext() {
+    const fn = nextFn;
+    cancelNext();
+    persist();
+    learn();
+    if (fn) fn();
+  }
+
+  function showNext() {
+    nextLeft = 10;
+    nextTitle.textContent = nextLabel;
+    nextCount.textContent = 'Empieza en ' + nextLeft + ' s';
+    el.classList.add('next-on');
+    nextTimer = setInterval(() => {
+      nextLeft--;
+      nextCount.textContent = 'Empieza en ' + nextLeft + ' s';
+      if (nextLeft <= 0) goNext();
+    }, 1000);
+  }
+
   video.addEventListener('ended', () => {
     persist();
-    if (mode === 'movie') close();
+    if (mode !== 'movie') return;
+    if (nextFn) showNext(); else close();
   });
 
   function duration() {
@@ -281,6 +318,7 @@ export function createPlayer(app) {
 
   function close() {
     if (!open) return;
+    cancelNext();
     persist();
     learn();
     teardown();
@@ -313,7 +351,11 @@ export function createPlayer(app) {
     isOpen: () => open,
     playLive(items, i) { start('live', items, i); },
     // resolved: { urls, subtitles, duration } de Internet Archive.
-    playMovie(movie, resolved, startAt) {
+    // opts.next: función que reproduce lo siguiente; opts.nextLabel: texto de la tarjeta ("T1:E6 · Episodio 6").
+    playMovie(movie, resolved, startAt, opts) {
+      cancelNext();
+      nextFn = opts && opts.next || null;
+      nextLabel = opts && opts.nextLabel || '';
       // Campos con "_" no se guardan en el progreso (URLs con token que caducan).
       const m = Object.assign({}, movie, { _urls: resolved.urls, _subtitles: resolved.subtitles, runtime: resolved.duration || movie.runtime });
       start('movie', [m], 0, { startAt });
@@ -327,6 +369,11 @@ export function createPlayer(app) {
       try { video.pause(); } catch (e) { /* sin video */ }
     },
     onAction(action) {
+      if (nextTimer) {
+        if (action === 'enter' || action === 'playpause') { goNext(); return; }
+        if (action === 'back' || action === 'stop') { close(); return; }
+        return;
+      }
       if (action === 'back' || action === 'stop') { close(); return; }
       if (action === 'up' || action === 'chup') { if (mode === 'live') zap(1); else showOsd(); return; }
       if (action === 'down' || action === 'chdown') { if (mode === 'live') zap(-1); else showOsd(); return; }

@@ -63,10 +63,12 @@ export function movieCard(movie) {
   if (isFavorite(movie.key)) poster.appendChild(icon('star', 'fav-mark'));
   const p = getProgress(movie.key);
   if (p) poster.appendChild(h('div', { class: 'progress' }, h('div', { class: 'progress-fill', style: 'width:' + Math.round(100 * p.t / p.d) + '%' })));
-  const meta = [movie.year, movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
+  const meta = movie.type === 'series' ? (movie.seasons ? movie.seasons + (movie.seasons === 1 ? ' temporada' : ' temporadas') : 'Serie')
+    : movie.type === 'episode' ? 'T' + movie.season + ':E' + movie.number + ' · ' + movie.title
+    : [movie.year, movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
   const card = h('div', { class: 'card movie focusable', 'data-key': movie.key }, [
     poster,
-    h('div', { class: 'card-name', text: movie.name }),
+    h('div', { class: 'card-name', text: movie.type === 'episode' ? movie.seriesName : movie.name }),
     h('div', { class: 'card-meta', text: meta })
   ]);
   card._item = movie;
@@ -74,7 +76,7 @@ export function movieCard(movie) {
 }
 
 export function itemCard(item) {
-  return item.type === 'movie' ? movieCard(item) : liveCard(item);
+  return item.type === 'movie' || item.type === 'series' || item.type === 'episode' ? movieCard(item) : liveCard(item);
 }
 
 export function moreCard(count, kind) {

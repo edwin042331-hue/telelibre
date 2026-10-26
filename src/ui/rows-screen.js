@@ -27,12 +27,12 @@ export function createRowsScreen(app, name, getRows, emptyText) {
   function setHero(item, row) {
     if (!item || item.key === heroKey) return;
     heroKey = item.key;
-    const isMovie = item.type === 'movie';
+    const isMovie = item.type === 'movie' || item.type === 'series' || item.type === 'episode';
     const art = isMovie ? (item.art || item.poster) : item.logo;
     el.classList.toggle('hero-movie', isMovie);
     heroBg.style.backgroundImage = art ? 'url("' + art.replace(/"/g, '%22') + '")' : 'none';
     if (art) { heroArt.src = art; heroArt.style.display = ''; } else { heroArt.removeAttribute('src'); heroArt.style.display = 'none'; }
-    heroKicker.textContent = isMovie ? 'PELÍCULA' + (row ? ' · ' + row.title.toUpperCase() : '') : '● EN VIVO' + (row ? ' · ' + row.title.toUpperCase() : '');
+    heroKicker.textContent = isMovie ? (item.type === 'movie' ? 'PELÍCULA' : 'SERIE') + (row ? ' · ' + row.title.toUpperCase() : '') : '● EN VIVO' + (row ? ' · ' + row.title.toUpperCase() : '');
     heroKicker.className = 'hero-kicker' + (isMovie ? '' : ' live');
     heroTitle.textContent = item.name;
     clear(heroTags);

@@ -72,5 +72,6 @@ En cada TV:
 2. En el menú abre **República Dominicana** y elige Telemicro o Color Visión. Debe reproducirse y la barra debe decir "Ahora: …".
 3. Presiona **Atrás**: vuelve a la lista. Presiona **CH+**: cambia de canal.
 4. En **Películas**, abre una de Pluto TV y reprodúcela 1 minuto. Sal y vuelve: debe ofrecer "Reanudar".
+5. En **Series**, espera a que carguen las filas (unos 10 segundos la primera vez). Abre una serie y reproduce un episodio: debe salir el título "Serie · T1:E1". Al volver, el botón debe ofrecer continuar ese episodio.
 
-Reporta a Edwin, por cada TV: marca, modelo, sistema, cómo se instaló y el resultado de estas 4 comprobaciones.
+Reporta a Edwin, por cada TV: marca, modelo, sistema, cómo se instaló y el resultado de estas 5 comprobaciones.

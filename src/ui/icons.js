@@ -9,6 +9,7 @@ export const ICONS = {
   anime: svg('<path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path d="M19 2l.9 2.1L22 5l-2.1.9L19 8l-.9-2.1L16 5l2.1-.9z"/>'),
   // Bandera dominicana (a color, no usa currentColor).
   flag: '<svg viewBox="0 0 24 16" width="100%" height="100%" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect x="0" y="0" width="10" height="6" fill="#002d62"/><rect x="14" y="0" width="10" height="6" fill="#ce1126"/><rect x="0" y="10" width="10" height="6" fill="#ce1126"/><rect x="14" y="10" width="10" height="6" fill="#002d62"/><circle cx="12" cy="8" r="1.6" fill="#2e7d32"/></svg>',
+  series: svg('<path d="M4 7h16v12H4zM7 4h10M9 11l5 3-5 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'),
   guide: svg('<path d="M3 5h18v15H3zM3 9h18M8 3v4M16 3v4M7 13h4M13 13h4M7 16h4" fill="none" stroke="currentColor" stroke-width="2"/>'),
   dice: svg('<path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm3 3.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>'),
   bell: svg('<path d="M12 22a2.5 2.5 0 002.4-2h-4.8a2.5 2.5 0 002.4 2zm7-6V11a7 7 0 00-5-6.7V3a2 2 0 10-4 0v1.3A7 7 0 005 11v5l-2 2v1h18v-1z"/>'),

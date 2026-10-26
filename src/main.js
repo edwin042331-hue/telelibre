@@ -11,6 +11,8 @@ import { createSettingsScreen, createAddListScreen } from './ui/settings-screen.
 import { createPlayer } from './ui/player.js';
 import { createGuideScreen } from './ui/guide-screen.js';
 import { createPinScreen } from './ui/pin-screen.js';
+import { createShowScreen } from './ui/show-screen.js';
+import { loadSeriesCatalog, episodeUrl, plutoApiMovies } from './pluto.js';
 import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching } from './store.js';
 import { activeSources, loadSources } from './sources.js';
@@ -26,7 +28,7 @@ import { formatClock } from './ui/format.js';
 const HTTPS_ONLY = location.protocol === 'https:';
 
 const app = {
-  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], rdRows: [], stats: {}, httpsHidden: 0 },
+  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], rdRows: [], seriesRows: [], seriesAll: [], stats: {}, httpsHidden: 0 },
   raw: []
 };
 
@@ -158,6 +160,8 @@ const screens = {
   settings: createSettingsScreen(app),
   addlist: createAddListScreen(app),
   guide: createGuideScreen(app),
+  series: createRowsScreen(app, 'series', () => app.data.seriesRows, 'Cargando series de Pluto TV… (funcionan en la app instalada en la TV)'),
+  show: createShowScreen(app),
   pin: createPinScreen(app)
 };
 for (const k in screens) screensEl.appendChild(screens[k].el);
@@ -214,6 +218,7 @@ app.pop = function () {
 
 function navigate(id) {
   if (id === 'surprise') { app.surprise(); return; }
+  if (id === 'series') app.loadSeries();
   if (id === 'mylist') {
     show('grid', {
       title: 'Mi lista',
@@ -236,6 +241,7 @@ app.markDirty = function () {
   screens.movies.dirty = true;
   screens.anime.dirty = true;
   screens.rd.dirty = true;
+  screens.series.dirty = true;
 };
 
 function refreshCurrent() {
@@ -249,6 +255,14 @@ function refreshCurrent() {
 
 // ---------- Acciones de contenido ----------
 app.open = function (item, list, index) {
+  if (item.type === 'series') { app.push('show', { series: item }); return; }
+  // Desde "Continuar viendo": abrir la ficha de su serie en ese episodio.
+  if (item.type === 'episode') {
+    const series = app.data.seriesByKey && app.data.seriesByKey[item.seriesKey] ||
+      { type: 'series', key: item.seriesKey, plutoId: item.seriesId, name: item.seriesName, poster: item.poster, art: item.art, genre: '', summary: '', seasons: 0 };
+    app.push('show', { series, resumeKey: item.key });
+    return;
+  }
   if (item.type === 'movie') {
     // Desde favoritos/progreso llega una copia guardada: usar la del catálogo actual (URLs de Pluto con token vigente).
     const fresh = app.data.moviesByKey[item.key] || item;
@@ -269,8 +283,67 @@ app.playMovie = function (movie, list, index, resolved, startAt) {
     player.playMovie(movie, resolved, startAt);
     return;
   }
+  // Películas de la API de Pluto: la URL lleva la sesión actual.
+  if (movie.path) {
+    episodeUrl(movie).then(url => player.playMovie(movie, { urls: [url], subtitles: [], duration: movie.runtime }, startAt),
+      () => app.toast('Pluto TV no respondió, intenta de nuevo'));
+    return;
+  }
   app.toast('Preparando película…');
   resolveMovie(movie).then(r => app.playMovie(movie, list, index, r, startAt), () => app.toast('Internet Archive no respondió, intenta de nuevo'));
+};
+
+// Episodio de Pluto: la URL lleva la sesión actual; al terminar sigue el próximo de la lista.
+app.playEpisode = function (ep, list, index, startAt) {
+  const next = list[index + 1];
+  episodeUrl(ep).then(url => {
+    player.playMovie(ep, { urls: [url], subtitles: [], duration: ep.runtime }, startAt || 0, next ? {
+      next: () => app.playEpisode(next, list, index + 1, 0),
+      nextLabel: 'T' + next.season + ':E' + next.number + '  ·  ' + next.title
+    } : null);
+  }, () => app.toast('Pluto TV no respondió, intenta de nuevo'));
+};
+
+// Catálogo de series: se carga una vez (en segundo plano o al entrar a Series) y las filas aparecen a medida que llegan.
+let seriesLoading = null;
+let seriesRaw = [];
+function publishSeries() {
+  const rows = kidsOn() ? seriesRaw.map(r => Object.assign({}, r, { items: r.items.filter(s => s.kids) })).filter(r => r.items.length >= 3) : seriesRaw.slice();
+  app.data.seriesRows = rows;
+  const byKey = {};
+  const all = [];
+  seriesRaw.forEach(r => r.items.forEach(s => { if (!byKey[s.key]) { byKey[s.key] = s; all.push(s); } }));
+  app.data.seriesByKey = byKey;
+  app.data.seriesAll = kidsOn() ? all.filter(s => s.kids) : all;
+  screens.series.dirty = true;
+  if (current() === screens.series) {
+    refreshCurrent();
+    // Se entró a Series cuando aún estaba vacía (el foco quedó en el menú): al llegar las filas, pasar a la primera serie.
+    const f = getFocused();
+    if (f && sidebar.el.contains(f) && sidebar.activeItem() === f && screens.series.firstFocus()) focusScreen(screens.series);
+  }
+}
+app.publishSeries = publishSeries;
+app.loadSeries = function () {
+  if (seriesLoading) return seriesLoading;
+  let pending = null;
+  seriesLoading = loadSeriesCatalog(false, row => {
+    seriesRaw.push(row);
+    seriesRaw.sort((a, b) => a.order - b.order);
+    clearTimeout(pending);
+    pending = setTimeout(publishSeries, 800);
+  }).then(rows => {
+    clearTimeout(pending);
+    seriesRaw = rows;
+    publishSeries();
+    // El mismo catálogo trajo películas con fecha de estreno: se suman a Películas (fila "Estrenos").
+    mergeMovies();
+    app.rebuild(player.isOpen() || current() === screens.movies);
+  }, () => {
+    seriesLoading = null;
+    screens.series.dirty = true;
+  });
+  return seriesLoading;
 };
 
 app.onPlayerClosed = function () {
@@ -295,6 +368,14 @@ function setFavMark(card, on) {
 }
 
 // ---------- Datos ----------
+// Películas: primero las del catálogo de la API de Pluto (con fecha de estreno, de la más nueva a la más vieja),
+// después las de las listas; si una película está en ambas, gana la versión de la API (trae año y sinopsis).
+function mergeMovies() {
+  const seen = {};
+  app.data.movies = [];
+  plutoApiMovies().concat(app.data.listMovies || []).forEach(m => { if (!seen[m.key]) { seen[m.key] = true; app.data.movies.push(m); } });
+}
+
 // quiet: recalcula los datos sin repintar la pantalla que el usuario está mirando.
 app.rebuild = function (quiet) {
   const s = state.settings;
@@ -366,9 +447,9 @@ app.reload = function (force) {
 
   function publish() {
     app.raw = mergeChannels(liveParts.filter(Boolean).map(r => r.channels));
-    const seen = {};
-    app.data.movies = [];
-    vodParts.filter(Boolean).forEach(r => r.movies.forEach(m => { if (!seen[m.key]) { seen[m.key] = true; app.data.movies.push(m); } }));
+    app.data.listMovies = [];
+    vodParts.filter(Boolean).forEach(r => r.movies.forEach(m => app.data.listMovies.push(m)));
+    mergeMovies();
   }
 
   function open() {
@@ -542,6 +623,7 @@ app.kidsOn = kidsOn;
 
 app.onKidsChanged = function () {
   tick();
+  publishSeries();
   app.rebuild(true);
   navigate('home');
 };
@@ -580,6 +662,8 @@ setInterval(() => {
 
 registerKeys();
 app.reload(false);
+// Las series se cargan en segundo plano poco después de abrir (no compiten con el arranque).
+setTimeout(() => app.loadSeries(), 20000);
 
 // Señales del proyecto en GitHub Pages: canales verificados anoche y aviso de versión nueva en la TV.
 loadVerified().then(ok => { if (ok && started) app.rebuild(true); });

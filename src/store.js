@@ -65,11 +65,33 @@ export function clearRecents() {
 
 const MAX_PROGRESS = 50;
 
+// Episodios terminados (para la marca ✓ y para saber cuál sigue).
+state.watched = load('watched', {});
+
+export function isWatched(key) {
+  return !!state.watched[key];
+}
+
+function markWatched(key) {
+  state.watched[key] = Date.now();
+  const keys = Object.keys(state.watched);
+  if (keys.length > 3000) keys.sort((a, b) => state.watched[a] - state.watched[b]).slice(0, keys.length - 3000).forEach(k => { delete state.watched[k]; });
+  save('watched', state.watched);
+}
+
+let lastAt = 0;
+
 export function saveProgress(item, t, d) {
   if (!d || t < 30) return;
-  // Vista casi completa: sale de "Continuar viendo".
-  if (t > d * 0.95) delete state.progress[item.key];
-  else state.progress[item.key] = { item: snapshot(item), t: Math.floor(t), d: Math.floor(d), at: Date.now() };
+  // Vista casi completa: sale de "Continuar viendo" (y un episodio queda marcado como visto).
+  if (t > d * 0.95) {
+    delete state.progress[item.key];
+    if (item.type === 'episode') markWatched(item.key);
+  } else {
+    // Siempre creciente: dos guardados en el mismo milisegundo no deben empatar al ordenar.
+    lastAt = Math.max(Date.now(), lastAt + 1);
+    state.progress[item.key] = { item: snapshot(item), t: Math.floor(t), d: Math.floor(d), at: lastAt };
+  }
   const keys = Object.keys(state.progress).sort((a, b) => state.progress[b].at - state.progress[a].at);
   keys.slice(MAX_PROGRESS).forEach(k => { delete state.progress[k]; });
   save('progress', state.progress);
@@ -84,9 +106,25 @@ export function clearProgress(key) {
   save('progress', state.progress);
 }
 
+// Una entrada por serie (su episodio más reciente), no un episodio por fila.
 export function continueWatching() {
+  const seenSeries = {};
   return Object.keys(state.progress)
     .map(k => state.progress[k])
     .sort((a, b) => b.at - a.at)
-    .map(p => p.item);
+    .map(p => p.item)
+    .filter(item => {
+      if (item.type !== 'episode') return true;
+      if (seenSeries[item.seriesKey]) return false;
+      seenSeries[item.seriesKey] = true;
+      return true;
+    });
+}
+
+// Último episodio con progreso de una serie (para el botón "Continuar T1:E5").
+export function lastEpisodeOf(seriesKey) {
+  const list = Object.keys(state.progress).map(k => state.progress[k])
+    .filter(p => p.item.type === 'episode' && p.item.seriesKey === seriesKey)
+    .sort((a, b) => b.at - a.at);
+  return list[0] || null;
 }

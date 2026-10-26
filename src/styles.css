@@ -466,3 +466,48 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 .prog.tiny .prog-title, .prog.tiny .prog-time { visibility: hidden; }
 .prog.tiny.focused { width: auto !important; min-width: 260px; z-index: 3; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
 .prog.tiny.focused .prog-title, .prog.tiny.focused .prog-time { visibility: visible; }
+
+/* ---------- Ficha de serie ---------- */
+.show-top { position: absolute; top: 70px; left: 80px; right: 80px; height: 400px; }
+.show-poster { float: left; width: 250px; height: 360px; object-fit: cover; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7); background: #1b1b24; }
+.show-info { margin-left: 300px; }
+.show-title { font-size: 62px; font-weight: 800; line-height: 1.05; letter-spacing: -1px; margin-bottom: 18px; max-height: 135px; overflow: hidden; }
+.show-summary { font-size: 25px; line-height: 1.45; color: #c9c9d4; max-width: 1150px; max-height: 74px; overflow: hidden; margin-bottom: 6px; }
+.show-bottom { position: absolute; top: 500px; left: 80px; right: 60px; bottom: 0; }
+.show-seasons { position: absolute; left: 0; top: 0; width: 250px; }
+.season { height: 64px; line-height: 64px; padding: 0 22px; margin-bottom: 8px; border-radius: 10px; font-size: 26px; font-weight: 600; color: #a0a0ad; }
+.season.current { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.season.focused { background: #fff; color: #0b0b10; }
+.show-episodes-scroll { position: absolute; left: 290px; right: 0; top: 0; bottom: 0; overflow: hidden; }
+.show-episodes { padding-bottom: 300px; }
+.ep { position: relative; display: -webkit-flex; display: flex; padding: 18px 22px; margin-bottom: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); }
+.ep-num { width: 70px; font-size: 40px; font-weight: 800; color: #6f6f7c; }
+.ep-body { -webkit-flex: 1; flex: 1; min-width: 0; }
+.ep-title { font-size: 27px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ep-meta { margin-top: 4px; font-size: 21px; color: #a0a0ad; }
+.ep-desc { margin-top: 6px; font-size: 21px; line-height: 1.35; color: #8d8d99; max-height: 58px; overflow: hidden; }
+.ep .progress { position: relative; height: 6px; margin-top: 10px; border-radius: 3px; overflow: hidden; }
+.ep.watched .ep-num { color: #3fbf7f; }
+.ep.focused { background: #fff; color: #0b0b10; }
+.ep.focused .ep-meta, .ep.focused .ep-desc { color: #3a3a45; }
+.show-status { position: absolute; left: 290px; top: 20px; font-size: 26px; color: #a0a0ad; }
+.theme-light .show-summary { color: #3a3d48; }
+.theme-light .season { color: #6a6e7c; }
+.theme-light .season.current { color: #15161d; background: rgba(21, 22, 29, 0.08); }
+.theme-light .season.focused, .theme-light .ep.focused { background: #15161d; color: #fff; }
+.theme-light .ep { background: rgba(21, 22, 29, 0.05); }
+.theme-light .ep.focused .ep-meta, .theme-light .ep.focused .ep-desc { color: #c9ccd6; }
+
+/* ---------- Siguiente episodio ---------- */
+.next-up {
+  position: absolute; right: 80px; bottom: 120px; width: 620px; padding: 34px 40px; border-radius: 18px;
+  background: rgba(14, 14, 20, 0.94); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7); display: none;
+}
+.player.next-on .next-up { display: block; }
+.next-kicker { font-size: 20px; font-weight: 800; letter-spacing: 3px; color: #ff3b5c; }
+.next-title { margin-top: 12px; font-size: 34px; font-weight: 700; line-height: 1.2; }
+.next-count { margin-top: 14px; font-size: 26px; color: #c9c9d4; }
+.next-hint { margin-top: 18px; font-size: 22px; color: #8d8d99; }
+/* El reproductor siempre es oscuro con texto blanco, aunque la app esté en tema claro. */
+.player, .player-ui { color: #f2f2f5; }
+.player.next-on .state-icon { display: none; }

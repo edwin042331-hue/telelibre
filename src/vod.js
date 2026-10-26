@@ -284,7 +284,13 @@ export function buildMovieRows(movies) {
   const subtitled = movies.filter(m => m.subs);
   const pluto = es.filter(isFrom('pluto:'));
   const archive = es.filter(isFrom('ia:'));
-  if (pluto.length) rows.push({ id: 'mv:pluto', title: 'Estrenos gratis en Pluto TV', items: pluto.slice(0, 60) });
+  // Con el catálogo de la API de Pluto llegan fechas de estreno: la fila más nueva va primero.
+  const recent = es.filter(m => m.released).sort((a, b) => b.released - a.released).slice(0, 40);
+  if (recent.length >= 4) rows.push({ id: 'mv:new', title: 'Estrenos: lo más nuevo', items: recent });
+  const inRecent = {};
+  recent.forEach(m => { inRecent[m.key] = true; });
+  const morePluto = pluto.filter(m => !inRecent[m.key]);
+  if (morePluto.length) rows.push({ id: 'mv:pluto', title: 'Películas gratis de Pluto TV', items: morePluto.slice(0, 60) });
   if (subtitled.length >= 4) rows.push({ id: 'mv:subs', title: 'Subtituladas al español', items: subtitled });
   if (archive.length) rows.push({ id: 'mv:top', title: 'Joyas del cine en español', items: archive.slice(0, 40) });
   REGIONS.forEach(r => {

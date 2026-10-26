@@ -68,7 +68,13 @@ export function createDetailScreen(app) {
       clear(tags);
       itemTags(movie).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
       renderActions();
-      // Pluto ya trae la URL de reproducción; Internet Archive necesita consultar la ficha.
+      // Película del catálogo de la API de Pluto: la URL se arma con la sesión al reproducir.
+      if (movie.path) {
+        resolved = null;
+        desc.textContent = movie.summary || 'Película gratuita con anuncios, cortesía de Pluto TV.';
+        return;
+      }
+      // Pluto (lista M3U) ya trae la URL de reproducción; Internet Archive necesita consultar la ficha.
       if (movie.direct) {
         resolved = { urls: movie.urls, subtitles: [], description: '', duration: 0 };
         desc.textContent = 'Película gratuita con anuncios, cortesía de Pluto TV.';

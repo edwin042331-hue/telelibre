@@ -45,11 +45,19 @@ export function createSearchScreen(app) {
     }).slice(0, 30);
   }
 
+  function searchSeries(q) {
+    const tokens = normalizeText(q).split(/\s+/).filter(Boolean);
+    return (app.data.seriesAll || []).filter(s => {
+      const name = normalizeText(s.name);
+      return tokens.every(t => name.indexOf(t) >= 0);
+    }).slice(0, 20);
+  }
+
   function run(q) {
     const my = ++token;
     clearTimeout(remoteTimer);
     if (!q.trim()) { show([]); status.textContent = 'Escribe el nombre de un canal o película'; return; }
-    const local = searchMovies(q).concat(searchChannels(app.data.channels, q, 40));
+    const local = searchMovies(q).concat(searchSeries(q), searchChannels(app.data.channels, q, 40));
     show(local);
     status.textContent = local.length ? local.length + ' resultados' : 'Buscando en Internet Archive…';
     if (app.kidsOn()) return;

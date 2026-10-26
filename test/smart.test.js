@@ -101,3 +101,46 @@ test('versiones, recordatorios, verificados y Sorpréndeme', async () => {
   const chans = [{ key: 'ok', name: 'Noticias', lang: 'es', cats: ['news'] }, { key: 'x', name: 'Otro', lang: 'es', cats: ['news'] }];
   for (let i = 0; i < 20; i++) assert.equal(surprise(chans, [], new Date(2026, 9, 26, 9, 0)).key, 'ok');
 });
+
+test('series de Pluto: tarjeta resumida y "Continuar viendo" con un episodio por serie', async () => {
+  const { toSeries } = await import('../src/pluto.js');
+  const s = toSeries({
+    _id: 'abc', name: 'El Capo', genre: 'Telenovela', summary: 'Narco…', seasonsNumbers: [1, 2, 3],
+    covers: [{ aspectRatio: '347:500', url: 'https://images.pluto.tv/series/abc/poster.jpg?fill=blur&h=1000&q=75&w=694' }],
+    featuredImage: { path: 'https://images.pluto.tv/series/abc/featured.jpg' }
+  }, 'Series Latinas');
+  assert.equal(s.key, 'pls:abc');
+  assert.equal(s.seasons, 3);
+  assert.match(s.poster, /w=300/);
+  assert.match(s.poster, /h=432/);
+  assert.equal(s.kids, false);
+  assert.equal(toSeries({ _id: 'k', name: 'Paw', covers: [] }, 'Nick Jr.').kids, true);
+
+  const store = await import('../src/store.js');
+  const ep = (n, at) => ({ type: 'episode', key: 'ple:' + n, seriesKey: 'pls:abc', seriesName: 'El Capo', season: 1, number: n, title: 'Ep ' + n });
+  store.saveProgress(ep(1), 600, 3000);
+  store.saveProgress(ep(2), 120, 3000);
+  store.saveProgress({ type: 'movie', key: 'm1', name: 'Peli' }, 300, 5000);
+  const cw = store.continueWatching();
+  assert.equal(cw.filter(i => i.type === 'episode').length, 1);
+  assert.equal(store.lastEpisodeOf('pls:abc').item.key, 'ple:2');
+  store.saveProgress(ep(2), 2950, 3000);
+  assert.equal(store.isWatched('ple:2'), true);
+  assert.equal(store.lastEpisodeOf('pls:abc').item.key, 'ple:1');
+});
+
+test('películas de la API de Pluto: año, género y fila "Estrenos" primero', async () => {
+  const { toPlutoMovie } = await import('../src/pluto.js');
+  const { buildMovieRows } = await import('../src/vod.js');
+  const mk = (id, date, genre) => toPlutoMovie({ _id: id, name: 'P' + id, genre, duration: 5400000, clip: { originalReleaseDate: date },
+    stitched: { path: '/stitch/hls/episode/' + id + '/master.m3u8' }, covers: [] });
+  const a = mk('a', '2026-01-20T00:00:00Z', 'Romance');
+  assert.equal(a.year, '2026');
+  assert.deepEqual(a.genres, ['romance']);
+  assert.equal(a.key, 'pluto:a');
+  assert.equal(a.runtime, 5400);
+  const list = [mk('b', '2019-05-01T00:00:00Z', 'Drama'), a, mk('c', '2025-12-19T00:00:00Z', 'Romance'), mk('d', '2021-01-01T00:00:00Z', 'Comedy')];
+  const rows = buildMovieRows(list);
+  assert.equal(rows[0].id, 'mv:new');
+  assert.deepEqual(rows[0].items.map(m => m.name), ['Pa', 'Pc', 'Pd', 'Pb']);
+});

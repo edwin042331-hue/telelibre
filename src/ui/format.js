@@ -27,6 +27,12 @@ export function formatClock(d) {
 
 // Etiquetas cortas que se muestran como "chips" en el panel superior y en el detalle.
 export function itemTags(item) {
+  if (item.type === 'series') {
+    return [item.genre, item.seasons ? item.seasons + (item.seasons === 1 ? ' temporada' : ' temporadas') : '', 'Pluto TV'].filter(Boolean);
+  }
+  if (item.type === 'episode') {
+    return ['T' + item.season + ':E' + item.number, item.title, formatDuration(item.runtime)].filter(Boolean);
+  }
   if (item.type === 'movie') {
     return [item.year, formatDuration(item.runtime)].concat(item.genres.slice(0, 3).map(genreLabel))
       .concat(item.subs ? ['Subtitulada'] : []).concat(item.lang === 'en' ? ['Inglés'] : []).filter(Boolean);
