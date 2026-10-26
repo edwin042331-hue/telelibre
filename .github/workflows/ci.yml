@@ -39,7 +39,8 @@ jobs:
 
       # La app avisa en la TV cuando hay una versión más nueva que la instalada.
       - name: version.json
-        run: node -e "require('fs').writeFileSync('dist/version.json', JSON.stringify({ version: require('./package.json').version }))"
+        run: |
+          node -e "require('fs').writeFileSync('dist/version.json', JSON.stringify({ version: require('./package.json').version }))"
 
       # Revisión nocturna: qué canales responden. En los demás builds se conserva la última publicada.
       - name: Canales verificados
