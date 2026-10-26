@@ -75,3 +75,29 @@ test('EPG: coincidencias de nombre sin falsos positivos', async () => {
   assert.equal(nowNext(ch('HTV Live')), null);
   assert.equal(nowNext({ key: 'x', name: 'Telemicro', country: 'mx' }), null);
 });
+
+test('versiones, recordatorios, verificados y Sorpréndeme', async () => {
+  const { isNewer } = await import('../src/remote.js');
+  assert.equal(isNewer('0.10.0', '0.9.3'), true);
+  assert.equal(isNewer('0.4.0', '0.4.0'), false);
+  assert.equal(isNewer('0.3.9', '0.4.0'), false);
+
+  const { toggleReminder, hasReminder, dueReminders } = await import('../src/reminders.js');
+  const now = Date.now();
+  const ch = { key: 'tm', name: 'Telemicro' };
+  assert.equal(toggleReminder(ch, { title: 'Telenoticias', start: now + 30000 }), true);
+  assert.equal(hasReminder('tm', now + 30000), true);
+  assert.equal(toggleReminder(ch, { title: 'Más tarde', start: now + 3600000 }), true);
+  const due = dueReminders(now);
+  assert.deepEqual(due.map(r => r.title), ['Telenoticias']);
+  assert.equal(hasReminder('tm', now + 30000), false);
+  assert.equal(hasReminder('tm', now + 3600000), true);
+
+  const { setVerified, isVerified, rankByHealth, surprise } = await import('../src/smart.js');
+  const { shortKey } = await import('../src/catalog.js');
+  setVerified([shortKey('ok')]);
+  assert.equal(isVerified('ok'), true);
+  assert.deepEqual(rankByHealth([{ key: 'nuevo' }, { key: 'ok' }]).map(i => i.key), ['ok', 'nuevo']);
+  const chans = [{ key: 'ok', name: 'Noticias', lang: 'es', cats: ['news'] }, { key: 'x', name: 'Otro', lang: 'es', cats: ['news'] }];
+  for (let i = 0; i < 20; i++) assert.equal(surprise(chans, [], new Date(2026, 9, 26, 9, 0)).key, 'ok');
+});

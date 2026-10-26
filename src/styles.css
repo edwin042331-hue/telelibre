@@ -412,3 +412,57 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 .splash .loading-lines { display: none; }
 /* La portada siempre es oscura y cinematográfica, también de día. */
 .theme-light .loading.splash { background: #07070b; }
+
+/* ---------- Menú compacto (10 opciones caben en 1080 px) ---------- */
+.nav-item { height: 68px; margin-top: 3px; margin-bottom: 3px; }
+.brand { margin-bottom: 24px; }
+
+/* ---------- Guía de programación (cuadrícula) ---------- */
+.guide-head { position: relative; height: 56px; margin: 6px 0 0 60px; }
+.guide-corner { position: absolute; left: 0; top: 10px; width: 300px; font-size: 20px; color: #8d8d99; }
+.guide-ruler { position: absolute; left: 320px; top: 0; width: 1260px; height: 56px; border-bottom: 2px solid rgba(255, 255, 255, 0.12); }
+.guide-tick { position: absolute; top: 12px; font-size: 24px; font-weight: 600; color: #c9c9d4; margin-left: 6px; }
+.guide-now { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1px; background: #ff3b5c; z-index: 1; }
+.guide-rows { position: absolute; top: 210px; left: 0; right: 0; bottom: 0; overflow: hidden; padding: 0 0 200px 60px; }
+.guide-row { position: relative; height: 104px; margin-top: 10px; white-space: nowrap; }
+.guide-channel {
+  position: absolute; left: 0; top: 0; width: 300px; height: 104px; padding: 0 18px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+  font-size: 26px; font-weight: 700; overflow: hidden;
+}
+.guide-channel img { width: 72px; height: 48px; object-fit: contain; margin-right: 16px; }
+.guide-channel span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.guide-line { position: absolute; left: 320px; top: 0; width: 1260px; height: 104px; }
+.prog {
+  position: absolute; top: 0; height: 104px; padding: 14px 16px; border-radius: 12px; overflow: hidden;
+  background: rgba(255, 255, 255, 0.08); white-space: nowrap;
+}
+.prog.live { background: rgba(255, 59, 92, 0.22); }
+.prog-title { display: block; font-size: 25px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.prog-time { display: block; margin-top: 8px; font-size: 20px; color: #a0a0ad; }
+.prog-bell { position: absolute; right: 10px; top: 10px; width: 26px; height: 26px; color: #ffc93c; display: none; }
+.prog.reminded .prog-bell { display: block; }
+.guide-channel.focused, .prog.focused { background: #fff; color: #0b0b10; }
+.prog.focused .prog-time { color: #3a3a45; }
+.theme-light .guide-channel, .theme-light .prog { background: rgba(21, 22, 29, 0.07); }
+.theme-light .prog.live { background: rgba(255, 59, 92, 0.18); }
+.theme-light .guide-channel.focused, .theme-light .prog.focused { background: #15161d; color: #fff; }
+.theme-light .prog.focused .prog-time { color: #c9ccd6; }
+.theme-light .guide-tick { color: #3a3d48; }
+.theme-light .guide-ruler { border-bottom-color: rgba(21, 22, 29, 0.15); }
+
+/* ---------- PIN ---------- */
+.pin-screen { padding: 56px 60px; }
+.pin-dots { margin: 30px 0 40px; }
+.pin-dot { display: inline-block; width: 36px; height: 36px; margin-right: 22px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.5); }
+.pin-dot.on { background: #ff3b5c; border-color: #ff3b5c; }
+.theme-light .pin-dot { border-color: rgba(21, 22, 29, 0.4); }
+.pin-pad .key { width: 120px; height: 90px; line-height: 90px; font-size: 40px; }
+.pin-pad .key.wide { width: 120px; font-size: 24px; }
+/* La línea de "ahora" va detrás de los programas (se ve en la regla y entre bloques). */
+.guide-line .guide-now { z-index: 0; opacity: 0.8; }
+.prog { z-index: 1; }
+.prog.tiny { padding: 14px 4px; }
+.prog.tiny .prog-title, .prog.tiny .prog-time { visibility: hidden; }
+.prog.tiny.focused { width: auto !important; min-width: 260px; z-index: 3; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+.prog.tiny.focused .prog-title, .prog.tiny.focused .prog-time { visibility: visible; }

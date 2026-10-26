@@ -1,6 +1,6 @@
 // Apartado "República Dominicana": todos los canales dominicanos ordenados como los busca un dominicano.
 import { normalizeText, sortChannels } from './catalog.js';
-import { nowNext } from './epg.js';
+import { nowNext, guideId } from './epg.js';
 import { rankByHealth } from './smart.js';
 
 // Los canales grandes, en el orden del dial dominicano.
@@ -23,6 +23,24 @@ function alphabetical(list) {
     const y = normalizeText(b.name);
     return x < y ? -1 : x > y ? 1 : 0;
   });
+}
+
+// Canales con programación, los grandes primero y sin duplicar la misma guía (Antena 7 / Antena 7 HD).
+export function guideChannels(channels) {
+  const seen = {};
+  return channels
+    .filter(c => c.country === 'do' && guideId(c))
+    .sort((a, b) => {
+      const ra = bigRank(a);
+      const rb = bigRank(b);
+      return (ra < 0 ? 99 : ra) - (rb < 0 ? 99 : rb) || (parseInt(b.quality, 10) || 0) - (parseInt(a.quality, 10) || 0);
+    })
+    .filter(c => {
+      const id = guideId(c);
+      if (seen[id]) return false;
+      seen[id] = true;
+      return true;
+    });
 }
 
 export function buildDominicanRows(channels) {

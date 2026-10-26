@@ -6,7 +6,8 @@ import { state, saveSettings, clearRecents } from '../store.js';
 import { resetHealth, tasteSummary, resetTaste } from '../smart.js';
 import { BUILTIN_SOURCES, isSourceOn } from '../sources.js';
 import { VOD_SOURCES, isVodSourceOn } from '../vod.js';
-import { platformLabel } from '../platform.js';
+import { platform, platformLabel } from '../platform.js';
+import { load } from '../store.js';
 
 function item(label, value, onEnter, extraClass) {
   const valueEl = h('span', { class: 'setting-value', text: value });
@@ -32,6 +33,26 @@ export function createSettingsScreen(app) {
     clear(list);
     const s = state.settings;
     const stats = app.data.stats;
+
+    // En modo infantil los ajustes quedan bloqueados: solo se puede salir con el PIN.
+    if (app.kidsOn()) {
+      section('Modo infantil activado');
+      list.appendChild(item('Salir del modo infantil', 'Pide el PIN', () => app.push('pin', { mode: 'unlock' })));
+      return;
+    }
+
+    if (app.data.update) {
+      section('Actualización disponible');
+      const how = {
+        android: 'Abre Downloader y vuelve a instalar desde edwin042331-hue.github.io/telelibre/TeleLibre.apk',
+        tizen: 'Vuelve a instalar TeleLibre-Samsung.wgt con Apps2Samsung',
+        webos: 'Vuelve a instalar TeleLibre-LG.ipk con ares-install'
+      }[platform] || '';
+      list.appendChild(item('Versión ' + app.data.update + ' (tienes ' + __APP_VERSION__ + ')', how, () => app.toast(how, 8000)));
+    }
+
+    section('Familia');
+    list.appendChild(item('Modo infantil', 'Solo canales y películas para niños, protegido con PIN', () => app.push('pin', { mode: 'set' })));
 
     section('Fuentes de TV en vivo (comunidad GitHub)');
     BUILTIN_SOURCES.forEach(src => {
@@ -94,6 +115,8 @@ export function createSettingsScreen(app) {
 
     section('Mantenimiento');
     list.appendChild(item('Actualizar canales y películas ahora', 'Descarga las listas de nuevo', () => app.reload(true)));
+    const v = load('verified', null);
+    list.appendChild(item('Revisión nocturna de canales', v ? v.keys.length + ' canales funcionaron (' + new Date(v.t).toLocaleDateString('es') + ')' : 'Sin datos todavía', () => {}));
     list.appendChild(item('Volver a probar los canales escondidos', 'Olvida lo aprendido sobre canales caídos', () => { resetHealth(); app.rebuild(); app.toast('Listo: se volverán a mostrar todos'); }));
     list.appendChild(item('Borrar canales recientes', state.recents.length + ' guardados', () => { clearRecents(); app.rebuild(); app.toast('Recientes borrados'); }));
 

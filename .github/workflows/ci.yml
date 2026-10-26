@@ -33,7 +33,22 @@ jobs:
 
       - name: Fuentes en vivo (smoke test)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        # Si una fuente se cae esa noche queda marcado en el log, pero no frena la publicación.
+        continue-on-error: true
         run: node scripts/smoke.mjs
+
+      # La app avisa en la TV cuando hay una versión más nueva que la instalada.
+      - name: version.json
+        run: node -e "require('fs').writeFileSync('dist/version.json', JSON.stringify({ version: require('./package.json').version }))"
+
+      # Revisión nocturna: qué canales responden. En los demás builds se conserva la última publicada.
+      - name: Canales verificados
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node scripts/verify-streams.mjs dist/verified.json
+          else
+            curl -fsSL https://edwin042331-hue.github.io/telelibre/verified.json -o dist/verified.json || echo "Aún no hay verified.json publicado"
+          fi
 
       - name: Empaquetar para LG (.ipk) y Samsung (.wgt)
         run: |
@@ -52,7 +67,6 @@ jobs:
   android:
     name: APK Android TV / Google TV
     needs: web
-    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,7 +112,7 @@ jobs:
   pages:
     name: Publicar web + descargas (GitHub Pages)
     needs: [web, android]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write

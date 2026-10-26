@@ -39,7 +39,7 @@ export function createSearchScreen(app) {
 
   function searchMovies(q) {
     const tokens = normalizeText(q).split(/\s+/).filter(Boolean);
-    return app.data.movies.filter(m => {
+    return (app.data.visibleMovies || app.data.movies).filter(m => {
       const name = normalizeText(m.name);
       return tokens.every(t => name.indexOf(t) >= 0);
     }).slice(0, 30);
@@ -52,6 +52,7 @@ export function createSearchScreen(app) {
     const local = searchMovies(q).concat(searchChannels(app.data.channels, q, 40));
     show(local);
     status.textContent = local.length ? local.length + ' resultados' : 'Buscando en Internet Archive…';
+    if (app.kidsOn()) return;
     remoteTimer = setTimeout(() => {
       searchArchive(q).then(found => {
         if (my !== token) return;

@@ -4,7 +4,7 @@
 // - Recomendaciones "porque viste…" a partir de recientes, Mi lista y películas en progreso.
 // - Tema claro/oscuro automático según la hora.
 import { load, save } from './store.js';
-import { categoryLabel, sortChannels } from './catalog.js';
+import { categoryLabel, sortChannels, shortKey } from './catalog.js';
 import { genreLabel } from './vod.js';
 
 // ---------- Momento del día ----------
@@ -68,10 +68,24 @@ export function isDead(key) {
   return !!h && h[0] === 0 && h[1] >= 3;
 }
 
+// ---------- Verificados por la revisión nocturna (GitHub Actions) ----------
+let verified = {};
+
+export function setVerified(shortKeys) {
+  verified = {};
+  shortKeys.forEach(k => { verified[k] = true; });
+}
+
+export function isVerified(key) {
+  return !!verified[shortKey(key)];
+}
+
+// Lo aprendido en esta TV manda; la revisión nocturna desempata entre los que nunca se han probado aquí.
 function score(key) {
   const h = health[key];
-  if (!h) return 0;
-  return h[0] > 0 ? 2 : h[1] > 0 ? -1 : 0;
+  if (h && h[0] > 0) return 3;
+  if (h && h[1] > 0) return -1;
+  return isVerified(key) ? 1 : 0;
 }
 
 // Orden estable: los que ya funcionaron primero, los que fallaron al final.
@@ -182,6 +196,36 @@ export function recommendations(channels, movies, recents, favorites, progress) 
     }
   }
   return rows.slice(0, 3);
+}
+
+// ---------- Sorpréndeme ----------
+const DAYPART_CATS = {
+  manana: ['news', 'kids', 'music'],
+  tarde: ['novelas', 'entertainment', 'kids', 'series'],
+  noche: ['movies', 'series', 'crime'],
+  madrugada: ['movies', 'music', 'series']
+};
+
+function pick(list) {
+  return list.length ? list[Math.floor(Math.random() * list.length)] : null;
+}
+
+// Devuelve un canal o una película. De noche tira más a películas; de día, a canales.
+// Solo propone canales que funcionaron en esta TV o pasaron la revisión nocturna.
+export function surprise(channels, movies, d) {
+  const part = daypart(d);
+  const movieOdds = part === 'noche' || part === 'madrugada' ? 0.6 : 0.3;
+  const esMovies = movies.filter(m => m.lang === 'es');
+  if (esMovies.length && Math.random() < movieOdds) {
+    const genres = topOf(taste.genres, 3);
+    const pool = genres.length ? esMovies.filter(m => m.genres.some(g => genres.indexOf(g) >= 0)) : esMovies;
+    return pick(pool.length ? pool : esMovies);
+  }
+  const cats = topOf(taste.cats, 3).concat(DAYPART_CATS[part]);
+  const es = channels.filter(c => c.lang === 'es' && !isDead(c.key));
+  const good = es.filter(c => score(c.key) > 0);
+  const themed = good.filter(c => c.cats.some(k => cats.indexOf(k) >= 0));
+  return pick(themed.length ? themed : good.length ? good : es);
 }
 
 // ---------- Tema ----------

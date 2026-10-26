@@ -9,6 +9,9 @@ export const ICONS = {
   anime: svg('<path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path d="M19 2l.9 2.1L22 5l-2.1.9L19 8l-.9-2.1L16 5l2.1-.9z"/>'),
   // Bandera dominicana (a color, no usa currentColor).
   flag: '<svg viewBox="0 0 24 16" width="100%" height="100%" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect x="0" y="0" width="10" height="6" fill="#002d62"/><rect x="14" y="0" width="10" height="6" fill="#ce1126"/><rect x="0" y="10" width="10" height="6" fill="#ce1126"/><rect x="14" y="10" width="10" height="6" fill="#002d62"/><circle cx="12" cy="8" r="1.6" fill="#2e7d32"/></svg>',
+  guide: svg('<path d="M3 5h18v15H3zM3 9h18M8 3v4M16 3v4M7 13h4M13 13h4M7 16h4" fill="none" stroke="currentColor" stroke-width="2"/>'),
+  dice: svg('<path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm3 3.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm8 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>'),
+  bell: svg('<path d="M12 22a2.5 2.5 0 002.4-2h-4.8a2.5 2.5 0 002.4 2zm7-6V11a7 7 0 00-5-6.7V3a2 2 0 10-4 0v1.3A7 7 0 005 11v5l-2 2v1h18v-1z"/>'),
   star: svg('<path d="M12 2.5l2.9 6.2 6.6.7-5 4.5 1.4 6.6L12 17.2 6.1 20.5l1.4-6.6-5-4.5 6.6-.7z"/>'),
   gear: svg('<path d="M12 8.5a3.5 3.5 0 110 7 3.5 3.5 0 010-7zm8.6 2l-2-.4a6.9 6.9 0 00-.6-1.5l1.1-1.7-1.9-1.9-1.7 1.1c-.5-.3-1-.5-1.5-.6l-.4-2h-2.7l-.4 2c-.5.1-1 .3-1.5.6L7.3 5l-1.9 1.9L6.5 8.6c-.3.5-.5 1-.6 1.5l-2 .4v2.7l2 .4c.1.5.3 1 .6 1.5l-1.1 1.7 1.9 1.9 1.7-1.1c.5.3 1 .5 1.5.6l.4 2h2.7l.4-2c.5-.1 1-.3 1.5-.6l1.7 1.1 1.9-1.9-1.1-1.7c.3-.5.5-1 .6-1.5l2-.4z"/>'),
   play: svg('<path d="M7 4l13 8-13 8z"/>'),

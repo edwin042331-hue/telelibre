@@ -323,3 +323,15 @@ export function searchChannels(channels, query, limit) {
   scored.sort((a, b) => a.score - b.score || (a.ch.name < b.ch.name ? -1 : 1));
   return scored.slice(0, limit || 60).map(s => s.ch);
 }
+
+// Identificador corto y estable de un canal (para listas grandes como la de verificados).
+export function shortKey(key) {
+  let h1 = 5381;
+  let h2 = 52711;
+  for (let i = 0; i < key.length; i++) {
+    const c = key.charCodeAt(i);
+    h1 = (h1 * 33) ^ c;
+    h2 = (h2 * 33) ^ c;
+  }
+  return (h1 >>> 0).toString(36) + (h2 >>> 0).toString(36).slice(0, 2);
+}

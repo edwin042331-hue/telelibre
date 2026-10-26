@@ -112,6 +112,21 @@ export function nowNext(channel, at) {
   return null;
 }
 
+// Programas de un canal que se cruzan con [from, to), para la guía en cuadrícula.
+export function programsFor(channel, from, to) {
+  const list = guideFor(channel);
+  if (!list) return [];
+  return list.filter(p => p[1] > from && p[0] < to).map(p => ({ title: p[2], start: p[0], stop: p[1] }));
+}
+
+// Nombre de la guía que le tocó a un canal (para no repetir "Antena 7" y "Antena 7 HD").
+export function guideId(channel) {
+  const list = guideFor(channel);
+  if (!list) return null;
+  for (let i = 0; i < names.length; i++) if (guide[names[i]] === list) return names[i];
+  return null;
+}
+
 // Carga una guía ya procesada (tests y herramientas como scripts/smoke.mjs).
 export function useGuide(g) {
   setGuide(g);

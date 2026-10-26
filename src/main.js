@@ -9,12 +9,16 @@ import { createDetailScreen } from './ui/detail-screen.js';
 import { createSearchScreen } from './ui/search-screen.js';
 import { createSettingsScreen, createAddListScreen } from './ui/settings-screen.js';
 import { createPlayer } from './ui/player.js';
+import { createGuideScreen } from './ui/guide-screen.js';
+import { createPinScreen } from './ui/pin-screen.js';
 import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
-import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme } from './smart.js';
+import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise } from './smart.js';
+import { loadVerified, checkUpdate } from './remote.js';
+import { dueReminders } from './reminders.js';
 import { buildDominicanRows } from './dominican.js';
 import { loadEpg } from './epg.js';
 import { formatClock } from './ui/format.js';
@@ -96,7 +100,7 @@ function tick() {
   const now = new Date();
   const theme = resolveTheme(state.settings.theme, now);
   document.body.className = 'theme-' + theme + ' platform-' + platform;
-  topbar.textContent = greeting(now) + '  ·  ' + formatClock(now);
+  topbar.textContent = (kidsOn() ? 'Modo infantil  ·  ' : '') + greeting(now) + '  ·  ' + formatClock(now);
 }
 tick();
 setInterval(tick, 30000);
@@ -107,13 +111,16 @@ app.applyTheme = tick;
 // intercalados y reordenados según la hora (noticias en la mañana, películas de noche…).
 function homeRows() {
   const rows = [];
-  const cw = continueWatching();
-  if (cw.length) rows.push({ id: 'continue', title: 'Continuar viendo', items: cw });
-  const recents = resolveSaved(state.recents, app.data.byKey);
-  if (recents.length) rows.push({ id: 'recents', title: 'Canales que viste', items: recents });
-  const mine = resolveSaved(state.favorites, app.data.byKey);
-  if (mine.length) rows.push({ id: 'mylist', title: 'Mi lista', items: mine });
-  recommendations(app.data.channels, app.data.movies, recents, mine, cw).forEach(r => rows.push(r));
+  // En modo infantil no se muestra lo que vio el adulto (continuar, recientes, Mi lista, recomendaciones).
+  if (!kidsOn()) {
+    const cw = continueWatching();
+    if (cw.length) rows.push({ id: 'continue', title: 'Continuar viendo', items: cw });
+    const recents = resolveSaved(state.recents, app.data.byKey);
+    if (recents.length) rows.push({ id: 'recents', title: 'Canales que viste', items: recents });
+    const mine = resolveSaved(state.favorites, app.data.byKey);
+    if (mine.length) rows.push({ id: 'mylist', title: 'Mi lista', items: mine });
+    recommendations(app.data.channels, app.data.movies, recents, mine, cw).forEach(r => rows.push(r));
+  }
 
   const live = app.data.liveRows.filter(r => r.id === 'country:do' || r.id.indexOf('cat:') === 0);
   const movies = app.data.movieRows.filter(r => r.id.indexOf('mv:en:') < 0);
@@ -149,7 +156,9 @@ const screens = {
   detail: createDetailScreen(app),
   search: createSearchScreen(app),
   settings: createSettingsScreen(app),
-  addlist: createAddListScreen(app)
+  addlist: createAddListScreen(app),
+  guide: createGuideScreen(app),
+  pin: createPinScreen(app)
 };
 for (const k in screens) screensEl.appendChild(screens[k].el);
 
@@ -204,6 +213,7 @@ app.pop = function () {
 };
 
 function navigate(id) {
+  if (id === 'surprise') { app.surprise(); return; }
   if (id === 'mylist') {
     show('grid', {
       title: 'Mi lista',
@@ -269,11 +279,12 @@ app.onPlayerClosed = function () {
 };
 
 let toastTimer = null;
-app.toast = function (text) {
+// ms: cuánto se muestra (los recordatorios duran más).
+app.toast = function (text, ms) {
   toastEl.textContent = text;
   toastEl.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), ms || 2600);
 };
 
 function setFavMark(card, on) {
@@ -290,6 +301,7 @@ app.rebuild = function (quiet) {
   let visible = applyFilters(app.raw, { hideGeo: s.hideGeo, hideNot247: s.hideNot247 });
   // Canales que nunca han funcionado en esta TV (3 fallos seguidos): fuera, salvo que el usuario lo desactive.
   if (s.hideDead !== false) visible = visible.filter(c => !isDead(c.key));
+  if (kidsOn()) visible = visible.filter(c => c.cats.indexOf('kids') >= 0 || c.cats.indexOf('family') >= 0);
   const channels = HTTPS_ONLY ? applyFilters(visible, { httpsOnly: true }) : visible;
   app.data.httpsHidden = visible.length - channels.length;
   app.data.channels = channels;
@@ -302,8 +314,10 @@ app.rebuild = function (quiet) {
   liveRows.forEach(r => { r.items = rankByHealth(r.items); });
   app.data.liveRows = liveRows;
   app.data.rdRows = buildDominicanRows(spanish);
-  app.data.movieRows = buildMovieRows(app.data.movies);
-  app.data.animeRows = buildAnimeRows(spanish, english, app.data.movies);
+  const movies = kidsOn() ? app.data.movies.filter(m => m.genres.indexOf('animacion') >= 0 || m.genres.indexOf('familia') >= 0) : app.data.movies;
+  app.data.visibleMovies = movies;
+  app.data.movieRows = buildMovieRows(movies);
+  app.data.animeRows = kidsOn() ? [] : buildAnimeRows(spanish, english, movies);
   app.data.moviesByKey = indexByKey(app.data.movies);
   app.markDirty();
   if (!quiet) refreshCurrent();
@@ -338,6 +352,9 @@ app.reload = function (force) {
     loadingEl.classList.add('show');
   } else app.toast('Actualizando fuentes…');
   const tipTimer = setInterval(rotateTip, 3500);
+  // La guía de RD se pide en paralelo desde el principio: así el apartado RD ya trae "Ahora" al abrir.
+  // Si llega después de abrir Inicio, se repintan las filas para que aparezca.
+  loadEpg(force).then(ok => { if (ok && started) app.rebuild(player.isOpen()); });
 
   // Arranque progresivo: con lo que llegue en los primeros segundos ya se abre Inicio; las listas lentas
   // (la mundial de 11,000 canales, Pluto VOD) se suman después sin que el usuario espere.
@@ -395,8 +412,6 @@ app.reload = function (force) {
     clearTimeout(earlyTimer);
     if (opened) { clearTimeout(partialTimer); publish(); app.rebuild(player.isOpen()); } else open();
     if (!app.raw.length && !app.data.movies.length) app.toast('Sin conexión y sin copia guardada. Revisa el internet de la TV.');
-    // La guía de RD llega después, sin frenar el arranque; al llegar se repintan las filas con "Ahora".
-    loadEpg(force).then(ok => { if (ok) app.rebuild(player.isOpen()); });
   });
 };
 
@@ -444,7 +459,10 @@ function onKey(e) {
 // Acción ya traducida (del teclado/control o del puente nativo de Android).
 function runAction(a) {
   if (!started) { if (a === 'back') tryExit(); return; }
+  // ● Verde justo después de un recordatorio: ir a ese canal (también desde el reproductor).
+  if (a === 'green' && pendingReminder && Date.now() < pendingReminder.until) { playReminder(); return; }
   if (player.isOpen()) { player.onAction(a); return; }
+  if (a === 'yellow') { app.surprise(); return; }
   const scr = current();
   const f = getFocused();
   const inSidebar = !!f && sidebar.el.contains(f);
@@ -516,5 +534,59 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) playe
 window.addEventListener('pagehide', () => player.persist());
 window.addEventListener('beforeunload', () => player.persist());
 
+// ---------- Modo infantil ----------
+function kidsOn() {
+  return !!(state.settings.kids && state.settings.kids.on);
+}
+app.kidsOn = kidsOn;
+
+app.onKidsChanged = function () {
+  tick();
+  app.rebuild(true);
+  navigate('home');
+};
+
+// ---------- Sorpréndeme ----------
+app.surprise = function () {
+  const movies = app.data.visibleMovies || app.data.movies;
+  const pick = surprise(app.data.channels, movies, new Date());
+  if (!pick) { app.toast('Todavía no hay nada para sorprenderte'); return; }
+  app.toast('Sorpréndeme: ' + pick.name);
+  if (pick.type === 'movie') { app.open(pick, [pick], 0); return; }
+  // Para seguir con ▲ ▼ por canales parecidos.
+  const similar = app.data.channels.filter(c => c.lang === 'es' && c.cats[0] === pick.cats[0]);
+  app.open(pick, similar.indexOf(pick) >= 0 ? similar : [pick].concat(similar), Math.max(0, similar.indexOf(pick)));
+};
+
+// ---------- Recordatorios ----------
+let pendingReminder = null;
+
+function playReminder() {
+  const ch = app.data.byKey[pendingReminder.key];
+  pendingReminder = null;
+  if (!ch) { app.toast('Ese canal no está disponible ahora'); return; }
+  if (player.isOpen()) player.onAction('stop');
+  app.open(ch, [ch], 0);
+}
+
+setInterval(() => {
+  if (!started) return;
+  const due = dueReminders(Date.now());
+  if (!due.length) return;
+  const r = due[0];
+  pendingReminder = { key: r.key, until: Date.now() + 2 * 60000 };
+  app.toast('Empieza «' + r.title + '» en ' + r.channel + '  ·  presiona ● Verde para verlo', 15000);
+}, 20000);
+
 registerKeys();
 app.reload(false);
+
+// Señales del proyecto en GitHub Pages: canales verificados anoche y aviso de versión nueva en la TV.
+loadVerified().then(ok => { if (ok && started) app.rebuild(true); });
+if (platform !== 'web') {
+  setTimeout(() => checkUpdate(__APP_VERSION__).then(v => {
+    if (!v) return;
+    app.data.update = v;
+    app.toast('Hay una versión nueva de TeleLibre (' + v + '). Mira Ajustes para actualizar.', 8000);
+  }), 15000);
+}
