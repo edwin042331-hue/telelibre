@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.0.1 (2026-10-26): ajustes vistos en la TCL real
+
+- Probada en la TCL Smart TV Pro (Android 12, WebView 155, 1080p sobre panel 4K): apartado RD con guía, en vivo, CH+, Atrás y series por episodios.
+- El panel superior muestra la fila donde está el foco al volver a una pantalla (antes mostraba siempre la primera).
+- En Series, "Series Latinas" y las novelas van antes que "Cine Latino" (películas sueltas). La caché de series se reconstruye sola.
+
 ## 1.0.0 (2026-10-26): versión estable para instalar en las TVs
 
 - **Compatibilidad real con TVs viejas**: el JavaScript publicado ahora es ES5 en todos sus archivos (webOS 3 / Tizen 3, Chromium 38). Antes, el empaquetador de Vite 8 dejaba sintaxis moderna en sus propios helpers. El CI verifica cada build con `scripts/check-es5.mjs`.

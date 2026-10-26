@@ -140,7 +140,8 @@ export function toPlutoMovie(item) {
 // y al final las categorías de cine (que solo traen alguna docuserie). Dentro de cada grupo, el orden de Pluto.
 export function rowOrder(name, index) {
   // Lo latino y las novelas primero: es lo que más se ve en RD.
-  const tier = /latin|novela/i.test(name) ? 0
+  // "Cine Latino" son películas sueltas: lo latino que va primero son las series y novelas.
+  const tier = /latin|novela/i.test(name) && !/^cine|pel[ií]culas|pelis/i.test(name) ? 0
     : /^series/i.test(name) ? 1
     : /anime|naruto|boruto|one piece|nick|junior|teen|retro|mtv|reality|maratonear|nuevo/i.test(name) ? 2
     : /^cine|pel[ií]culas|pelis/i.test(name) ? 4
@@ -153,7 +154,7 @@ export function rowOrder(name, index) {
 // el resultado resumido se guarda 12 h. onRow(fila) permite ir mostrando filas mientras llegan.
 export function loadSeriesCatalog(force, onRow) {
   const cached = load('pluto:series', null);
-  if (!force && cached && cached.v === 3 && Date.now() - cached.t < CATALOG_TTL) { lastMovies = cached.movies.map(unpackMovie); return Promise.resolve(unpackRows(cached)); }
+  if (!force && cached && cached.v === 4 && Date.now() - cached.t < CATALOG_TTL) { lastMovies = cached.movies.map(unpackMovie); return Promise.resolve(unpackRows(cached)); }
   return plutoSession().then(s => getJson(s.vod + '/v4/vod/categories?includeItems=false&offset=1000&page=1', s.token).then(list => {
     const cats = list.categories || list;
     const rows = [];
@@ -182,7 +183,7 @@ export function loadSeriesCatalog(force, onRow) {
       return rows;
     });
   })).catch(err => {
-    if (cached && cached.v === 3) { lastMovies = cached.movies.map(unpackMovie); return unpackRows(cached); }
+    if (cached && cached.v === 4) { lastMovies = cached.movies.map(unpackMovie); return unpackRows(cached); }
     throw err;
   });
 }
@@ -215,7 +216,7 @@ function packRows(rows, movies) {
     r.items.forEach(s => { if (!series[s.plutoId]) series[s.plutoId] = packSeries(s); });
     return [r.id, r.title, r.order, r.items.map(s => s.plutoId)];
   });
-  return { v: 3, t: Date.now(), series, rows: packed, movies: movies.map(packMovie) };
+  return { v: 4, t: Date.now(), series, rows: packed, movies: movies.map(packMovie) };
 }
 
 function unpackRows(c) {

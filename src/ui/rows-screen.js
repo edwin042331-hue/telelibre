@@ -111,7 +111,9 @@ export function createRowsScreen(app, name, getRows, emptyText) {
     }
     heroKey = null;
     const first = rows[0] && rows[0].items[0];
-    setHero(screen.lastFocus && screen.lastFocus._item ? screen.lastFocus._item : first, rows[0]);
+    // El panel muestra la fila donde quedó el foco (no siempre la primera).
+    const kept = screen.lastFocus && screen.lastFocus._item ? screen.lastFocus : null;
+    setHero(kept ? kept._item : first, kept && kept._row ? kept._row : rows[0]);
   }
 
   const screen = {

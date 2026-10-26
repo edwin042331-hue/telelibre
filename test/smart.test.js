@@ -158,3 +158,10 @@ test('caché de series v3: compacta y sin perder lo que se muestra', async () =>
   assert.equal((m.poster.match(/\?/g) || []).length, 1);
   assert.equal(m.year, '2026');
 });
+
+test('orden de filas de series: Series Latinas y novelas antes que "Cine Latino"', async () => {
+  const { rowOrder } = await import('../src/pluto.js');
+  const names = ['Cine Latino', 'Series Drama', 'Series Latinas', 'Anime Shōnen', 'Telenovelas', 'Cine Terror', 'Documentales'];
+  const sorted = names.map((n, i) => [n, rowOrder(n, i)]).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  assert.deepEqual(sorted, ['Series Latinas', 'Telenovelas', 'Series Drama', 'Anime Shōnen', 'Documentales', 'Cine Latino', 'Cine Terror']);
+});
