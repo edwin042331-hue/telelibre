@@ -33,6 +33,33 @@ export const BUILTIN_SOURCES = [
     lang: 'multi'
   },
   {
+    // TV abierta oficial de España (RTVE, autonómicas, locales), curada a mano por la comunidad.
+    id: 'tdt-es',
+    name: 'TDTChannels · TV abierta de España',
+    url: 'https://www.tdtchannels.com/lists/tv.m3u8',
+    home: 'github.com/LaQuay/TDTChannels',
+    country: 'es',
+    forceCountry: true,
+    fallbackCategory: 'general',
+    groupExclude: ['Int. Asia', 'Int. Europa', 'Int. África', 'Int. Otros', 'Eventuales']
+  },
+  {
+    id: 'iptv-eng',
+    name: 'iptv-org · Canales en inglés',
+    url: IPTV_ORG + 'languages/eng.m3u',
+    home: 'github.com/iptv-org/iptv',
+    lang: 'en'
+  },
+  {
+    // La lista mundial completa: se reparte por idioma (español, inglés y la sección "Del mundo").
+    id: 'iptv-all',
+    name: 'iptv-org · Todo el mundo (11,000+ canales)',
+    url: IPTV_ORG + 'index.m3u',
+    home: 'github.com/iptv-org/iptv',
+    lang: 'multi',
+    noCache: true
+  },
+  {
     id: 'freetv',
     name: 'Free-TV · Señal abierta hispana',
     url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8',
@@ -78,14 +105,15 @@ function readCache(id) {
 }
 
 function loadSource(source, force) {
-  const cached = readCache(source.id);
+  const cached = source.noCache ? null : readCache(source.id);
   if (!force && cached && Date.now() - cached.t < CACHE_TTL) {
     return Promise.resolve({ source, channels: cached.channels, fromCache: true });
   }
-  return getText(source.url, 30000).then(text => {
+  return getText(source.url, 45000).then(text => {
     const channels = parseM3U(text).map(e => toChannel(e, source)).filter(Boolean);
     // Si no cabe en localStorage (cuota de ~5 MB) simplemente no se cachea.
-    save('cache:' + source.id, { t: Date.now(), channels });
+    // Las listas enormes ni se intentan: llenarían la cuota y dejarían sin caché a las demás.
+    if (!source.noCache) save('cache:' + source.id, { t: Date.now(), channels });
     return { source, channels, fromCache: false };
   }, err => {
     // Sin internet o GitHub caído: se usa la última copia buena aunque esté vieja.

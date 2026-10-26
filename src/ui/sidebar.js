@@ -5,6 +5,7 @@ import { icon } from './icons.js';
 export const NAV = [
   ['search', 'search', 'Buscar'],
   ['home', 'home', 'Inicio'],
+  ['rd', 'flag', 'República Dominicana'],
   ['live', 'live', 'TV en vivo'],
   ['movies', 'movie', 'Películas'],
   ['anime', 'anime', 'Anime'],

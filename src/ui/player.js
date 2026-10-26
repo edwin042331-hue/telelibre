@@ -4,6 +4,8 @@ import { icon } from './icons.js';
 import { isTV } from '../platform.js';
 import { pushRecent, saveProgress, toggleFavorite, isFavorite } from '../store.js';
 import { formatTime, formatClock, itemTags } from './format.js';
+import { recordPlayback, isDead, learnFrom } from '../smart.js';
+import { nowNext } from '../epg.js';
 
 const LIVE_TIMEOUT = 20000;
 const MOVIE_TIMEOUT = 30000;
@@ -71,6 +73,13 @@ export function createPlayer(app) {
   let lastSave = 0;
   let startAt = 0;
   let subtitlesOn = true;
+  // Momento en que empezó a verse el contenido actual (para aprender gustos por tiempo visto).
+  let watchedSince = 0;
+
+  function learn() {
+    if (watchedSince && item) learnFrom(item, (Date.now() - watchedSince) / 1000);
+    watchedSince = 0;
+  }
   // Adelantar/retroceder acumulado: varias pulsaciones mueven la marca y se aplica al soltar.
   let seekTarget = null;
   let seekPresses = 0;
@@ -93,7 +102,10 @@ export function createPlayer(app) {
     const art = isMovie ? item.poster : item.logo;
     if (art) { logo.src = art; logo.style.display = ''; } else logo.style.display = 'none';
     title.textContent = (isFavorite(item.key) ? '★ ' : '') + item.name;
-    sub.textContent = itemTags(item).join(' · ');
+    const np = !isMovie && nowNext(item);
+    sub.textContent = np
+      ? 'Ahora: ' + np.now.title + ' (hasta las ' + formatClock(new Date(np.now.stop)) + ')' + (np.next ? ' · Después: ' + np.next.title : '')
+      : itemTags(item).join(' · ');
     liveBar.textContent = isMovie ? '' : '● EN VIVO · ' + (index + 1) + ' de ' + list.length;
     hints.textContent = isMovie
       ? 'OK pausa · ◀ ▶ retroceder / adelantar · ● Rojo Mi lista' + (video.textTracks && video.textTracks.length ? ' · ● Verde subtítulos' : '') + ' · Atrás salir'
@@ -117,6 +129,7 @@ export function createPlayer(app) {
 
   function fail() {
     if (attempt + 1 < attempts.length) { attempt++; startAttempt(); return; }
+    if (mode === 'live') recordPlayback(item.key, false);
     teardown();
     setState('error');
     errorBox.textContent = mode === 'movie'
@@ -167,9 +180,10 @@ export function createPlayer(app) {
   }
 
   video.addEventListener('playing', () => {
+    if (!watchedSince) watchedSince = Date.now();
     clearTimeout(watchdog);
     setState('playing');
-    if (mode === 'live') pushRecent(item);
+    if (mode === 'live') { pushRecent(item); recordPlayback(item.key, true); }
   });
   video.addEventListener('waiting', () => { if (open) el.classList.add('loading'); });
   video.addEventListener('pause', () => {
@@ -253,7 +267,10 @@ export function createPlayer(app) {
 
   function zap(delta) {
     if (mode !== 'live' || list.length < 2) return;
-    index = (index + delta + list.length) % list.length;
+    learn();
+    // Salta los canales que nunca han funcionado en esta TV.
+    let tries = 0;
+    do { index = (index + delta + list.length) % list.length; } while (isDead(list[index].key) && ++tries < list.length);
     item = list[index];
     attempts = attemptsFor(item.urls);
     attempt = 0;
@@ -265,6 +282,7 @@ export function createPlayer(app) {
   function close() {
     if (!open) return;
     persist();
+    learn();
     teardown();
     open = false;
     token++;
@@ -305,6 +323,7 @@ export function createPlayer(app) {
     onHidden() {
       if (!open) return;
       persist();
+      learn();
       try { video.pause(); } catch (e) { /* sin video */ }
     },
     onAction(action) {

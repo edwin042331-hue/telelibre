@@ -9,7 +9,7 @@ export const CATEGORIES = [
   ['novelas', 'Novelas'],
   ['crime', 'Crimen e investigación'],
   ['kids', 'Infantil'],
-  ['anime', 'Anime'],
+  ['anime', 'Anime en vivo'],
   ['music', 'Música'],
   ['entertainment', 'Entretenimiento'],
   ['documentary', 'Documentales y cultura'],
@@ -60,7 +60,10 @@ const ALIASES = {
   'educational': 'documentary', 'environment': 'documentary', 'paranormal': 'documentary', 'art': 'documentary',
   'crime': 'crime', 'crime drama': 'crime', 'law': 'crime', 'western & classic tv': 'classic', 'classic tv': 'classic', 'westerns': 'classic',
   'ambiance': 'music', 'music videos': 'music', 'animated': 'kids', 'children-music': 'kids', 'faith & family': 'religious',
-  'auction': 'shop', 'shopping': 'shop', 'halloween hits': 'movies', 'latino': 'general', 'en español': 'general'
+  'auction': 'shop', 'shopping': 'shop', 'halloween hits': 'movies', 'latino': 'general', 'en español': 'general',
+  // TDTChannels (España).
+  'generalistas': 'general', 'informativos': 'news', 'deportivos': 'sports', 'deportivos int.': 'sports',
+  'infantiles': 'kids', 'musicales': 'music', 'religiosos': 'religious'
 };
 
 // Grupos en español dentro de listas en inglés (Samsung TV Plus "Latino", Pluto USA "En Español").
@@ -80,7 +83,18 @@ export const COUNTRY_NAMES = {
   pa: 'Panamá', gt: 'Guatemala', hn: 'Honduras', sv: 'El Salvador', ni: 'Nicaragua', cu: 'Cuba',
   pr: 'Puerto Rico', us: 'Estados Unidos', gq: 'Guinea Ecuatorial', ad: 'Andorra', br: 'Brasil',
   ca: 'Canadá', fr: 'Francia', it: 'Italia', uk: 'Reino Unido', gb: 'Reino Unido', de: 'Alemania',
-  pt: 'Portugal', ht: 'Haití', jm: 'Jamaica', tt: 'Trinidad y Tobago', int: 'Internacional'
+  pt: 'Portugal', ht: 'Haití', jm: 'Jamaica', tt: 'Trinidad y Tobago', int: 'Internacional',
+  // Sección "Del mundo".
+  ru: 'Rusia', in: 'India', se: 'Suecia', tr: 'Turquía', nl: 'Países Bajos', pl: 'Polonia', gr: 'Grecia', ro: 'Rumania',
+  ua: 'Ucrania', cn: 'China', jp: 'Japón', kr: 'Corea del Sur', id: 'Indonesia', ph: 'Filipinas', vn: 'Vietnam',
+  th: 'Tailandia', ir: 'Irán', iq: 'Irak', sa: 'Arabia Saudita', ae: 'Emiratos Árabes', eg: 'Egipto', ma: 'Marruecos',
+  dz: 'Argelia', ng: 'Nigeria', za: 'Sudáfrica', al: 'Albania', rs: 'Serbia', hr: 'Croacia', ba: 'Bosnia', bg: 'Bulgaria',
+  hu: 'Hungría', cz: 'Chequia', sk: 'Eslovaquia', at: 'Austria', ch: 'Suiza', be: 'Bélgica', il: 'Israel', pk: 'Pakistán',
+  bd: 'Bangladés', my: 'Malasia', af: 'Afganistán', az: 'Azerbaiyán', am: 'Armenia', ge: 'Georgia', kz: 'Kazajistán',
+  mn: 'Mongolia', lb: 'Líbano', sy: 'Siria', tn: 'Túnez', mk: 'Macedonia del Norte', si: 'Eslovenia', lt: 'Lituania',
+  lv: 'Letonia', ee: 'Estonia', fi: 'Finlandia', no: 'Noruega', dk: 'Dinamarca', is: 'Islandia', cy: 'Chipre', mt: 'Malta',
+  hk: 'Hong Kong', tw: 'Taiwán', sg: 'Singapur', by: 'Bielorrusia', md: 'Moldavia', me: 'Montenegro', xk: 'Kosovo',
+  qa: 'Catar', kw: 'Kuwait', jo: 'Jordania', au: 'Australia', nz: 'Nueva Zelanda', ie: 'Irlanda', lu: 'Luxemburgo'
 };
 
 // Solo estos países tienen fila propia: la app es para público hispano (los demás siguen en las categorías).
@@ -105,6 +119,7 @@ export function isAnimeName(name) {
 }
 
 function countryOf(entry, source) {
+  if (source.forceCountry) return source.country;
   const m = /\.([a-z]{2})(?:@|$)/i.exec(entry.tvgId);
   if (m) return m[1].toLowerCase();
   return entry.country || source.country || '';
@@ -114,6 +129,7 @@ function countryOf(entry, source) {
 export function toChannel(entry, source) {
   const groups = entry.groups;
   if (source.groupFilter && !groups.some(g => source.groupFilter.indexOf(g) >= 0)) return null;
+  if (source.groupExclude && groups.some(g => source.groupExclude.indexOf(g) >= 0)) return null;
   const lower = groups.map(g => g.toLowerCase());
   if (lower.some(g => HIDDEN_GROUPS[g])) return null;
   if (!entry.name || !isPlayableUrl(entry.url)) return null;
@@ -124,7 +140,7 @@ export function toChannel(entry, source) {
   lower.forEach(g => {
     const k = source.groupMode === 'freetv' ? (FREETV_GROUPS[g] || 'general')
       : source.groupMode === 'none' ? source.category
-      : (ALIASES[g] || 'other');
+      : (ALIASES[g] || source.fallbackCategory || 'other');
     if (cats.indexOf(k) < 0) cats.push(k);
   });
   if (!cats.length) cats.push(source.category || 'other');
@@ -266,6 +282,17 @@ export function buildRows(channels) {
       rows.push({ id: 'country:' + code, title: 'Desde ' + countryName(code), items: sortChannels(channels.filter(ch => ch.country === code)) });
     });
   return rows;
+}
+
+// Sección "Del mundo": canales en otros idiomas, una fila por país (los que tienen suficientes canales).
+export function buildWorldRows(channels, limit) {
+  const byCountry = {};
+  channels.forEach(ch => { if (ch.country) (byCountry[ch.country] = byCountry[ch.country] || []).push(ch); });
+  return Object.keys(byCountry)
+    .filter(code => byCountry[code].length >= 15)
+    .sort((a, b) => byCountry[b].length - byCountry[a].length)
+    .slice(0, limit || 25)
+    .map(code => ({ id: 'world:' + code, title: 'Del mundo · ' + countryName(code), items: sortChannels(byCountry[code]) }));
 }
 
 // TV en inglés: mismas categorías pero en filas propias, para no mezclarlas con las de español.

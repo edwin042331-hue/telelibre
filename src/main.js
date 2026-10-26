@@ -9,16 +9,20 @@ import { createDetailScreen } from './ui/detail-screen.js';
 import { createSearchScreen } from './ui/search-screen.js';
 import { createSettingsScreen, createAddListScreen } from './ui/settings-screen.js';
 import { createPlayer } from './ui/player.js';
-import { keyAction, registerKeys, exitApp } from './platform.js';
+import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching } from './store.js';
 import { activeSources, loadSources } from './sources.js';
-import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie } from './vod.js';
-import { applyFilters, buildRows, buildEnglishRows, sortChannels, indexByKey, resolveSaved } from './catalog.js';
+import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
+import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
+import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme } from './smart.js';
+import { buildDominicanRows } from './dominican.js';
+import { loadEpg } from './epg.js';
+import { formatClock } from './ui/format.js';
 
 const HTTPS_ONLY = location.protocol === 'https:';
 
 const app = {
-  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], stats: {}, httpsHidden: 0 },
+  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], rdRows: [], stats: {}, httpsHidden: 0 },
   raw: []
 };
 
@@ -27,12 +31,42 @@ const root = document.getElementById('app');
 const sidebar = createSidebar(id => navigate(id));
 const screensEl = h('main', { class: 'screens' });
 const toastEl = h('div', { class: 'toast' });
+// Pantalla de arranque: fondo animado, logo con brillo, saludo, progreso real de las fuentes y consejos.
+const DAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const TIPS = [
+  'Presiona ● Rojo sobre cualquier canal o película para guardarlo en Mi lista.',
+  'Las películas recuerdan dónde te quedaste, aunque apagues la TV.',
+  'En vivo, usa ▲ ▼ o CH+ CH- para cambiar de canal sin salir.',
+  'Mientras más ves, mejor te conoce la app: mira "Para ti" en Inicio.',
+  'En República Dominicana verás qué programa está pasando ahora.',
+  'Los canales que nunca cargan en tu TV se esconden solos.',
+  'En las películas, ◀ ▶ seguidos adelantan más rápido: 10, 30 y 60 segundos.'
+];
 const loadingLines = h('div', { class: 'loading-lines' });
-const loadingEl = h('div', { class: 'loading' }, [
-  h('div', { class: 'loading-brand' }, [h('span', { class: 'brand-mark big', text: 'T' }), h('span', { class: 'loading-name', text: 'TeleLibre' })]),
-  h('div', { class: 'spinner static' }),
+const splashFill = h('div', { class: 'splash-fill' });
+const splashStatus = h('div', { class: 'splash-status', text: 'Conectando…' });
+const splashTip = h('div', { class: 'splash-tip' });
+const splashHello = h('div', { class: 'splash-hello' });
+const loadingEl = h('div', { class: 'loading splash' }, [
+  h('div', { class: 'splash-bg' }, [h('span', { class: 'blob b1' }), h('span', { class: 'blob b2' }), h('span', { class: 'blob b3' })]),
+  h('div', { class: 'splash-center' }, [
+    h('div', { class: 'splash-logo' }, h('span', { class: 'brand-mark big', text: 'T' })),
+    h('div', { class: 'splash-name', text: 'TeleLibre' }),
+    h('div', { class: 'splash-tagline', text: 'TV en vivo · Películas · Anime · República Dominicana' }),
+    splashHello,
+    h('div', { class: 'splash-bar' }, splashFill),
+    splashStatus,
+    splashTip
+  ]),
   loadingLines
 ]);
+let tipIndex = Math.floor(Math.random() * TIPS.length);
+function rotateTip() {
+  splashTip.textContent = 'Consejo: ' + TIPS[tipIndex++ % TIPS.length];
+}
+let sourcesDone = 0;
+let sourcesTotal = 1;
 root.appendChild(sidebar.el);
 root.appendChild(screensEl);
 root.appendChild(loadingEl);
@@ -54,7 +88,23 @@ function fit() {
 window.addEventListener('resize', fit);
 fit();
 
+// ---------- Tema (día/noche) y barra superior ----------
+const topbar = h('div', { class: 'topbar' });
+root.appendChild(topbar);
+
+function tick() {
+  const now = new Date();
+  const theme = resolveTheme(state.settings.theme, now);
+  document.body.className = 'theme-' + theme + ' platform-' + platform;
+  topbar.textContent = greeting(now) + '  ·  ' + formatClock(now);
+}
+tick();
+setInterval(tick, 30000);
+app.applyTheme = tick;
+
 // ---------- Filas de Inicio ----------
+// Personales arriba (continuar, recientes, Mi lista, recomendaciones); luego en vivo y películas
+// intercalados y reordenados según la hora (noticias en la mañana, películas de noche…).
 function homeRows() {
   const rows = [];
   const cw = continueWatching();
@@ -63,16 +113,17 @@ function homeRows() {
   if (recents.length) rows.push({ id: 'recents', title: 'Canales que viste', items: recents });
   const mine = resolveSaved(state.favorites, app.data.byKey);
   if (mine.length) rows.push({ id: 'mylist', title: 'Mi lista', items: mine });
+  recommendations(app.data.channels, app.data.movies, recents, mine, cw).forEach(r => rows.push(r));
 
   const live = app.data.liveRows.filter(r => r.id === 'country:do' || r.id.indexOf('cat:') === 0);
-  const movies = app.data.movieRows;
-  // Intercala en vivo y películas para que Inicio tenga de todo sin ser eterno.
+  const movies = app.data.movieRows.filter(r => r.id.indexOf('mv:en:') < 0);
+  const mixed = [];
   const max = Math.max(live.length, movies.length);
-  for (let i = 0; i < max && rows.length < 16; i++) {
-    if (live[i]) rows.push(live[i]);
-    if (movies[i]) rows.push(movies[i]);
+  for (let i = 0; i < max; i++) {
+    if (live[i]) mixed.push(live[i]);
+    if (movies[i]) mixed.push(movies[i]);
   }
-  return rows;
+  return rows.concat(orderForTime(mixed, new Date())).slice(0, 18);
 }
 
 // Sección Anime: canales 24/7 (Naruto, One Piece, Dragon Ball, Crunchyroll…) y películas, español primero.
@@ -93,6 +144,7 @@ const screens = {
   live: createRowsScreen(app, 'live', () => app.data.liveRows, 'No se pudieron cargar canales. Revisa la conexión o las fuentes en Ajustes.'),
   movies: createRowsScreen(app, 'movies', () => app.data.movieRows, 'No se pudieron cargar películas. Revisa la conexión.'),
   anime: createRowsScreen(app, 'anime', () => app.data.animeRows, 'No hay anime disponible ahora. Revisa la conexión o las fuentes en Ajustes.'),
+  rd: createRowsScreen(app, 'rd', () => app.data.rdRows, 'No se pudieron cargar los canales dominicanos. Revisa la conexión.'),
   grid: createGridScreen(app),
   detail: createDetailScreen(app),
   search: createSearchScreen(app),
@@ -173,6 +225,7 @@ app.markDirty = function () {
   screens.live.dirty = true;
   screens.movies.dirty = true;
   screens.anime.dirty = true;
+  screens.rd.dirty = true;
 };
 
 function refreshCurrent() {
@@ -231,22 +284,29 @@ function setFavMark(card, on) {
 }
 
 // ---------- Datos ----------
-app.rebuild = function () {
+// quiet: recalcula los datos sin repintar la pantalla que el usuario está mirando.
+app.rebuild = function (quiet) {
   const s = state.settings;
-  const visible = applyFilters(app.raw, { hideGeo: s.hideGeo, hideNot247: s.hideNot247 });
+  let visible = applyFilters(app.raw, { hideGeo: s.hideGeo, hideNot247: s.hideNot247 });
+  // Canales que nunca han funcionado en esta TV (3 fallos seguidos): fuera, salvo que el usuario lo desactive.
+  if (s.hideDead !== false) visible = visible.filter(c => !isDead(c.key));
   const channels = HTTPS_ONLY ? applyFilters(visible, { httpsOnly: true }) : visible;
   app.data.httpsHidden = visible.length - channels.length;
   app.data.channels = channels;
   app.data.byKey = indexByKey(channels);
-  // Español en las filas principales; el inglés va en su propia sección al final. Otros idiomas: solo en la búsqueda.
+  // Español en las filas principales; el inglés va en su propia sección al final; otros idiomas en "Del mundo".
   const spanish = channels.filter(c => c.lang === 'es');
   const english = channels.filter(c => c.lang === 'en');
-  app.data.liveRows = buildRows(spanish).concat(buildEnglishRows(english));
+  const world = channels.filter(c => c.lang === 'other');
+  const liveRows = buildRows(spanish).concat(buildEnglishRows(english), buildWorldRows(world));
+  liveRows.forEach(r => { r.items = rankByHealth(r.items); });
+  app.data.liveRows = liveRows;
+  app.data.rdRows = buildDominicanRows(spanish);
   app.data.movieRows = buildMovieRows(app.data.movies);
   app.data.animeRows = buildAnimeRows(spanish, english, app.data.movies);
   app.data.moviesByKey = indexByKey(app.data.movies);
   app.markDirty();
-  refreshCurrent();
+  if (!quiet) refreshCurrent();
 };
 
 let started = false;
@@ -257,27 +317,91 @@ function progressLine(r, unit) {
   const note = r.stale ? ' (sin conexión: usando copia guardada)' : r.error ? ' (' + r.error + ')' : '';
   loadingLines.appendChild(h('div', { class: 'loading-line' + (ok ? ' ok' : ' bad'), text: (ok ? '✓ ' : '✕ ') + r.source.name + ' — ' + n + ' ' + unit + note }));
   app.data.stats[r.source.id] = n;
+  sourcesDone++;
+  splashFill.style.width = Math.round(100 * sourcesDone / sourcesTotal) + '%';
+  splashStatus.textContent = (ok ? 'Listo: ' : 'Sin respuesta: ') + r.source.name + '  ·  ' + sourcesDone + ' de ' + sourcesTotal;
 }
 
 // full: muestra la pantalla de carga (inicio o "Actualizar ahora"); si no, recarga en segundo plano.
 app.reload = function (force) {
   const full = force || !started;
-  if (full) { clear(loadingLines); loadingEl.classList.add('show'); } else app.toast('Actualizando fuentes…');
   const sources = activeSources(state.settings);
-  return Promise.all([
-    loadSources(sources, { force, onProgress: r => progressLine(r, 'canales') }),
-    loadMovies(state.settings, { force, onProgress: r => progressLine(r, 'películas') })
-  ]).then(res => {
-    app.raw = res[0].channels;
-    app.data.movies = res[1].movies;
+  if (full) {
+    const now = new Date();
+    clear(loadingLines);
+    sourcesDone = 0;
+    sourcesTotal = Math.max(1, sources.filter(s => s.enabled).length + VOD_SOURCES.filter(s => isVodSourceOn(s, state.settings)).length);
+    splashFill.style.width = '3%';
+    splashHello.textContent = greeting(now) + '  ·  ' + DAYS[now.getDay()] + ' ' + now.getDate() + ' de ' + MONTHS[now.getMonth()];
+    rotateTip();
+    loadingEl.classList.remove('leaving');
+    loadingEl.classList.add('show');
+  } else app.toast('Actualizando fuentes…');
+  const tipTimer = setInterval(rotateTip, 3500);
+
+  // Arranque progresivo: con lo que llegue en los primeros segundos ya se abre Inicio; las listas lentas
+  // (la mundial de 11,000 canales, Pluto VOD) se suman después sin que el usuario espere.
+  const liveSources = sources.filter(s => s.enabled);
+  const liveParts = [];
+  const vodParts = [];
+  let opened = false;
+  let partialTimer = null;
+
+  function publish() {
+    app.raw = mergeChannels(liveParts.filter(Boolean).map(r => r.channels));
+    const seen = {};
+    app.data.movies = [];
+    vodParts.filter(Boolean).forEach(r => r.movies.forEach(m => { if (!seen[m.key]) { seen[m.key] = true; app.data.movies.push(m); } }));
+  }
+
+  function open() {
+    if (opened) return;
+    opened = true;
+    clearInterval(tipTimer);
+    publish();
     const firstRun = !started;
     started = true;
     app.rebuild();
     if (firstRun) show('home');
-    setTimeout(() => loadingEl.classList.remove('show'), full ? 500 : 0);
+    if (full) {
+      splashFill.style.width = '100%';
+      splashStatus.textContent = app.data.channels.length.toLocaleString('es') + ' canales y ' + app.data.movies.length.toLocaleString('es') + ' películas listos';
+      // Salida suave: el inicio aparece detrás mientras la portada se desvanece.
+      setTimeout(() => loadingEl.classList.add('leaving'), 700);
+      setTimeout(() => { loadingEl.classList.remove('show'); loadingEl.classList.remove('leaving'); }, 1500);
+    }
+  }
+
+  // Lo que llega después de abrir se integra cada 1.5 s como máximo, sin repintar mientras se ve algo.
+  function arrivedLate() {
+    clearTimeout(partialTimer);
+    partialTimer = setTimeout(() => { publish(); app.rebuild(player.isOpen()); }, 1500);
+  }
+
+  const earlyTimer = setTimeout(() => { if (liveParts.some(r => r && r.channels.length)) open(); }, 6000);
+
+  return Promise.all([
+    loadSources(sources, { force, onProgress: r => {
+      progressLine(r, 'canales');
+      liveParts[liveSources.indexOf(r.source)] = r;
+      if (opened) arrivedLate();
+    } }),
+    loadMovies(state.settings, { force, onProgress: r => {
+      progressLine(r, 'películas');
+      vodParts[VOD_SOURCES.indexOf(r.source)] = r;
+      if (opened) arrivedLate();
+    } })
+  ]).then(() => {
+    clearTimeout(earlyTimer);
+    if (opened) { clearTimeout(partialTimer); publish(); app.rebuild(player.isOpen()); } else open();
     if (!app.raw.length && !app.data.movies.length) app.toast('Sin conexión y sin copia guardada. Revisa el internet de la TV.');
+    // La guía de RD llega después, sin frenar el arranque; al llegar se repintan las filas con "Ahora".
+    loadEpg(force).then(ok => { if (ok) app.rebuild(player.isOpen()); });
   });
 };
+
+// La programación cambia: cada 10 minutos se rearma "Ahora en la TV dominicana" y el orden por hora del día.
+setInterval(() => { if (started) app.rebuild(true); }, 10 * 60 * 1000);
 
 // ---------- Control remoto ----------
 let lastBack = 0;

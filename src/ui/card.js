@@ -2,6 +2,7 @@
 import { h } from './dom.js';
 import { icon } from './icons.js';
 import { isFavorite, getProgress } from '../store.js';
+import { nowNext } from '../epg.js';
 
 function hash(str) {
   let x = 5381;
@@ -44,7 +45,12 @@ export function liveCard(ch) {
   if (badge) tile.appendChild(h('span', { class: 'badge', text: badge }));
   tile.appendChild(h('span', { class: 'live-dot', text: 'EN VIVO' }));
   if (isFavorite(ch.key)) tile.appendChild(icon('star', 'fav-mark'));
-  const card = h('div', { class: 'card live focusable', 'data-key': ch.key }, [tile, h('div', { class: 'card-name', text: ch.name })]);
+  const np = nowNext(ch);
+  const card = h('div', { class: 'card live focusable', 'data-key': ch.key }, [
+    tile,
+    h('div', { class: 'card-name', text: ch.name }),
+    np ? h('div', { class: 'card-meta now', text: 'Ahora: ' + np.now.title }) : null
+  ]);
   card._item = ch;
   return card;
 }

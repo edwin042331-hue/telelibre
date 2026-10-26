@@ -13,7 +13,13 @@ App estilo streaming para **Android TV / Google TV** (TCL, Sony, Philips, Chrome
 
 Contenido:
 
-- **~4,800 canales en vivo**, en español primero y con su propia sección en inglés: dominicanos, noticias, deportes, novelas, series y cine 24/7, infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv), [Free-TV](https://github.com/Free-TV/IPTV), y Pluto TV, Samsung TV Plus, Roku y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
+- **Más de 15,000 canales en vivo**: en español primero, con su propia sección en inglés y otra "Del mundo" por país. Incluye dominicanos, noticias, deportes, novelas, series y cine 24/7, e infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv) (lista en español, en inglés y mundial), [Free-TV](https://github.com/Free-TV/IPTV), [TDTChannels](https://github.com/LaQuay/TDTChannels) (TV abierta de España), y Pluto TV, Samsung TV Plus, Roku y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
+- **Apartado República Dominicana**: los grandes en orden del dial (Teleantillas, Telemicro, Antena 7, Color Visión, Telesistema…), noticias, deportes, música, cristianos, regionales y todos de la A a la Z. Muestra **qué programa pasa ahora y cuál sigue**, con la guía de [iptv-epg.org](https://iptv-epg.org/guides).
+- **Inteligente sin servidores**: todo se calcula en la TV.
+  - Aprende tus gustos por el tiempo que ves cada género y te arma filas "Para ti".
+  - Reordena Inicio según la hora: noticias en la mañana, novelas en la tarde, películas de noche, deportes el fin de semana.
+  - Esconde solos los canales que nunca cargan en tu TV y los salta al cambiar de canal.
+  - Cambia a tema claro de día y oscuro de noche.
 - **~2,000 películas bajo demanda**: Pluto TV en español y en inglés vía [OwnerPlugins/pluto-tv-m3u](https://github.com/OwnerPlugins/pluto-tv-m3u), **~300 subtituladas al español** (Hitchcock, Fritz Lang, cine negro…), cine argentino y mexicano, y clásicos de dominio público de [Internet Archive](https://archive.org/details/feature_films).
 - **Sección Anime**: Naruto, One Piece, Dragon Ball, Los Caballeros del Zodiaco, Death Note, Hunter x Hunter, Pokémon, Yu-Gi-Oh, Crunchyroll, HIDIVE, RetroCrush, Sailor Moon… Son canales 24/7 oficiales y gratuitos que se actualizan a diario, más películas de anime en español y en inglés.
 - **Continuar viendo**: guarda dónde quedó cada película cada 5 s, al pausar, al salir y al apagar la TV.
@@ -82,7 +88,7 @@ La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de fi
 3. **Empaquetar e instalar:**
    ```powershell
    npm run package:webos
-   npx ares-install --device tv release\com.telelibre.tv_0.2.0_all.ipk
+   npx ares-install --device tv release\com.telelibre.tv_0.3.0_all.ipk
    npx ares-launch --device tv com.telelibre.tv
    ```
 
@@ -93,16 +99,16 @@ La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de fi
 1. **En la TV:** ve a *Apps*, marca **1 2 3 4 5** con el control, activa **Developer mode** y en *Host PC IP* pon la IP de tu PC (`ipconfig`). Reinicia la TV.
 2. **En la PC:**
    ```powershell
-   npm run package:tizen      # genera release\TeleLibre-0.2.0-unsigned.wgt
+   npm run package:tizen      # genera release\TeleLibre-0.3.0-unsigned.wgt
    ```
 3. Abre [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung/releases) y elige tu TV, luego **Custom WGT** y selecciona el `.wgt`. La primera vez te pide entrar con tu cuenta Samsung en el navegador para crear el certificado. Después firma e instala solo.
 
 **Ruta oficial (alternativa):** instala la extensión *Tizen TV* de Samsung en VS Code y crea un perfil de certificado llamado `TeleLibre`. Luego:
 ```powershell
 $env:TIZEN_CLI = "C:\tizen-studio\tools\ide\bin\tizen.bat"   # ruta de tu instalación
-npm run package:tizen      # ahora sale firmado: release\TeleLibre-0.2.0.wgt
+npm run package:tizen      # ahora sale firmado: release\TeleLibre-0.3.0.wgt
 sdb connect IP_DE_LA_TV
-tizen install -n release\TeleLibre-0.2.0.wgt -t NOMBRE_DEL_DISPOSITIVO
+tizen install -n release\TeleLibre-0.3.0.wgt -t NOMBRE_DEL_DISPOSITIVO
 ```
 
 En esta PC está activado **Control inteligente de aplicaciones**. Si bloquea algún `.exe` sin firma (Apps2Samsung o `sdb`), **no lo desactives**: no se puede volver a activar sin reinstalar Windows. Usa la otra ruta o instala desde otra computadora.

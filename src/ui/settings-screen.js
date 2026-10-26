@@ -3,6 +3,7 @@ import { h, clear } from './dom.js';
 import { focus } from './focus.js';
 import { createKeyboard, handlePhysicalKey } from './keyboard.js';
 import { state, saveSettings, clearRecents } from '../store.js';
+import { resetHealth, tasteSummary, resetTaste } from '../smart.js';
 import { BUILTIN_SOURCES, isSourceOn } from '../sources.js';
 import { VOD_SOURCES, isVodSourceOn } from '../vod.js';
 import { platformLabel } from '../platform.js';
@@ -63,6 +64,22 @@ export function createSettingsScreen(app) {
       }));
     });
 
+    section('Tus gustos (la app aprende de lo que ves)');
+    const likes = tasteSummary();
+    list.appendChild(item('Te gusta', likes.length ? likes.join(' · ') : 'Todavía aprendiendo: mira algo un rato', () => {}));
+    list.appendChild(item('Olvidar mis gustos', 'Empezar de cero las recomendaciones', () => { resetTaste(); app.rebuild(); app.toast('Gustos borrados'); screen.refresh(); }));
+
+    section('Apariencia');
+    const THEMES = { auto: 'Automático según la hora (claro de día, oscuro de noche)', dark: 'Siempre oscuro', light: 'Siempre claro' };
+    const theme = s.theme || 'auto';
+    list.appendChild(item('Tema', THEMES[theme], () => {
+      const order = ['auto', 'dark', 'light'];
+      s.theme = order[(order.indexOf(theme) + 1) % order.length];
+      saveSettings();
+      app.applyTheme();
+      screen.refresh();
+    }));
+
     section('Idioma del contenido');
     list.appendChild(item('Contenido en inglés (Pluto USA, Samsung TV Plus, Roku, películas)', onOff(s.english !== false), () => {
       s.english = s.english === false;
@@ -73,9 +90,11 @@ export function createSettingsScreen(app) {
     section('Filtros');
     list.appendChild(item('Ocultar canales geo-bloqueados', onOff(s.hideGeo), () => { s.hideGeo = !s.hideGeo; saveSettings(); app.rebuild(); }));
     list.appendChild(item('Ocultar canales que no transmiten 24/7', onOff(s.hideNot247), () => { s.hideNot247 = !s.hideNot247; saveSettings(); app.rebuild(); }));
+    list.appendChild(item('Esconder canales que nunca funcionan en esta TV', onOff(s.hideDead !== false), () => { s.hideDead = s.hideDead === false; saveSettings(); app.rebuild(); }));
 
     section('Mantenimiento');
     list.appendChild(item('Actualizar canales y películas ahora', 'Descarga las listas de nuevo', () => app.reload(true)));
+    list.appendChild(item('Volver a probar los canales escondidos', 'Olvida lo aprendido sobre canales caídos', () => { resetHealth(); app.rebuild(); app.toast('Listo: se volverán a mostrar todos'); }));
     list.appendChild(item('Borrar canales recientes', state.recents.length + ' guardados', () => { clearRecents(); app.rebuild(); app.toast('Recientes borrados'); }));
 
     section('Acerca de');
