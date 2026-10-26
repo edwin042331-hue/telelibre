@@ -12,13 +12,13 @@ import { createPlayer } from './ui/player.js';
 import { keyAction, registerKeys, exitApp } from './platform.js';
 import { state, toggleFavorite, continueWatching } from './store.js';
 import { activeSources, loadSources } from './sources.js';
-import { loadMovies, buildMovieRows, resolveMovie } from './vod.js';
-import { applyFilters, buildRows, indexByKey, resolveSaved } from './catalog.js';
+import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie } from './vod.js';
+import { applyFilters, buildRows, buildEnglishRows, sortChannels, indexByKey, resolveSaved } from './catalog.js';
 
 const HTTPS_ONLY = location.protocol === 'https:';
 
 const app = {
-  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], stats: {}, httpsHidden: 0 },
+  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], stats: {}, httpsHidden: 0 },
   raw: []
 };
 
@@ -75,10 +75,24 @@ function homeRows() {
   return rows;
 }
 
+// Sección Anime: canales 24/7 (Naruto, One Piece, Dragon Ball, Crunchyroll…) y películas, español primero.
+function buildAnimeRows(spanish, english, movies) {
+  const isAnime = c => c.cats.indexOf('anime') >= 0;
+  const rows = [];
+  const es = sortChannels(spanish.filter(isAnime));
+  const en = sortChannels(english.filter(isAnime));
+  if (es.length) rows.push({ id: 'an:live:es', title: 'Anime en vivo · español', items: es });
+  const movieRows = buildAnimeMovieRows(movies);
+  if (movieRows[0]) rows.push(movieRows[0]);
+  if (en.length) rows.push({ id: 'an:live:en', title: 'Anime 24/7 · en inglés', items: en });
+  return rows.concat(movieRows.slice(1));
+}
+
 const screens = {
   home: createRowsScreen(app, 'home', homeRows, 'Cargando contenido…'),
   live: createRowsScreen(app, 'live', () => app.data.liveRows, 'No se pudieron cargar canales. Revisa la conexión o las fuentes en Ajustes.'),
   movies: createRowsScreen(app, 'movies', () => app.data.movieRows, 'No se pudieron cargar películas. Revisa la conexión.'),
+  anime: createRowsScreen(app, 'anime', () => app.data.animeRows, 'No hay anime disponible ahora. Revisa la conexión o las fuentes en Ajustes.'),
   grid: createGridScreen(app),
   detail: createDetailScreen(app),
   search: createSearchScreen(app),
@@ -158,6 +172,7 @@ app.markDirty = function () {
   screens.home.dirty = true;
   screens.live.dirty = true;
   screens.movies.dirty = true;
+  screens.anime.dirty = true;
 };
 
 function refreshCurrent() {
@@ -223,8 +238,12 @@ app.rebuild = function () {
   app.data.httpsHidden = visible.length - channels.length;
   app.data.channels = channels;
   app.data.byKey = indexByKey(channels);
-  app.data.liveRows = buildRows(channels);
+  // Español en las filas principales; el inglés va en su propia sección al final. Otros idiomas: solo en la búsqueda.
+  const spanish = channels.filter(c => c.lang === 'es');
+  const english = channels.filter(c => c.lang === 'en');
+  app.data.liveRows = buildRows(spanish).concat(buildEnglishRows(english));
   app.data.movieRows = buildMovieRows(app.data.movies);
+  app.data.animeRows = buildAnimeRows(spanish, english, app.data.movies);
   app.data.moviesByKey = indexByKey(app.data.movies);
   app.markDirty();
   refreshCurrent();
@@ -285,22 +304,26 @@ function sidebarAction(action, f) {
 }
 
 function onKey(e) {
-  if (!started) {
-    if (keyAction(e) === 'back') { e.preventDefault(); tryExit(); }
-    return;
+  // Teclado físico: las pantallas con texto (búsqueda, URL) usan las letras antes de traducirlas a acciones.
+  if (started && !player.isOpen()) {
+    const scr = current();
+    const f = getFocused();
+    const inSidebar = !!f && sidebar.el.contains(f);
+    if (!inSidebar && scr.onRawKey && scr.onRawKey(e)) { e.preventDefault(); return; }
   }
-  if (player.isOpen()) {
-    const a = keyAction(e);
-    if (a) { e.preventDefault(); player.onAction(a); }
-    return;
-  }
-  const scr = current();
-  const f = getFocused();
-  const inSidebar = !!f && sidebar.el.contains(f);
-  if (!inSidebar && scr.onRawKey && scr.onRawKey(e)) { e.preventDefault(); return; }
   const a = keyAction(e);
   if (!a) return;
   e.preventDefault();
+  runAction(a);
+}
+
+// Acción ya traducida (del teclado/control o del puente nativo de Android).
+function runAction(a) {
+  if (!started) { if (a === 'back') tryExit(); return; }
+  if (player.isOpen()) { player.onAction(a); return; }
+  const scr = current();
+  const f = getFocused();
+  const inSidebar = !!f && sidebar.el.contains(f);
   if (inSidebar) { sidebarAction(a, f); return; }
   if (scr.onAction && scr.onAction(a, f)) return;
 
@@ -324,6 +347,9 @@ function onKey(e) {
 }
 
 document.addEventListener('keydown', onKey);
+// Android TV entrega Atrás, canales, multimedia y colores por aquí (ver MainActivity.java).
+window.__telelibreKey = runAction;
+window.__telelibreHidden = () => player.onHidden();
 
 onFocusChange(el => {
   const inSidebar = sidebar.el.contains(el);

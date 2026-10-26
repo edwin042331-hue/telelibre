@@ -27,7 +27,7 @@ export function remove(name) {
   try { localStorage.removeItem(PREFIX + name); } catch (e) { /* sin almacenamiento */ }
 }
 
-const DEFAULT_SETTINGS = { sources: {}, custom: [], hideGeo: true, hideNot247: false };
+const DEFAULT_SETTINGS = { sources: {}, custom: [], hideGeo: true, hideNot247: false, english: true };
 
 export const state = {
   settings: Object.assign({}, DEFAULT_SETTINGS, load('settings', {})),

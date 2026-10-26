@@ -14,14 +14,21 @@ const PLUTO_VOD = 'https://raw.githubusercontent.com/OwnerPlugins/pluto-tv-m3u/m
 
 // kind 'ia': búsqueda en Internet Archive (MP4). kind 'pluto': lista M3U de películas bajo demanda de Pluto TV (HLS).
 // Las URLs de Pluto llevan un token de 24 h atado al país y la lista pesa ~1.5 MB: no se guardan en caché.
+// Películas en inglés con subtítulos en español (VOSE): suelen venir quemados en la imagen, así se ven en cualquier TV.
+const SUBTITLED = FEATURE_FILMS + ' AND (title:(VOSE OR subtitulada OR subtitulado OR subtitulos) OR subject:(VOSE OR subtitulada OR subtitulado OR subtitulos) OR (title:(spanish) AND title:(subtitles)))';
+
 export const VOD_SOURCES = [
   { id: 'pluto-vod-do', kind: 'pluto', name: 'Pluto TV · Películas (República Dominicana)', url: PLUTO_VOD + 'DO.m3u', noCache: true },
   { id: 'ia-es', kind: 'ia', name: 'Internet Archive · Cine en español', query: FEATURE_FILMS + ' AND language:(spa OR Spanish)' + NO_ADULT, rows: 600 },
+  { id: 'ia-subs', kind: 'ia', name: 'Internet Archive · Subtituladas al español', query: SUBTITLED + NO_ADULT, rows: 400, lang: 'en', subs: true, anyGenre: true },
+  { id: 'pluto-vod-us', kind: 'pluto', name: 'Pluto TV · Movies (inglés)', url: PLUTO_VOD + 'US.m3u', noCache: true, lang: 'en' },
   { id: 'ia-classics', kind: 'ia', name: 'Internet Archive · Clásicos de Hollywood (inglés)', query: FEATURE_FILMS + ' AND language:(eng OR English)' + NO_ADULT, rows: 300, lang: 'en' },
   { id: 'pluto-vod-mx', kind: 'pluto', name: 'Pluto TV · Películas (México)', url: PLUTO_VOD + 'MX.m3u', noCache: true, defaultOff: true }
 ];
 
+// Las subtituladas al español se quedan aunque se apague "Contenido en inglés": están pensadas para quien habla español.
 export function isVodSourceOn(source, settings) {
+  if (source.lang === 'en' && !source.subs && settings.english === false) return false;
   const v = settings.sources[source.id];
   return v == null ? !source.defaultOff : v;
 }
@@ -69,15 +76,23 @@ const PLUTO_GENRE = {
 function guessPlutoGenre(group) {
   const g = group.toLowerCase();
   if (PLUTO_GENRE[g]) return PLUTO_GENRE[g];
+  if (g.indexOf('anime') >= 0) return 'anime';
   const word = g.replace(/^cine\s+/, '');
   return SUBJECT_GENRE[word] || null;
 }
+
+// Pluto USA agrupa por década o sello ("'80s Movies", "A24"): eso se usa como colección para armar filas.
+const PLUTO_COLLECTIONS = {
+  "'70s movies": 'Cine de los 70', "'80s movies": 'Cine de los 80', "'90s movies": 'Cine de los 90',
+  "'00s movies": 'Cine de los 2000', 'a24': 'A24 · cine independiente'
+};
 
 export function plutoMovie(entry, source) {
   const m = /\/episode\/([0-9a-f]{24})\//i.exec(entry.url);
   if (!m || !entry.name || TITLE_BLOCK_RE.test(entry.name)) return null;
   const genres = [];
   entry.groups.forEach(gr => { const k = guessPlutoGenre(gr); if (k && genres.indexOf(k) < 0) genres.push(k); });
+  const group = (entry.groups[0] || '').toLowerCase();
   const img = 'https://images.pluto.tv/episodes/' + m[1] + '/poster.jpg';
   return {
     type: 'movie',
@@ -86,9 +101,10 @@ export function plutoMovie(entry, source) {
     year: '',
     genres,
     regions: [],
+    collection: PLUTO_COLLECTIONS[group] || '',
     runtime: 0,
     subs: false,
-    lang: 'es',
+    lang: group.indexOf('español') >= 0 ? 'es' : (source.lang || 'es'),
     // El póster original pesa ~750 KB; Pluto lo redimensiona con ?w=.
     direct: true,
     poster: img + '?w=300',
@@ -126,15 +142,31 @@ export function parseRuntime(raw) {
   return isNaN(n) ? 0 : Math.round(n * 60);
 }
 
+// "1959 - Anatomy of a Murder - Anatomía de un asesinato - VOSE" -> título limpio, año y si es subtitulada.
 export function cleanTitle(raw) {
   let subs = false;
+  let year = '';
   const title = String(raw || '')
-    .replace(/\((with )?spanish subtitles\)/i, () => { subs = true; return ''; })
-    .replace(/\[?VOS ?castellano\]?|\bsubtitulad[ao]\b/i, () => { subs = true; return ''; })
+    .replace(/^\s*(\d{4})\s*-\s*/, (_, y) => { year = y; return ''; })
+    .replace(/\(?(with |w\/ ?)spanish subtit\w*\)?/i, () => { subs = true; return ''; })
+    .replace(/\[?VOS ?castellano\]?|\bsubtitulad[ao]\b|\bVOSE\b|\bsubt[ií]tulos( en espa[nñ]ol)?\b/gi, () => { subs = true; return ''; })
     .replace(/\(\s*\d{4}\s*\)/, '')
+    .replace(/\(\s*\)|\[\s*\]/g, '')
+    .replace(/(\s*-\s*)+$/, '')
     .replace(/\s+/g, ' ')
     .trim();
-  return { title, subs };
+  return { title, subs, year };
+}
+
+// Etiquetas compuestas ("Film noir tardío", "Horror;Thriller") que no coinciden exacto con el diccionario.
+const GENRE_HINTS = [['noir', 'crimen'], ['horror', 'terror'], ['terror', 'terror'], ['thriller', 'suspenso'], ['comed', 'comedia'],
+  ['western', 'western'], ['drama', 'drama'], ['romanc', 'romance'], ['world war', 'guerra'], ['guerra', 'guerra'], ['sci-fi', 'scifi'],
+  ['science fiction', 'scifi'], ['animat', 'animacion'], ['document', 'documental'], ['crime', 'crimen'], ['mystery', 'suspenso']];
+
+function genreOf(subject) {
+  if (SUBJECT_GENRE[subject]) return SUBJECT_GENRE[subject];
+  for (let i = 0; i < GENRE_HINTS.length; i++) if (subject.indexOf(GENRE_HINTS[i][0]) >= 0) return GENRE_HINTS[i][1];
+  return null;
 }
 
 // null = descartada (sin género reconocible o título sospechoso).
@@ -143,15 +175,18 @@ export function toMovie(doc, source) {
   const genres = [];
   const regions = [];
   subjects.forEach(s => {
-    const g = SUBJECT_GENRE[s];
+    const g = genreOf(s);
     if (g && genres.indexOf(g) < 0) genres.push(g);
     const r = SUBJECT_REGION[s];
     if (r && regions.indexOf(r) < 0) regions.push(r);
   });
-  if (!genres.length && !regions.length) return null;
-  const t = cleanTitle(Array.isArray(doc.title) ? doc.title[0] : doc.title);
+  if (!genres.length && !regions.length && !source.anyGenre) return null;
+  const rawTitle = String(Array.isArray(doc.title) ? doc.title[0] : doc.title);
+  // En la fuente de subtituladas, las que solo traen subtítulos en inglés no sirven.
+  if (source.subs && /english subtit/i.test(rawTitle) && !/spanish|español|espanol|vose/i.test(rawTitle)) return null;
+  const t = cleanTitle(rawTitle);
   if (!t.title || TITLE_BLOCK_RE.test(t.title)) return null;
-  const year = parseInt(doc.year, 10);
+  const year = parseInt(doc.year || t.year, 10);
   return {
     type: 'movie',
     key: 'ia:' + doc.identifier,
@@ -161,7 +196,7 @@ export function toMovie(doc, source) {
     genres,
     regions,
     runtime: parseRuntime(doc.runtime),
-    subs: t.subs,
+    subs: t.subs || !!source.subs,
     lang: source.lang || 'es',
     poster: 'https://archive.org/services/img/' + encodeURIComponent(doc.identifier),
     src: source.id
@@ -237,13 +272,20 @@ export function resolveMovie(movie) {
   });
 }
 
+function isFrom(prefix) {
+  return m => m.key.indexOf(prefix) === 0;
+}
+
+// Orden: lo nuevo en español, subtituladas, cine por país y género; al final, la sección en inglés.
 export function buildMovieRows(movies) {
   const rows = [];
   const es = movies.filter(m => m.lang === 'es');
   const en = movies.filter(m => m.lang === 'en');
-  const pluto = es.filter(m => m.key.indexOf('pluto:') === 0);
-  const archive = es.filter(m => m.key.indexOf('ia:') === 0);
+  const subtitled = movies.filter(m => m.subs);
+  const pluto = es.filter(isFrom('pluto:'));
+  const archive = es.filter(isFrom('ia:'));
   if (pluto.length) rows.push({ id: 'mv:pluto', title: 'Estrenos gratis en Pluto TV', items: pluto.slice(0, 60) });
+  if (subtitled.length >= 4) rows.push({ id: 'mv:subs', title: 'Subtituladas al español', items: subtitled });
   if (archive.length) rows.push({ id: 'mv:top', title: 'Joyas del cine en español', items: archive.slice(0, 40) });
   REGIONS.forEach(r => {
     const items = es.filter(m => m.regions.indexOf(r[0]) >= 0);
@@ -253,6 +295,26 @@ export function buildMovieRows(movies) {
     const items = es.filter(m => m.genres.indexOf(g[0]) >= 0);
     if (items.length >= 4) rows.push({ id: 'mv:g:' + g[0], title: g[1], items });
   });
-  if (en.length) rows.push({ id: 'mv:classics', title: 'Clásicos de Hollywood (en inglés)', items: en });
+
+  const enPluto = en.filter(isFrom('pluto:'));
+  if (enPluto.length) rows.push({ id: 'mv:en:new', title: 'Movies · en inglés', items: enPluto.filter(m => m.genres.indexOf('anime') < 0).slice(0, 60) });
+  Object.keys(PLUTO_COLLECTIONS).forEach(k => {
+    const label = PLUTO_COLLECTIONS[k];
+    const items = en.filter(m => m.collection === label);
+    if (items.length >= 4) rows.push({ id: 'mv:en:c:' + k, title: label + ' (inglés)', items });
+  });
+  const classics = en.filter(m => m.src === 'ia-classics');
+  if (classics.length) rows.push({ id: 'mv:classics', title: 'Clásicos de Hollywood (inglés)', items: classics });
+  return rows;
+}
+
+// Sección Anime: películas en español primero, luego en inglés.
+export function buildAnimeMovieRows(movies) {
+  const anime = movies.filter(m => m.genres.indexOf('anime') >= 0);
+  const rows = [];
+  const es = anime.filter(m => m.lang === 'es');
+  const en = anime.filter(m => m.lang !== 'es');
+  if (es.length) rows.push({ id: 'an:mv:es', title: 'Películas de anime en español', items: es });
+  if (en.length) rows.push({ id: 'an:mv:en', title: 'Anime movies · en inglés', items: en });
   return rows;
 }

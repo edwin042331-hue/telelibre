@@ -7,6 +7,7 @@ export const NAV = [
   ['home', 'home', 'Inicio'],
   ['live', 'live', 'TV en vivo'],
   ['movies', 'movie', 'Películas'],
+  ['anime', 'anime', 'Anime'],
   ['mylist', 'star', 'Mi lista'],
   ['settings', 'gear', 'Ajustes']
 ];

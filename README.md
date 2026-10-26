@@ -1,11 +1,23 @@
 # TeleLibre
 
-App estilo streaming para **Samsung (Tizen)** y **LG (webOS)**. Junta TV en vivo y películas **gratis y legales** que publica la comunidad en GitHub, en una interfaz pensada para el control remoto.
+App estilo streaming para **Android TV / Google TV** (TCL, Sony, Philips, Chromecast), **Samsung (Tizen)** y **LG (webOS)**, más una versión web. Junta TV en vivo y películas **gratis y legales** que publica la comunidad en GitHub, en una interfaz pensada para el control remoto.
 
-- **~3,500 canales en vivo**: dominicanos, noticias, deportes, novelas, series y cine 24/7, infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv), [Free-TV](https://github.com/Free-TV/IPTV), y Pluto TV y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
-- **~1,200 películas bajo demanda**: Pluto TV en español vía [OwnerPlugins/pluto-tv-m3u](https://github.com/OwnerPlugins/pluto-tv-m3u), y cine en español y clásicos de dominio público de [Internet Archive](https://archive.org/details/feature_films).
+**Descargas directas** (siempre la última versión):
+
+| TV | Archivo |
+|---|---|
+| Android TV / Google TV | [TeleLibre.apk](https://edwin042331-hue.github.io/telelibre/TeleLibre.apk) |
+| Samsung | [TeleLibre-Samsung.wgt](https://edwin042331-hue.github.io/telelibre/TeleLibre-Samsung.wgt) |
+| LG | [TeleLibre-LG.ipk](https://edwin042331-hue.github.io/telelibre/TeleLibre-LG.ipk) |
+| Navegador | [edwin042331-hue.github.io/telelibre](https://edwin042331-hue.github.io/telelibre/) |
+
+Contenido:
+
+- **~4,800 canales en vivo**, en español primero y con su propia sección en inglés: dominicanos, noticias, deportes, novelas, series y cine 24/7, infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv), [Free-TV](https://github.com/Free-TV/IPTV), y Pluto TV, Samsung TV Plus, Roku y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
+- **~2,000 películas bajo demanda**: Pluto TV en español y en inglés vía [OwnerPlugins/pluto-tv-m3u](https://github.com/OwnerPlugins/pluto-tv-m3u), **~300 subtituladas al español** (Hitchcock, Fritz Lang, cine negro…), cine argentino y mexicano, y clásicos de dominio público de [Internet Archive](https://archive.org/details/feature_films).
+- **Sección Anime**: Naruto, One Piece, Dragon Ball, Los Caballeros del Zodiaco, Death Note, Hunter x Hunter, Pokémon, Yu-Gi-Oh, Crunchyroll, HIDIVE, RetroCrush, Sailor Moon… Son canales 24/7 oficiales y gratuitos que se actualizan a diario, más películas de anime en español y en inglés.
 - **Continuar viendo**: guarda dónde quedó cada película cada 5 s, al pausar, al salir y al apagar la TV.
-- **Mi lista**, recientes, búsqueda (incluye todo Internet Archive), filas por género y por país, y listas M3U propias.
+- **Mi lista**, recientes, búsqueda (incluye todo Internet Archive), filas por género y por país, y listas M3U propias. En Ajustes, un solo interruptor quita todo el contenido en inglés; las subtituladas al español se quedan.
 
 La app no aloja ningún video. Solo lee listas públicas, igual que un navegador.
 
@@ -13,7 +25,8 @@ La app no aloja ningún video. Solo lee listas públicas, igual que un navegador
 
 | Decisión | Motivo |
 |---|---|
-| **Una sola base de código web** (HTML/JS, sin framework) | Samsung y LG corren apps web. Una APK **no** se instala en Samsung ni en LG, porque no son Android. Sin framework, la app pesa 71 KB y fluye en TVs de 2016-2018. |
+| **Una sola base de código web** (HTML/JS, sin framework) | Samsung y LG corren apps web, y Android TV la abre en un WebView. Sin framework, la app pesa ~75 KB y fluye en TVs de 2016-2018. |
+| **Android TV con un proyecto mínimo propio** (`platforms/android`: una Activity, sin dependencias) | El control remoto completo (Atrás, CH+/CH-, multimedia, colores) llega a la app. Abre desde `file://` con acceso universal, así no depende de CORS y se reproducen los canales http. Siempre se firma con la misma llave, para que las actualizaciones se instalen encima. |
 | **El código va dentro de la app instalada** (.wgt / .ipk) y las listas se bajan al abrir | Desde `file://` se reproducen los canales `http://` (18 %), que una web `https` bloquea por contenido mixto. Las listas de canales siempre están frescas sin reinstalar. |
 | **Build ES5 con polyfills** (`@vitejs/plugin-legacy`) | Funciona desde webOS 3 / Tizen 3 (Chromium 38-47). |
 | **Reproductor nativo primero y hls.js de respaldo** | En la TV el nativo usa aceleración por hardware. Si un canal falla, prueba el otro motor y luego las URLs alternativas del mismo canal. |
@@ -48,6 +61,15 @@ Teclas en la PC: flechas, `Enter` (OK), `Esc` o `Backspace` (Atrás), `F` (botó
 
 En el navegador de la PC algunos canales fallan por CORS (el servidor no deja que una web los lea). En la TV eso no aplica.
 
+## Instalar en Android TV / Google TV (TCL y similares)
+
+1. **En la TV:** ve a *Ajustes → Sistema → Información* y presiona 7 veces *Compilación del SO* para activar las opciones de desarrollador.
+2. Instala la app **Downloader** (de AFTVnews) desde Google Play en la TV. En *Ajustes → Apps → Seguridad → Fuentes desconocidas*, permite que Downloader instale apps.
+3. Abre Downloader, escribe `edwin042331-hue.github.io/telelibre/TeleLibre.apk` y luego presiona *Instalar*.
+4. Para actualizar, repite el paso 3: se instala encima y conserva Mi lista y el progreso.
+
+La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de firma está en la carpeta `.telelibre` de tu usuario de Windows (fuera del repo) y en los *secrets* del repositorio. **No la borres**: sin ella, las versiones nuevas no se pueden instalar encima de la anterior.
+
 ## Instalar en LG (webOS)
 
 1. **En la TV:** abre LG Content Store, busca e instala **Developer Mode**. Inicia sesión con una cuenta gratuita de [LG Developer](https://webostv.developer.lge.com) y activa *Dev Mode Status* (la TV se reinicia). Luego activa *Key Server* y anota la **IP** y la **passphrase** que muestra.
@@ -60,7 +82,7 @@ En el navegador de la PC algunos canales fallan por CORS (el servidor no deja qu
 3. **Empaquetar e instalar:**
    ```powershell
    npm run package:webos
-   npx ares-install --device tv release\com.telelibre.tv_0.1.0_all.ipk
+   npx ares-install --device tv release\com.telelibre.tv_0.2.0_all.ipk
    npx ares-launch --device tv com.telelibre.tv
    ```
 
@@ -71,16 +93,16 @@ En el navegador de la PC algunos canales fallan por CORS (el servidor no deja qu
 1. **En la TV:** ve a *Apps*, marca **1 2 3 4 5** con el control, activa **Developer mode** y en *Host PC IP* pon la IP de tu PC (`ipconfig`). Reinicia la TV.
 2. **En la PC:**
    ```powershell
-   npm run package:tizen      # genera release\TeleLibre-0.1.0-unsigned.wgt
+   npm run package:tizen      # genera release\TeleLibre-0.2.0-unsigned.wgt
    ```
 3. Abre [Apps2Samsung](https://github.com/Apps2Samsung/Apps2Samsung/releases) y elige tu TV, luego **Custom WGT** y selecciona el `.wgt`. La primera vez te pide entrar con tu cuenta Samsung en el navegador para crear el certificado. Después firma e instala solo.
 
 **Ruta oficial (alternativa):** instala la extensión *Tizen TV* de Samsung en VS Code y crea un perfil de certificado llamado `TeleLibre`. Luego:
 ```powershell
 $env:TIZEN_CLI = "C:\tizen-studio\tools\ide\bin\tizen.bat"   # ruta de tu instalación
-npm run package:tizen      # ahora sale firmado: release\TeleLibre-0.1.0.wgt
+npm run package:tizen      # ahora sale firmado: release\TeleLibre-0.2.0.wgt
 sdb connect IP_DE_LA_TV
-tizen install -n release\TeleLibre-0.1.0.wgt -t NOMBRE_DEL_DISPOSITIVO
+tizen install -n release\TeleLibre-0.2.0.wgt -t NOMBRE_DEL_DISPOSITIVO
 ```
 
 En esta PC está activado **Control inteligente de aplicaciones**. Si bloquea algún `.exe` sin firma (Apps2Samsung o `sdb`), **no lo desactives**: no se puede volver a activar sin reinstalar Windows. Usa la otra ruta o instala desde otra computadora.

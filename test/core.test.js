@@ -78,7 +78,9 @@ test('películas: duración, títulos y filtro de contenido sin género', () => 
   assert.equal(parseRuntime('83 min.'), 4980);
   assert.equal(parseRuntime('1:07'), 4020);
   assert.equal(parseRuntime('67:16'), 4036);
-  assert.deepEqual(cleanTitle('Horror Express (with spanish subtitles)'), { title: 'Horror Express', subs: true });
+  assert.deepEqual(cleanTitle('Horror Express (with spanish subtitles)'), { title: 'Horror Express', subs: true, year: '' });
+  assert.deepEqual(cleanTitle('1959 - Anatomy of a Murder - Anatomía de un asesinato - VOSE'), { title: 'Anatomy of a Murder - Anatomía de un asesinato', subs: true, year: '1959' });
+  assert.equal(cleanTitle('The Night of The Hunter (La noche del cazador) w/Spanish Subtitles').subs, true);
   assert.equal(cleanTitle('El Tahur ( 1979)').title, 'El Tahur');
 
   const src = { id: 'ia-es' };
@@ -102,4 +104,20 @@ https://cfd.prd.pluto.tv/v2/stitch/hls/episode/63d414b6200a670013670138/master.m
   assert.deepEqual(m.genres, ['accion']);
   assert.equal(m.direct, true);
   assert.match(m.poster, /poster\.jpg\?w=300$/);
+});
+
+test('idioma y anime: listas multilingües por país, variantes regionales y gaming fuera', () => {
+  const multi = { id: 'iptv-anime', lang: 'multi' };
+  const en = { id: 'pluto-us', lang: 'en' };
+  const mx = { id: 'pluto-mx' };
+  const ch = (name, tvgId, groups, src) => toChannel({ name, tvgId, groups, url: 'https://x/' + name + '.m3u8', logo: '', country: '' }, src);
+  assert.equal(ch('One Piece LatAm', 'OnePieceLatAm.mx', ['Animation'], multi).lang, 'es');
+  assert.equal(ch('Naruto Brazil', 'NarutoBrazil.us', ['Animation'], multi).lang, 'other');
+  assert.equal(ch('Pokémon en español', 'abc', ['Kids'], en).lang, 'es');
+  assert.equal(ch('Crunchyroll', 'cr', ['Anime'], en).lang, 'en');
+  const naruto = ch('Naruto Shippuden', 'n1', ['Anime & Gaming'], mx);
+  assert.equal(naruto.cats[0], 'anime');
+  const esports = ch('Pluto TV E-Sports', 'e1', ['Anime & Gaming'], mx);
+  assert.deepEqual(esports.cats, ['entertainment']);
+  assert.equal(ch('Ghost Hunters', 'g1', ['Reality'], en).cats.indexOf('anime'), -1);
 });

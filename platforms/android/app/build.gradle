@@ -1,0 +1,44 @@
+// App Android TV / Google TV: un WebView a pantalla completa con la misma web de dist/ (copiada a assets/www).
+plugins {
+    id 'com.android.application'
+}
+
+def pkg = new groovy.json.JsonSlurper().parse(rootProject.file('../../package.json'))
+def keystore = System.getenv('KEYSTORE_PATH')
+
+android {
+    namespace 'com.telelibre.tv'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.telelibre.tv'
+        minSdk 21
+        targetSdk 35
+        versionCode((System.getenv('VERSION_CODE') ?: '1') as int)
+        versionName pkg.version
+    }
+
+    // Siempre la misma llave: así cada versión nueva se instala encima de la anterior sin borrar Mi lista ni el progreso.
+    signingConfigs {
+        release {
+            if (keystore) {
+                storeFile file(keystore)
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (keystore) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

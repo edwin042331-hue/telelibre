@@ -29,7 +29,8 @@ export const BUILTIN_SOURCES = [
     name: 'iptv-org · Cine 24/7 (varios idiomas)',
     url: IPTV_ORG + 'categories/movies.m3u',
     home: 'github.com/iptv-org/iptv',
-    category: 'movies'
+    category: 'movies',
+    lang: 'multi'
   },
   {
     id: 'freetv',
@@ -39,16 +40,29 @@ export const BUILTIN_SOURCES = [
     groupMode: 'freetv',
     groupFilter: ['Argentina', 'Chile', 'Costa Rica', 'Dominican Republic', 'Mexico', 'Paraguay', 'Peru', 'Spain', 'Venezuela', 'News (ES)']
   },
+  {
+    id: 'iptv-anime',
+    name: 'iptv-org · Anime (Anime Vision, Toonami…)',
+    url: IPTV_ORG + 'categories/animation.m3u',
+    home: 'github.com/iptv-org/iptv',
+    animeOnly: true,
+    lang: 'multi'
+  },
   { id: 'pluto-mx', name: 'Pluto TV · Latinoamérica', url: FAST + 'plutotv_mx.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'mx' },
   { id: 'pluto-es', name: 'Pluto TV · España', url: FAST + 'plutotv_es.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'es' },
   { id: 'plex-mx', name: 'Plex · canales gratis (México)', url: FAST + 'plex_mx.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'mx', groupMode: 'none', category: 'plex' },
   { id: 'plex-es', name: 'Plex · canales gratis (España)', url: FAST + 'plex_es.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'es', groupMode: 'none', category: 'plex', defaultOff: true },
   { id: 'samsung-es', name: 'Samsung TV Plus · España (solo desde España)', url: FAST + 'samsungtvplus_es.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'es', defaultOff: true },
-  { id: 'pluto-us', name: 'Pluto TV · Estados Unidos (inglés)', url: FAST + 'plutotv_us.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'us', defaultOff: true }
+  // En inglés: se apagan todas juntas con "Contenido en inglés" en Ajustes.
+  { id: 'pluto-us', name: 'Pluto TV · USA (inglés)', url: FAST + 'plutotv_us.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'us', lang: 'en' },
+  { id: 'samsung-us', name: 'Samsung TV Plus · USA (inglés)', url: FAST + 'samsungtvplus_us.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'us', lang: 'en' },
+  { id: 'roku', name: 'The Roku Channel (inglés)', url: FAST + 'roku_all.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'us', lang: 'en' },
+  { id: 'plex-us', name: 'Plex · USA (inglés)', url: FAST + 'plex_us.m3u', home: 'github.com/BuddyChewChew/app-m3u-generator', country: 'us', groupMode: 'none', category: 'plex', lang: 'en', defaultOff: true }
 ];
 
 // Sin preferencia guardada, cada fuente usa su valor por defecto.
 export function isSourceOn(source, settings) {
+  if (source.lang === 'en' && settings.english === false) return false;
   const v = settings.sources[source.id];
   return v == null ? !source.defaultOff : v;
 }

@@ -9,7 +9,7 @@ export const CATEGORIES = [
   ['novelas', 'Novelas'],
   ['crime', 'Crimen e investigación'],
   ['kids', 'Infantil'],
-  ['anime', 'Anime y gaming'],
+  ['anime', 'Anime'],
   ['music', 'Música'],
   ['entertainment', 'Entretenimiento'],
   ['documentary', 'Documentales y cultura'],
@@ -48,8 +48,23 @@ const ALIASES = {
   'novelas': 'novelas', 'telenovela': 'novelas', 'telenovelas': 'novelas', 'música': 'music', 'música & ambiente': 'music',
   'deportes': 'sports', 'deporte': 'sports', 'comedia': 'entertainment', 'retro': 'classic', 'noticias': 'news',
   'estilo de vida': 'lifestyle', 'viajes y cocina': 'lifestyle', 'entretenimiento': 'entertainment', 'investigación': 'crime',
-  'crimen': 'crime', 'true crime': 'crime', 'teen': 'series', 'serie': 'series'
+  'crimen': 'crime', 'true crime': 'crime', 'teen': 'series', 'serie': 'series',
+  // Pluto USA, Samsung TV Plus USA y Roku (en inglés).
+  'anime': 'anime', 'drama': 'series', 'action & drama': 'series', 'sci-fi': 'series', 'sci-fi & horror': 'series', 'romance': 'series',
+  'news + opinion': 'news', 'news & opinion': 'news', 'local news': 'news', 'national news': 'news',
+  'sports & outdoors': 'sports', 'motor sports': 'sports', 'auto & motorsports': 'sports', 'pro wrestling': 'sports', 'bowling': 'sports', '3x3 basketball': 'sports',
+  'home & food': 'lifestyle', 'home + food': 'lifestyle', 'lifestyle & pop culture': 'lifestyle', 'health': 'lifestyle', 'home improvement': 'lifestyle',
+  'reality tv': 'entertainment', 'reality competition': 'entertainment', 'competition reality': 'entertainment', 'game shows': 'entertainment',
+  'game show': 'entertainment', 'daytime + game shows': 'entertainment', 'tv & entertainment': 'entertainment', 'gaming & tech': 'entertainment', 'card games': 'entertainment',
+  'nature, history & science': 'documentary', 'history + science': 'documentary', 'animals + nature': 'documentary', 'animals': 'documentary',
+  'educational': 'documentary', 'environment': 'documentary', 'paranormal': 'documentary', 'art': 'documentary',
+  'crime': 'crime', 'crime drama': 'crime', 'law': 'crime', 'western & classic tv': 'classic', 'classic tv': 'classic', 'westerns': 'classic',
+  'ambiance': 'music', 'music videos': 'music', 'animated': 'kids', 'children-music': 'kids', 'faith & family': 'religious',
+  'auction': 'shop', 'shopping': 'shop', 'halloween hits': 'movies', 'latino': 'general', 'en español': 'general'
 };
+
+// Grupos en español dentro de listas en inglés (Samsung TV Plus "Latino", Pluto USA "En Español").
+const SPANISH_GROUPS = { 'latino': true, 'en español': true };
 
 const HIDDEN_GROUPS = { xxx: true };
 
@@ -81,6 +96,14 @@ export function isPlayableUrl(url) {
   return /^https?:\/\//i.test(url) && !UNPLAYABLE_RE.test(url);
 }
 
+// Series y canales de anime conocidos (Pluto, Samsung TV Plus, Roku, iptv-org). Se busca por nombre porque
+// ninguna lista tiene una categoría "anime" confiable.
+const ANIME_RE = /\b(anime|naruto|boruto|one piece|dragon ball|pok[eé]mon|yu-?gi-?oh|crunchyroll|hidive|sailor moon|gundam|hunter x hunter|inuyasha|saint seiya|caballeros del zod[ií]aco|beyblade|digimon|retrocrush|toonami|death note|captain tsubasa|super campeones|sh[oō]nen|mazinger|otaku)\b/i;
+
+export function isAnimeName(name) {
+  return ANIME_RE.test(name);
+}
+
 function countryOf(entry, source) {
   const m = /\.([a-z]{2})(?:@|$)/i.exec(entry.tvgId);
   if (m) return m[1].toLowerCase();
@@ -94,6 +117,8 @@ export function toChannel(entry, source) {
   const lower = groups.map(g => g.toLowerCase());
   if (lower.some(g => HIDDEN_GROUPS[g])) return null;
   if (!entry.name || !isPlayableUrl(entry.url)) return null;
+  const anime = isAnimeName(entry.name);
+  if (source.animeOnly && !anime) return null;
 
   const cats = [];
   lower.forEach(g => {
@@ -103,20 +128,41 @@ export function toChannel(entry, source) {
     if (cats.indexOf(k) < 0) cats.push(k);
   });
   if (!cats.length) cats.push(source.category || 'other');
+  // "anime" solo por nombre: el grupo "Anime & Gaming" de Pluto mezcla e-sports y videojuegos.
+  const animeAt = cats.indexOf('anime');
+  if (animeAt >= 0 && !anime) cats.splice(animeAt, 1, 'entertainment');
+  if (anime && cats.indexOf('anime') < 0) cats.unshift('anime');
   if (cats.length > 1 && cats.indexOf('other') >= 0) cats.splice(cats.indexOf('other'), 1);
 
+  const country = countryOf(entry, source);
   return {
     key: entry.tvgId ? 'id:' + entry.tvgId.toLowerCase() : 'u:' + entry.url,
     name: entry.name,
     logo: entry.logo,
-    country: countryOf(entry, source),
-    cats,
+    country,
+    cats: cats.filter((c, i) => cats.indexOf(c) === i),
     quality: entry.quality,
     geo: entry.geo,
     not247: entry.not247,
     urls: [entry.url],
-    src: source.id
+    src: source.id,
+    lang: lower.some(g => SPANISH_GROUPS[g]) ? 'es' : languageOf(entry.name, country, source)
   };
+}
+
+const SPANISH_COUNTRIES = ['do', 'es', 'mx', 'ar', 'co', 've', 'cl', 'pe', 'ec', 'bo', 'py', 'uy', 'cr', 'pa', 'gt', 'hn', 'sv', 'ni', 'cu', 'pr', 'gq'];
+const ENGLISH_COUNTRIES = ['us', 'ca', 'uk', 'gb', 'au', 'ie', 'nz'];
+
+// 'es' | 'en' | 'other'. Las listas multilingües (cine 24/7, anime) se clasifican por país;
+// 'other' (portugués, alemán…) no tiene fila propia pero sigue apareciendo en la búsqueda.
+function languageOf(name, country, source) {
+  if (/espa[nñ]ol|latino|castellano/i.test(name)) return 'es';
+  // Variantes regionales de Pluto ("Naruto Brazil", "One Piece FR") llevan tvg-id de EE. UU. pero no son en inglés.
+  if (/\b(brazil|br|germany|deutsch\w*|fr|france|italia|acao|portugu[eê]s)\b/i.test(name)) return 'other';
+  if (source.lang !== 'multi') return source.lang || 'es';
+  if (SPANISH_COUNTRIES.indexOf(country) >= 0) return 'es';
+  if (ENGLISH_COUNTRIES.indexOf(country) >= 0) return 'en';
+  return 'other';
 }
 
 // Une las listas: el mismo tvg-id en varias calidades/fuentes queda como un canal con URLs alternativas,
@@ -222,8 +268,18 @@ export function buildRows(channels) {
   return rows;
 }
 
+// TV en inglés: mismas categorías pero en filas propias, para no mezclarlas con las de español.
+export function buildEnglishRows(channels) {
+  const rows = [];
+  CATEGORIES.forEach(c => {
+    const items = channels.filter(ch => ch.cats.indexOf(c[0]) >= 0);
+    if (items.length >= 3) rows.push({ id: 'en:cat:' + c[0], title: c[1] + ' · en inglés', items: sortChannels(items) });
+  });
+  return rows;
+}
+
 export function normalizeText(s) {
-  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 export function searchChannels(channels, query, limit) {

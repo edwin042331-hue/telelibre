@@ -41,7 +41,6 @@ console.log('\nPelículas:', movies.length);
 buildMovieRows(movies).forEach(r => console.log('  fila', r.title.padEnd(32), r.items.length));
 
 if (failures) {
-  console.error('
-' + failures + ' fuente(s) fallaron');
+  console.error('\n' + failures + ' fuente(s) fallaron');
   process.exit(1);
 }

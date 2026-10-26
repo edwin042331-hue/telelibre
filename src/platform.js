@@ -1,6 +1,8 @@
 // Diferencias entre Samsung (Tizen), LG (webOS) y navegador de PC: detección, teclas del control y salida.
 
 function detect() {
+  // La app Android (platforms/android) expone este puente nativo.
+  if (window.TeleLibreNative) return 'android';
   if (window.tizen) return 'tizen';
   if (window.webOS || window.PalmSystem || /Web0S|webOS/i.test(navigator.userAgent)) return 'webos';
   return 'web';
@@ -37,8 +39,9 @@ export function exitApp() {
   try {
     if (platform === 'tizen') { window.tizen.application.getCurrentApplication().exit(); return true; }
     if (platform === 'webos') { window.close(); return true; }
+    if (platform === 'android') { window.TeleLibreNative.exit(); return true; }
   } catch (e) { /* cae al false */ }
   return false;
 }
 
-export const platformLabel = { tizen: 'Samsung Tizen', webos: 'LG webOS', web: 'Navegador' }[platform];
+export const platformLabel = { tizen: 'Samsung Tizen', webos: 'LG webOS', android: 'Android TV', web: 'Navegador' }[platform];

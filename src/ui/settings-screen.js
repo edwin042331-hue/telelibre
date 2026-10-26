@@ -63,6 +63,13 @@ export function createSettingsScreen(app) {
       }));
     });
 
+    section('Idioma del contenido');
+    list.appendChild(item('Contenido en inglés (Pluto USA, Samsung TV Plus, Roku, películas)', onOff(s.english !== false), () => {
+      s.english = s.english === false;
+      saveSettings();
+      app.reload(false);
+    }));
+
     section('Filtros');
     list.appendChild(item('Ocultar canales geo-bloqueados', onOff(s.hideGeo), () => { s.hideGeo = !s.hideGeo; saveSettings(); app.rebuild(); }));
     list.appendChild(item('Ocultar canales que no transmiten 24/7', onOff(s.hideNot247), () => { s.hideNot247 = !s.hideNot247; saveSettings(); app.rebuild(); }));
