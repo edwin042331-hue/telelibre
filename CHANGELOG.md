@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.2.0 (2026-10-26): ronda 4
+
+- **Búsqueda por voz** en Android TV: botón en Buscar, "Buscar por voz" en el menú y tecla de búsqueda del control.
+- **"Seguir viendo" en la pantalla de inicio de Google TV**: las películas y episodios a medias del perfil activo aparecen junto a los de otras apps; al elegir uno se abre TeleLibre y arranca donde quedó.
+- **Temporizador para dormir** (15 a 120 min), con aviso un minuto antes para seguir viendo.
+- **La pantalla solo se mantiene encendida mientras se reproduce**: en los menús vuelve el protector de pantalla.
+
 ## 1.1.1 (2026-10-26)
 
 - Probada en la TCL: menú de opciones, lista de canales con ◀ (cambio desde la lista), canal anterior y migración de datos al perfil principal.
