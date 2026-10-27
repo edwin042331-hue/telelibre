@@ -3,7 +3,7 @@
 // - Cada canal acumula éxitos/fallos al reproducirse: los que funcionan suben, los que nunca funcionan se esconden.
 // - Recomendaciones "porque viste…" a partir de recientes, Mi lista y películas en progreso.
 // - Tema claro/oscuro automático según la hora.
-import { load, save } from './store.js';
+import { load, save, userKey } from './store.js';
 import { categoryLabel, sortChannels, shortKey } from './catalog.js';
 import { genreLabel } from './vod.js';
 
@@ -101,7 +101,12 @@ export function resetHealth() {
 // ---------- Gustos ----------
 // Minutos vistos por categoría (en vivo) y por género (películas), con olvido gradual:
 // lo que viste hace meses pesa menos que lo de esta semana.
-let taste = load('taste', { cats: {}, genres: {}, t: Date.now() });
+let taste = load(userKey('taste'), { cats: {}, genres: {}, t: Date.now() });
+
+// Al cambiar de perfil, cada uno tiene sus propios gustos.
+export function reloadTaste() {
+  taste = load(userKey('taste'), { cats: {}, genres: {}, t: Date.now() });
+}
 
 function decay() {
   const weeks = (Date.now() - taste.t) / (7 * 864e5);
@@ -122,7 +127,7 @@ export function learnFrom(item, seconds) {
   const kind = item.type === 'movie' ? 'genres' : 'cats';
   const keys = item.type === 'movie' ? item.genres || [] : (item.cats || []).filter(c => c !== 'general' && c !== 'other');
   keys.forEach(k => { taste[kind][k] = (taste[kind][k] || 0) + minutes / keys.length; });
-  save('taste', taste);
+  save(userKey('taste'), taste);
 }
 
 function topOf(map, n) {
@@ -140,7 +145,7 @@ export function tasteSummary() {
 
 export function resetTaste() {
   taste = { cats: {}, genres: {}, t: Date.now() };
-  save('taste', taste);
+  save(userKey('taste'), taste);
 }
 
 // ---------- Recomendaciones ----------

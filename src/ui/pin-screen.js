@@ -15,7 +15,10 @@ export function createPinScreen(app) {
   const pad = h('div', { class: 'pin-pad' });
   const el = h('section', { class: 'screen pin-screen' }, [title, hint, dots, pad]);
 
+  // 'set': crea PIN y activa el modo infantil · 'set-only': solo crea el PIN (perfil infantil nuevo)
+  // 'unlock': pide el PIN; si hay onSuccess lo llama (salir de un perfil infantil), si no apaga el modo infantil.
   let mode = 'set';
+  let onSuccess = null;
   let value = '';
   let first = '';
 
@@ -33,7 +36,8 @@ export function createPinScreen(app) {
   function submit() {
     if (value.length < 4) { app.toast('El PIN tiene 4 números'); return; }
     if (mode === 'unlock') {
-      if (value !== state.settings.kids.pin) { fail('PIN incorrecto'); return; }
+      if (!state.settings.kids || value !== state.settings.kids.pin) { fail('PIN incorrecto'); return; }
+      if (onSuccess) { const cb = onSuccess; onSuccess = null; cb(); return; }
       state.settings.kids.on = false;
       saveSettings();
       app.toast('Modo infantil desactivado');
@@ -48,6 +52,13 @@ export function createPinScreen(app) {
       return;
     }
     if (value !== first) { first = ''; title.textContent = 'Crea un PIN de 4 números'; fail('No coinciden, empieza de nuevo'); return; }
+    if (mode === 'set-only') {
+      state.settings.kids = { on: !!(state.settings.kids && state.settings.kids.on), pin: value };
+      saveSettings();
+      app.toast('PIN guardado: se pedirá para salir del perfil infantil');
+      app.pop();
+      return;
+    }
     state.settings.kids = { on: true, pin: value };
     saveSettings();
     app.toast('Modo infantil activado');
@@ -75,9 +86,10 @@ export function createPinScreen(app) {
     lastFocus: null,
     mount(params) {
       mode = params.mode || 'set';
+      onSuccess = params.onSuccess || null;
       value = '';
       first = '';
-      title.textContent = mode === 'unlock' ? 'PIN para salir del modo infantil' : 'Crea un PIN de 4 números';
+      title.textContent = mode === 'unlock' ? (onSuccess ? 'PIN para cambiar de perfil' : 'PIN para salir del modo infantil') : 'Crea un PIN de 4 números';
       hint.textContent = mode === 'unlock'
         ? 'Escribe el PIN con los números del control o con las teclas de la pantalla.'
         : 'Con el modo infantil solo se ven canales y películas para niños. Para salir se pide este PIN.';

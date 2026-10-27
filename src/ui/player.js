@@ -1,5 +1,5 @@
 // Reproductor a pantalla completa para canales en vivo (HLS) y películas (MP4).
-import { h } from './dom.js';
+import { h, clear } from './dom.js';
 import { icon } from './icons.js';
 import { isTV } from '../platform.js';
 import { pushRecent, saveProgress, toggleFavorite, isFavorite } from '../store.js';
@@ -60,7 +60,13 @@ export function createPlayer(app) {
   const nextTitle = h('div', { class: 'next-title' });
   const nextCount = h('div', { class: 'next-count' });
   const nextUp = h('div', { class: 'next-up' }, [h('div', { class: 'next-kicker', text: 'SIGUIENTE EPISODIO' }), nextTitle, nextCount, h('div', { class: 'next-hint', text: 'OK: verlo ya  ·  Atrás: salir' })]);
-  const ui = h('div', { class: 'player-ui' }, [spinner, stateIcon, errorBox, osd, nextUp]);
+  // Lista de canales dentro del reproductor (◀ en vivo), como en el cable.
+  const chTitle = h('div', { class: 'chlist-title' });
+  const chRows = h('div', { class: 'chlist-rows' });
+  const chList = h('div', { class: 'chlist' }, [chTitle, chRows, h('div', { class: 'chlist-hint', text: '▲ ▼ elegir · OK ver · ▶ o Atrás cerrar' })]);
+  // Número de canal que se está marcando ("Canal 2_").
+  const numBox = h('div', { class: 'num-box' });
+  const ui = h('div', { class: 'player-ui' }, [spinner, stateIcon, errorBox, osd, nextUp, chList, numBox]);
   const el = h('div', { class: 'player' }, [video, ui]);
 
   let open = false;
@@ -89,9 +95,10 @@ export function createPlayer(app) {
   let seekPresses = 0;
   let seekTimer = null;
 
+  // Al cambiar de estado (cargando → reproduciendo…) se conservan las capas abiertas: barra, lista de canales y número.
   function setState(s) {
-    const osdOn = el.classList.contains('osd-on');
-    el.className = 'player open ' + mode + ' ' + s + (osdOn ? ' osd-on' : '');
+    const keep = ['osd-on', 'chlist-on', 'num-on'].filter(c => el.classList.contains(c));
+    el.className = 'player open ' + mode + ' ' + s + (keep.length ? ' ' + keep.join(' ') : '');
   }
 
   function showOsd(sticky) {
@@ -111,9 +118,10 @@ export function createPlayer(app) {
       ? 'Ahora: ' + np.now.title + ' (hasta las ' + formatClock(new Date(np.now.stop)) + ')' + (np.next ? ' · Después: ' + np.next.title : '')
       : itemTags(item).join(' · ');
     liveBar.textContent = isMovie ? '' : '● EN VIVO · ' + (index + 1) + ' de ' + list.length;
+    // "Mantén OK" sirve con cualquier control (el de la TCL no tiene botones de colores).
     hints.textContent = isMovie
-      ? 'OK pausa · ◀ ▶ retroceder / adelantar · ● Rojo Mi lista' + (video.textTracks && video.textTracks.length ? ' · ● Verde subtítulos' : '') + ' · Atrás salir'
-      : '▲ ▼ cambiar canal · ● Rojo Mi lista · Atrás salir';
+      ? 'OK pausa · ◀ ▶ retroceder / adelantar · Mantén OK: opciones · Atrás salir'
+      : '▲ ▼ cambiar canal · ◀ lista de canales · Mantén OK: opciones · Atrás salir';
   }
 
   function clearTimers() {
@@ -302,9 +310,70 @@ export function createPlayer(app) {
     app.toast(subtitlesOn ? 'Subtítulos activados' : 'Subtítulos desactivados');
   }
 
+  let prevIndex = -1;
+
+  // Ir directo a un canal de la lista (lista de canales, número, canal anterior).
+  function tune(i) {
+    if (mode !== 'live' || i < 0 || i >= list.length || i === index) return;
+    learn();
+    prevIndex = index;
+    index = i;
+    item = list[index];
+    attempts = attemptsFor(item.urls);
+    attempt = 0;
+    renderInfo();
+    showOsd();
+    startAttempt();
+  }
+
+  // ---- Lista de canales ----
+  let chSel = 0;
+  function chOpen() { return el.classList.contains('chlist-on'); }
+  function paintList() {
+    clear(chRows);
+    chTitle.textContent = 'Canales · ' + (index + 1) + ' de ' + list.length;
+    // Solo se dibujan 8 filas alrededor de la selección: la lista puede tener cientos de canales.
+    const from = Math.max(0, Math.min(chSel - 3, list.length - 8));
+    for (let i = from; i < Math.min(list.length, from + 8); i++) {
+      const ch = list[i];
+      const np = nowNext(ch);
+      chRows.appendChild(h('div', { class: 'chrow' + (i === chSel ? ' sel' : '') + (i === index ? ' current' : '') }, [
+        h('span', { class: 'chrow-num', text: String(i + 1) }),
+        ch.logo ? h('img', { class: 'chrow-logo', src: ch.logo, alt: '' }) : h('span', { class: 'chrow-logo' }),
+        h('span', { class: 'chrow-text' }, [h('span', { class: 'chrow-name', text: ch.name }), np ? h('span', { class: 'chrow-now', text: 'Ahora: ' + np.now.title }) : null])
+      ]));
+    }
+  }
+  function openList() {
+    if (mode !== 'live') return;
+    chSel = index;
+    paintList();
+    el.classList.add('chlist-on');
+    el.classList.remove('osd-on');
+  }
+  function closeList() { el.classList.remove('chlist-on'); }
+
+  // ---- Marcar número de canal ----
+  let numBuf = '';
+  let numTimer = null;
+  function typeDigit(d) {
+    if (mode !== 'live') return;
+    numBuf = (numBuf + d).slice(-4);
+    numBox.textContent = 'Canal ' + numBuf + '_';
+    el.classList.add('num-on');
+    clearTimeout(numTimer);
+    numTimer = setTimeout(() => {
+      el.classList.remove('num-on');
+      const n = parseInt(numBuf, 10);
+      numBuf = '';
+      if (n >= 1 && n <= list.length) tune(n - 1); else app.toast('No hay canal ' + n + ' en esta lista (tiene ' + list.length + ')');
+    }, 1300);
+  }
+
   function zap(delta) {
     if (mode !== 'live' || list.length < 2) return;
     learn();
+    prevIndex = index;
     // Salta los canales que nunca han funcionado en esta TV.
     let tries = 0;
     do { index = (index + delta + list.length) % list.length; } while (isDead(list[index].key) && ++tries < list.length);
@@ -368,7 +437,36 @@ export function createPlayer(app) {
       learn();
       try { video.pause(); } catch (e) { /* sin video */ }
     },
+    // Opciones de "mantener OK" dentro del reproductor.
+    menuOptions() {
+      const fav = isFavorite(item.key);
+      const tracks = video.textTracks && video.textTracks.length;
+      const items = mode === 'live' ? [
+        { label: 'Lista de canales', icon: 'live', action: openList },
+        prevIndex >= 0 && list[prevIndex] ? { label: 'Canal anterior: ' + list[prevIndex].name, icon: 'prev', action: () => tune(prevIndex) } : null,
+        { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => this.onAction('red') },
+        { label: 'Salir del canal', icon: 'home', action: close }
+      ] : [
+        { label: video.paused ? 'Seguir viendo' : 'Pausa', icon: video.paused ? 'play' : 'pause', action: togglePause },
+        tracks ? { label: subtitlesOn ? 'Quitar subtítulos' : 'Poner subtítulos', icon: 'check', action: toggleSubtitles } : null,
+        { label: 'Volver al inicio de la película', icon: 'restart', action: () => { try { video.currentTime = 0; } catch (e) { /* sin seek */ } } },
+        { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => this.onAction('red') },
+        { label: 'Salir', icon: 'home', action: close }
+      ];
+      return { title: item.name, items };
+    },
     onAction(action) {
+      // Lista de canales abierta: se queda con las flechas.
+      if (chOpen()) {
+        if (action === 'up') { chSel = (chSel - 1 + list.length) % list.length; paintList(); }
+        else if (action === 'down') { chSel = (chSel + 1) % list.length; paintList(); }
+        else if (action === 'enter') { closeList(); tune(chSel); }
+        else if (action === 'right' || action === 'back' || action === 'left') closeList();
+        return;
+      }
+      if (/^d[0-9]$/.test(action)) { typeDigit(action.slice(1)); return; }
+      if (action === 'recall') { if (prevIndex >= 0) tune(prevIndex); return; }
+      if (action === 'info') { showOsd(); return; }
       if (nextTimer) {
         if (action === 'enter' || action === 'playpause') { goNext(); return; }
         if (action === 'back' || action === 'stop') { close(); return; }
@@ -377,7 +475,7 @@ export function createPlayer(app) {
       if (action === 'back' || action === 'stop') { close(); return; }
       if (action === 'up' || action === 'chup') { if (mode === 'live') zap(1); else showOsd(); return; }
       if (action === 'down' || action === 'chdown') { if (mode === 'live') zap(-1); else showOsd(); return; }
-      if (action === 'left') { seekBy(-1); return; }
+      if (action === 'left') { if (mode === 'live') openList(); else seekBy(-1); return; }
       if (action === 'right') { seekBy(1); return; }
       if (action === 'rw') { seekBy(-1, 60); return; }
       if (action === 'ff') { seekBy(1, 60); return; }

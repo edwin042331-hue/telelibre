@@ -12,13 +12,15 @@ import { createPlayer } from './ui/player.js';
 import { createGuideScreen } from './ui/guide-screen.js';
 import { createPinScreen } from './ui/pin-screen.js';
 import { createShowScreen } from './ui/show-screen.js';
+import { createMenu } from './ui/menu.js';
 import { loadSeriesCatalog, episodeUrl, plutoApiMovies } from './pluto.js';
 import { keyAction, registerKeys, exitApp, platform } from './platform.js';
-import { state, toggleFavorite, continueWatching } from './store.js';
+import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
-import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise } from './smart.js';
+import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise, reloadTaste } from './smart.js';
+import { createProfilesScreen, createNewProfileScreen } from './ui/profiles-screen.js';
 import { loadVerified, checkUpdate } from './remote.js';
 import { dueReminders } from './reminders.js';
 import { installErrorCapture } from './diag.js';
@@ -85,11 +87,15 @@ root.appendChild(toastEl);
 const player = createPlayer(app);
 // El video va fuera del contenedor escalado: algunos TV dibujan el video en un plano aparte y no toleran transformaciones.
 document.body.appendChild(player.el);
+// El menú emergente va encima de todo (también del reproductor).
+const menu = createMenu();
+document.body.appendChild(menu.el);
+app.menu = menu;
 
 // Diseño fijo 1920x1080 escalado a la pantalla (en la TV la escala es 1).
 function fit() {
   const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-  [root, player.ui].forEach(el => {
+  [root, player.ui, menu.ui].forEach(el => {
     el.style.transform = 'scale(' + s + ')';
     el.style.left = Math.round((window.innerWidth - 1920 * s) / 2) + 'px';
     el.style.top = Math.round((window.innerHeight - 1080 * s) / 2) + 'px';
@@ -106,7 +112,8 @@ function tick() {
   const now = new Date();
   const theme = resolveTheme(state.settings.theme, now);
   document.body.className = 'theme-' + theme + ' platform-' + platform;
-  topbar.textContent = (kidsOn() ? 'Modo infantil  ·  ' : '') + greeting(now) + '  ·  ' + formatClock(now);
+  const who = activeProfile().name;
+  topbar.textContent = (kidsOn() ? 'Modo infantil  ·  ' : '') + greeting(now) + (who && who !== 'Principal' ? ', ' + who : '') + '  ·  ' + formatClock(now);
 }
 tick();
 setInterval(tick, 30000);
@@ -166,7 +173,9 @@ const screens = {
   guide: createGuideScreen(app),
   series: createRowsScreen(app, 'series', () => app.data.seriesRows, 'Cargando series de Pluto TV… (funcionan en la app instalada en la TV)'),
   show: createShowScreen(app),
-  pin: createPinScreen(app)
+  pin: createPinScreen(app),
+  profiles: createProfilesScreen(app),
+  'profile-new': createNewProfileScreen(app)
 };
 for (const k in screens) screensEl.appendChild(screens[k].el);
 
@@ -467,7 +476,8 @@ app.reload = function (force) {
     const firstRun = !started;
     started = true;
     app.rebuild();
-    if (firstRun) show('home');
+    // Con más de un perfil, primero "¿Quién está viendo?".
+    if (firstRun) { if (profiles.list.length > 1) show('profiles'); else { profileChosen = true; show('home'); } }
     if (full) {
       splashFill.style.width = '100%';
       splashStatus.textContent = app.data.channels.length.toLocaleString('es') + ' canales y ' + app.data.movies.length.toLocaleString('es') + ' películas listos';
@@ -530,9 +540,71 @@ function sidebarAction(action, f) {
   if (action === 'back') { if (current().name === 'home' && stack.length === 1) tryExit(); else navigate('home'); }
 }
 
+function toggleFavOn(card) {
+  const on = toggleFavorite(card._item);
+  app.toast(on ? 'Agregado a Mi lista' : 'Quitado de Mi lista');
+  if (card.classList.contains('card')) setFavMark(card, on);
+  app.markDirty();
+}
+
+// Menú de "OK mantenido": opciones según dónde está el foco.
+function openContextMenu() {
+  if (player.isOpen()) { menu.open(player.menuOptions()); return; }
+  const f = getFocused();
+  const item = f && f._item;
+  if (item && !sidebar.el.contains(f)) {
+    const fav = isFavorite(item.key);
+    const isLive = item.type !== 'movie' && item.type !== 'series' && item.type !== 'episode';
+    menu.open({
+      title: item.name,
+      items: [
+        { label: isLive ? 'Ver ahora' : 'Ver detalles', icon: 'play', action: () => { if (f._onEnter) f._onEnter(); } },
+        { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => toggleFavOn(f) },
+        isLive && item.country === 'do' ? { label: 'Guía de programación', icon: 'guide', action: () => navigate('guide') } : null,
+        { label: 'Sorpréndeme', icon: 'dice', action: () => app.surprise() }
+      ]
+    });
+    return;
+  }
+  menu.open({
+    title: 'TeleLibre',
+    items: [
+      { label: 'Sorpréndeme', icon: 'dice', action: () => app.surprise() },
+      { label: 'Buscar', icon: 'search', action: () => navigate('search') },
+      { label: 'Guía de TV', icon: 'guide', action: () => navigate('guide') },
+      { label: 'Ajustes', icon: 'gear', action: () => navigate('settings') }
+    ]
+  });
+}
+
+// OK mantenido (~0.6 s) abre el menú de opciones: así todo funciona con controles sin botones de colores
+// (como el de la TCL). El OK normal se ejecuta al soltar; si el control no manda "soltar", se ejecuta igual.
+const LONG_PRESS = 600;
+let okTimer = null;
+let okLong = false;
+
+function onOkDown(e) {
+  e.preventDefault();
+  if (e.repeat || okTimer) return;
+  okLong = false;
+  okTimer = setTimeout(() => { okTimer = null; okLong = true; openContextMenu(); }, LONG_PRESS);
+}
+
+function onOkUp(e) {
+  if (e.keyCode !== 13) return;
+  e.preventDefault();
+  if (okLong) { okLong = false; return; }
+  if (!okTimer) return;
+  clearTimeout(okTimer);
+  okTimer = null;
+  runAction('enter');
+}
+
 function onKey(e) {
+  // OK con pulsación larga: solo donde no se está escribiendo (en el teclado en pantalla OK siempre es OK).
+  if (e.keyCode === 13 && started && !menu.isOpen() && !typingScreen()) { onOkDown(e); return; }
   // Teclado físico: las pantallas con texto (búsqueda, URL) usan las letras antes de traducirlas a acciones.
-  if (started && !player.isOpen()) {
+  if (started && !player.isOpen() && !menu.isOpen()) {
     const scr = current();
     const f = getFocused();
     const inSidebar = !!f && sidebar.el.contains(f);
@@ -547,6 +619,11 @@ function onKey(e) {
 // Acción ya traducida (del teclado/control o del puente nativo de Android).
 function runAction(a) {
   if (!started) { if (a === 'back') tryExit(); return; }
+  if (menu.isOpen()) { menu.onAction(a); return; }
+  if (a === 'menu') { openContextMenu(); return; }
+  if (a === 'guide') { if (player.isOpen()) player.onAction('stop'); navigate('guide'); return; }
+  if (a === 'chlist' && !player.isOpen()) { navigate('live'); return; }
+  if (a === 'chlist') { player.onAction('left'); return; }
   // ● Verde justo después de un recordatorio: ir a ese canal (también desde el reproductor).
   if (a === 'green' && pendingReminder && Date.now() < pendingReminder.until) { playReminder(); return; }
   if (player.isOpen()) { player.onAction(a); return; }
@@ -566,17 +643,17 @@ function runAction(a) {
     return;
   }
   if (a === 'enter') { if (f && f._onEnter) f._onEnter(); return; }
-  if (a === 'red' && f && f._item) {
-    const on = toggleFavorite(f._item);
-    app.toast(on ? 'Agregado a Mi lista' : 'Quitado de Mi lista');
-    setFavMark(f, on);
-    app.markDirty();
-    return;
-  }
+  if (a === 'red' && f && f._item) { toggleFavOn(f); return; }
   if (a === 'back') goBack();
 }
 
 document.addEventListener('keydown', onKey);
+document.addEventListener('keyup', onOkUp);
+
+function typingScreen() {
+  const scr = current();
+  return !player.isOpen() && !!scr && (scr.name === 'search' || scr.name === 'addlist' || scr.name === 'pin');
+}
 // Android TV entrega Atrás, canales, multimedia y colores por aquí (ver MainActivity.java).
 window.__telelibreKey = runAction;
 window.__telelibreHidden = () => player.onHidden();
@@ -624,8 +701,39 @@ window.addEventListener('beforeunload', () => player.persist());
 
 // ---------- Modo infantil ----------
 function kidsOn() {
-  return !!(state.settings.kids && state.settings.kids.on);
+  return !!(state.settings.kids && state.settings.kids.on) || !!activeProfile().kids;
 }
+
+// ---------- Perfiles ----------
+let profileChosen = false;
+
+function switchProfile(id) {
+  useProfile(id);
+  reloadTaste();
+  profileChosen = true;
+  tick();
+  publishSeries();
+  app.rebuild(true);
+  stack = [];
+  navigate('home');
+  app.toast('Hola, ' + activeProfile().name);
+}
+
+// Salir de un perfil infantil pide el PIN (si hay uno creado).
+app.chooseProfile = function (id) {
+  const cur = activeProfile();
+  const pin = state.settings.kids && state.settings.kids.pin;
+  if (cur.kids && id !== cur.id && pin) { app.push('pin', { mode: 'unlock', onSuccess: () => switchProfile(id) }); return; }
+  switchProfile(id);
+};
+
+app.onProfileRemoved = function () {
+  switchProfile(profiles.active);
+};
+
+app.profilesBack = function () {
+  if (profileChosen) navigate('home'); else tryExit();
+};
 app.kidsOn = kidsOn;
 
 app.onKidsChanged = function () {
@@ -664,7 +772,16 @@ setInterval(() => {
   if (!due.length) return;
   const r = due[0];
   pendingReminder = { key: r.key, until: Date.now() + 2 * 60000 };
-  app.toast('Empieza «' + r.title + '» en ' + r.channel + '  ·  presiona ● Verde para verlo', 15000);
+  // Diálogo con botones: sirve con cualquier control (● Verde sigue funcionando como atajo).
+  menu.open({
+    title: 'Empieza ahora: ' + r.title,
+    subtitle: 'En ' + r.channel,
+    timeout: 60000,
+    items: [
+      { label: 'Ver ahora', icon: 'play', action: () => { if (pendingReminder) playReminder(); } },
+      { label: 'Ahora no', icon: 'check', action: () => { pendingReminder = null; } }
+    ]
+  });
 }, 20000);
 
 registerKeys();

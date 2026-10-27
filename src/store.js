@@ -66,15 +66,85 @@ export function remove(name) {
   try { localStorage.removeItem(PREFIX + name); } catch (e) { /* sin almacenamiento */ }
 }
 
+// ---------- Perfiles ----------
+// Cada perfil guarda lo suyo (Mi lista, progreso, vistos, recientes, gustos) bajo "u:<id>:".
+// Los ajustes, la salud de los canales y las cachés son de la TV y se comparten.
+const USER_DATA = ['favorites', 'recents', 'progress', 'watched', 'taste'];
+export const COLORS = ['#ff3b5c', '#7b2ff7', '#1aa3ff', '#18b87a', '#ff9f1a', '#e83e8c'];
+
+export const profiles = {
+  list: load('profiles', null) || [{ id: 'p1', name: 'Principal', color: 0, kids: false }],
+  active: load('profile', 'p1')
+};
+if (!profiles.list.some(p => p.id === profiles.active)) profiles.active = profiles.list[0].id;
+
+// Lo guardado antes de que existieran los perfiles pasa al perfil principal (una sola vez).
+USER_DATA.forEach(name => {
+  const old = load(name, null);
+  if (old != null && load('u:p1:' + name, null) == null) save('u:p1:' + name, old);
+  if (old != null) remove(name);
+});
+
+export function userKey(name) {
+  return 'u:' + profiles.active + ':' + name;
+}
+
+export function activeProfile() {
+  return profiles.list.filter(p => p.id === profiles.active)[0] || profiles.list[0];
+}
+
+function saveProfiles() {
+  save('profiles', profiles.list);
+}
+
+export function addProfile(name, kids) {
+  const p = { id: 'p' + Date.now().toString(36), name: name.slice(0, 20), color: profiles.list.length % COLORS.length, kids: !!kids };
+  profiles.list.push(p);
+  saveProfiles();
+  return p;
+}
+
+// Borra el perfil y todo lo suyo. El último perfil no se puede borrar.
+export function removeProfile(id) {
+  if (profiles.list.length < 2) return false;
+  profiles.list = profiles.list.filter(p => p.id !== id);
+  saveProfiles();
+  USER_DATA.forEach(name => remove('u:' + id + ':' + name));
+  if (profiles.active === id) useProfile(profiles.list[0].id);
+  return true;
+}
+
+export function renameProfile(id, name) {
+  profiles.list.forEach(p => { if (p.id === id) p.name = name.slice(0, 20); });
+  saveProfiles();
+}
+
 const DEFAULT_SETTINGS = { sources: {}, custom: [], hideGeo: true, hideNot247: false, english: true };
 
 export const state = {
   settings: Object.assign({}, DEFAULT_SETTINGS, load('settings', {})),
-  favorites: load('favorites', []),
-  recents: load('recents', []),
+  favorites: [],
+  recents: [],
   // key -> { item, t (segundos vistos), d (duración), at (fecha) }
-  progress: load('progress', {})
+  progress: {},
+  // Episodios terminados (para la marca ✓ y para saber cuál sigue).
+  watched: {}
 };
+
+function loadUserState() {
+  state.favorites = load(userKey('favorites'), []);
+  state.recents = load(userKey('recents'), []);
+  state.progress = load(userKey('progress'), {});
+  state.watched = load(userKey('watched'), {});
+}
+loadUserState();
+
+// Cambia de perfil (los gustos se recargan aparte: viven en smart.js).
+export function useProfile(id) {
+  profiles.active = id;
+  save('profile', id);
+  loadUserState();
+}
 
 export function saveSettings() {
   save('settings', state.settings);
@@ -88,24 +158,21 @@ export function isFavorite(key) {
 export function toggleFavorite(ch) {
   const was = isFavorite(ch.key);
   state.favorites = was ? state.favorites.filter(f => f.key !== ch.key) : [snapshot(ch)].concat(state.favorites);
-  save('favorites', state.favorites);
+  save(userKey('favorites'), state.favorites);
   return !was;
 }
 
 export function pushRecent(ch) {
   state.recents = [snapshot(ch)].concat(state.recents.filter(r => r.key !== ch.key)).slice(0, MAX_RECENTS);
-  save('recents', state.recents);
+  save(userKey('recents'), state.recents);
 }
 
 export function clearRecents() {
   state.recents = [];
-  save('recents', state.recents);
+  save(userKey('recents'), state.recents);
 }
 
 const MAX_PROGRESS = 50;
-
-// Episodios terminados (para la marca ✓ y para saber cuál sigue).
-state.watched = load('watched', {});
 
 export function isWatched(key) {
   return !!state.watched[key];
@@ -115,7 +182,7 @@ function markWatched(key) {
   state.watched[key] = Date.now();
   const keys = Object.keys(state.watched);
   if (keys.length > 3000) keys.sort((a, b) => state.watched[a] - state.watched[b]).slice(0, keys.length - 3000).forEach(k => { delete state.watched[k]; });
-  save('watched', state.watched);
+  save(userKey('watched'), state.watched);
 }
 
 let lastAt = 0;
@@ -133,7 +200,7 @@ export function saveProgress(item, t, d) {
   }
   const keys = Object.keys(state.progress).sort((a, b) => state.progress[b].at - state.progress[a].at);
   keys.slice(MAX_PROGRESS).forEach(k => { delete state.progress[k]; });
-  save('progress', state.progress);
+  save(userKey('progress'), state.progress);
 }
 
 export function getProgress(key) {
@@ -142,7 +209,7 @@ export function getProgress(key) {
 
 export function clearProgress(key) {
   delete state.progress[key];
-  save('progress', state.progress);
+  save(userKey('progress'), state.progress);
 }
 
 // Una entrada por serie (su episodio más reciente), no un episodio por fila.

@@ -7,7 +7,7 @@ import { resetHealth, tasteSummary, resetTaste } from '../smart.js';
 import { BUILTIN_SOURCES, isSourceOn } from '../sources.js';
 import { VOD_SOURCES, isVodSourceOn } from '../vod.js';
 import { platform, platformLabel } from '../platform.js';
-import { load, storageUsage } from '../store.js';
+import { load, storageUsage, profiles, activeProfile, removeProfile } from '../store.js';
 import { recentErrors, clearErrors } from '../diag.js';
 import { formatClock } from './format.js';
 
@@ -39,8 +39,26 @@ export function createSettingsScreen(app) {
     // En modo infantil los ajustes quedan bloqueados: solo se puede salir con el PIN.
     if (app.kidsOn()) {
       section('Modo infantil activado');
-      list.appendChild(item('Salir del modo infantil', 'Pide el PIN', () => app.push('pin', { mode: 'unlock' })));
+      if (activeProfile().kids) list.appendChild(item('Cambiar de perfil', 'Pide el PIN', () => app.push('profiles')));
+      else list.appendChild(item('Salir del modo infantil', 'Pide el PIN', () => app.push('pin', { mode: 'unlock' })));
       return;
+    }
+
+    section('Perfiles');
+    const me = activeProfile();
+    list.appendChild(item('Perfil actual: ' + me.name, profiles.list.length > 1 ? 'OK para cambiar de perfil' : 'Solo hay un perfil', () => app.push('profiles')));
+    list.appendChild(item('Agregar perfil', 'Para cada persona de la casa (o uno infantil)', () => app.push('profile-new')));
+    if (profiles.list.length > 1) {
+      list.appendChild(item('Quitar el perfil «' + me.name + '»', 'Borra su Mi lista y su progreso', () => {
+        app.menu.open({
+          title: '¿Quitar el perfil «' + me.name + '»?',
+          subtitle: 'Se borran su Mi lista, lo que dejó a medias y sus gustos.',
+          items: [
+            { label: 'No, dejarlo', icon: 'check' },
+            { label: 'Sí, quitarlo', icon: 'restart', action: () => { removeProfile(me.id); app.toast('Perfil quitado'); app.onProfileRemoved(); } }
+          ]
+        });
+      }));
     }
 
     if (app.data.update) {

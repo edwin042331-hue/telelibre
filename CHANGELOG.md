@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.1.0 (2026-10-26): ronda 3, perfiles y control de cable
+
+- **Mantén OK = menú de opciones** (Mi lista, ver, guía, Sorpréndeme; en el reproductor: lista de canales, canal anterior, subtítulos). Así todo funciona con controles sin botones de colores, como el de la TCL. También abre con la tecla Menú.
+- **Lista de canales dentro del reproductor** (◀ en vivo), con número, logo y "Ahora:"; **marcar el número de canal** con los números del control y **canal anterior**.
+- **Perfiles**: "¿Quién está viendo?" al abrir (si hay más de uno). Cada perfil tiene su Mi lista, su progreso, sus vistos, sus recientes y sus gustos. Hay perfil infantil: para salir de él se pide el PIN. Lo guardado antes pasa solo al perfil principal.
+- Los recordatorios son un diálogo con "Ver ahora / Ahora no" (ya no dependen del botón verde).
+- Android TV: también entiende Menú, Guía, Info y Canal anterior del control.
+
 ## 1.0.1 (2026-10-26): ajustes vistos en la TCL real
 
 - Probada en la TCL Smart TV Pro (Android 12, WebView 155, 1080p sobre panel 4K): apartado RD con guía, en vivo, CH+, Atrás y series por episodios.

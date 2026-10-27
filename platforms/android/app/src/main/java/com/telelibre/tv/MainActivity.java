@@ -68,6 +68,11 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_PROG_GREEN: return "green";
             case KeyEvent.KEYCODE_PROG_YELLOW: return "yellow";
             case KeyEvent.KEYCODE_PROG_BLUE: return "blue";
+            case KeyEvent.KEYCODE_MENU: return "menu";
+            case KeyEvent.KEYCODE_GUIDE: return "guide";
+            case KeyEvent.KEYCODE_INFO: return "info";
+            case KeyEvent.KEYCODE_LAST_CHANNEL: return "recall";
+            case KeyEvent.KEYCODE_TV: return "chlist";
             default: return null;
         }
     }

@@ -514,3 +514,70 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 .setting.diag-row { height: 64px; line-height: 64px; }
 .setting.diag-row .setting-label { font-size: 22px; color: #a0a0ad; }
 .setting.diag-row .setting-value { font-size: 20px; max-width: 1200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ---------- Menú emergente ("mantén OK", recordatorios) ---------- */
+.menu-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; display: none; background: rgba(0, 0, 0, 0.55); }
+.menu-layer.open { display: block; }
+.menu-ui { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; -webkit-transform-origin: 0 0; transform-origin: 0 0; color: #f2f2f5; }
+.menu-box {
+  position: absolute; left: 610px; top: 260px; width: 700px; padding: 40px 0 26px; border-radius: 22px;
+  background: rgba(22, 22, 30, 0.98); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+}
+.menu-title { padding: 0 44px; font-size: 36px; font-weight: 800; line-height: 1.15; max-height: 84px; overflow: hidden; }
+.menu-subtitle { padding: 8px 44px 0; font-size: 26px; color: #a0a0ad; }
+.menu-list { margin-top: 24px; }
+.menu-item { height: 82px; line-height: 82px; margin: 0 20px 6px; padding: 0 26px; border-radius: 14px; font-size: 30px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.menu-item .icon { width: 34px; height: 34px; margin-right: 22px; margin-top: -6px; }
+.menu-item.focused { background: #fff; color: #0b0b10; }
+
+/* ---------- Lista de canales en el reproductor ---------- */
+.chlist {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 760px; padding: 60px 40px 40px 70px; display: none;
+  background: -webkit-linear-gradient(left, rgba(8, 8, 12, 0.97) 70%, rgba(8, 8, 12, 0));
+  background: linear-gradient(to right, rgba(8, 8, 12, 0.97) 70%, rgba(8, 8, 12, 0));
+}
+.player.chlist-on .chlist { display: block; }
+.player.chlist-on .osd { opacity: 0; }
+.chlist-title { font-size: 30px; font-weight: 800; color: #c9c9d4; margin-bottom: 24px; }
+.chrow { position: relative; height: 96px; margin-bottom: 8px; padding: 12px 16px; border-radius: 14px; white-space: nowrap; overflow: hidden; }
+.chrow.sel { background: #fff; color: #0b0b10; }
+.chrow.current .chrow-num { color: #ff3b5c; }
+.chrow-num { display: inline-block; width: 62px; font-size: 26px; font-weight: 800; color: #8d8d99; vertical-align: middle; }
+.chrow-logo { display: inline-block; width: 96px; height: 60px; margin-right: 18px; object-fit: contain; vertical-align: middle; }
+.chrow-text { display: inline-block; width: 420px; vertical-align: middle; }
+.chrow-name { display: block; font-size: 27px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.chrow-now { display: block; margin-top: 4px; font-size: 21px; color: #ff8197; overflow: hidden; text-overflow: ellipsis; }
+.chrow.sel .chrow-now { color: #c0233d; }
+.chlist-hint { position: absolute; left: 70px; bottom: 40px; font-size: 22px; color: #8d8d99; }
+
+/* ---------- Número de canal ---------- */
+.num-box {
+  position: absolute; right: 80px; top: 60px; padding: 18px 34px; border-radius: 14px; display: none;
+  background: rgba(14, 14, 20, 0.94); font-size: 52px; font-weight: 800; letter-spacing: 2px;
+}
+.player.num-on .num-box { display: block; }
+
+/* ---------- Perfiles ---------- */
+.profiles-screen.active { left: -120px; width: 1920px; z-index: 30; background: #0b0b10; text-align: center; }
+.theme-light .profiles-screen.active { background: #eef1f6; }
+.profiles-title { margin-top: 250px; font-size: 72px; font-weight: 800; letter-spacing: -1px; }
+.profiles-row { margin-top: 80px; white-space: nowrap; }
+.profile { display: inline-block; vertical-align: top; width: 250px; margin: 0 26px; padding: 18px 0; border-radius: 22px; }
+.avatar {
+  position: relative; display: inline-block; width: 90px; height: 90px; line-height: 90px; border-radius: 22px;
+  font-size: 46px; font-weight: 800; color: #fff; text-align: center;
+}
+.avatar.big { width: 200px; height: 200px; line-height: 200px; border-radius: 40px; font-size: 100px; }
+.avatar.add { background: rgba(255, 255, 255, 0.1); color: #c9c9d4; }
+.avatar.add .icon { width: 90px; height: 90px; margin-top: -10px; }
+.avatar-kids {
+  position: absolute; left: 50%; bottom: 14px; width: 120px; margin-left: -60px; line-height: 34px; border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45); font-size: 20px; letter-spacing: 2px;
+}
+.profile-name { margin-top: 22px; font-size: 32px; font-weight: 700; color: #a0a0ad; }
+.profile.focused .avatar { box-shadow: 0 0 0 7px #fff, 0 20px 50px rgba(0, 0, 0, 0.6); -webkit-transform: scale(1.08); transform: scale(1.08); }
+.profile.focused .profile-name { color: #fff; }
+.theme-light .profile.focused .avatar { box-shadow: 0 0 0 7px #15161d, 0 20px 50px rgba(20, 24, 40, 0.3); }
+.theme-light .profile.focused .profile-name { color: #15161d; }
+.avatar, .profile .avatar { -webkit-transition: -webkit-transform 0.15s ease; transition: transform 0.15s ease; }
+.profiles-hint { margin-top: 70px; font-size: 26px; color: #8d8d99; }

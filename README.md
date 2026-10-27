@@ -15,6 +15,8 @@ Contenido:
 
 - **Más de 15,000 canales en vivo**: en español primero, con su propia sección en inglés y otra "Del mundo" por país. Incluye dominicanos, noticias, deportes, novelas, series y cine 24/7, e infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv) (lista en español, en inglés y mundial), [Free-TV](https://github.com/Free-TV/IPTV), [TDTChannels](https://github.com/LaQuay/TDTChannels) (TV abierta de España), y Pluto TV, Samsung TV Plus, Roku y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
 - **Apartado República Dominicana**: los grandes en orden del dial (Teleantillas, Telemicro, Antena 7, Color Visión, Telesistema…), noticias, deportes, música, cristianos, regionales y todos de la A a la Z. Muestra **qué programa pasa ahora y cuál sigue**, con la guía de [iptv-epg.org](https://iptv-epg.org/guides).
+- **Perfiles**: "¿Quién está viendo?" con avatares; cada persona tiene su Mi lista, lo que dejó a medias y sus recomendaciones. También hay perfil infantil, que pide PIN para salir.
+- **Control como el cable**: lista de canales dentro del reproductor (◀), marcar el número del canal, canal anterior y menú con "mantener OK".
 - **Series por episodios** (Pluto TV, ~1,500 series en español): temporadas, episodios con sinopsis, ✓ en los vistos, "Continuar T1:E5" y **siguiente episodio automático** con cuenta regresiva. Arriba van latinas y novelas, luego drama, comedia, anime (Naruto y One Piece por arcos), Nickelodeon, reality y más.
 - **Estrenos**: el catálogo de Pluto suma ~2,800 películas con fecha de estreno. La fila "Estrenos: lo más nuevo" las ordena por fecha (en octubre de 2026, la primera es *Amor en el paraíso*, de enero de 2026).
 - **Guía de TV tipo cable** (República Dominicana): una cuadrícula de 5 horas con lo que pasa ahora. Con OK se ve el programa, y sobre uno que viene se pone un **recordatorio**: cuando empieza aparece un aviso y con ● Verde se va directo al canal.
@@ -132,15 +134,20 @@ npx netlify deploy --prod --dir dist
 
 ## Botones del control
 
+Todo funciona con un control sin botones de colores (como el de la TCL): **mantener OK presionado** abre las opciones.
+
 | Dónde | Botón | Acción |
 |---|---|---|
 | Filas | ◀ ▶ ▲ ▼ / OK | Moverse / abrir |
 | Filas | ◀ en la primera tarjeta, o Atrás | Abrir el menú |
-| Cualquier tarjeta | **● Rojo** | Agregar o quitar de Mi lista |
+| Cualquier tarjeta | **Mantener OK** (o ● Rojo) | Opciones: Mi lista, ver, guía, Sorpréndeme |
 | En vivo | ▲ ▼ o CH+ CH- | Cambiar de canal |
-| Película | OK / ⏯ | Pausa |
-| Película | ◀ ▶ (pulsaciones seguidas aceleran: 10 s, 30 s, 60 s) · ⏪ ⏩ | Retroceder / adelantar |
-| Película | **● Verde** | Subtítulos (si la película los tiene) |
+| En vivo | **◀** | Lista de canales con "Ahora:" (▲ ▼ elegir, OK ver) |
+| En vivo | Números del control | Ir al canal N de la lista |
+| En vivo | Mantener OK | Lista de canales, **canal anterior**, Mi lista |
+| Película / episodio | OK / ⏯ | Pausa |
+| Película / episodio | ◀ ▶ (pulsaciones seguidas aceleran: 10 s, 30 s, 60 s) · ⏪ ⏩ | Retroceder / adelantar |
+| Película / episodio | Mantener OK (o ● Verde) | Subtítulos, volver al inicio, Mi lista |
 | Inicio | Atrás dos veces | Salir |
 
 ## Agregar más contenido
