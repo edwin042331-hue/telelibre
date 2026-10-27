@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.2.2 (2026-10-26)
+
+- La búsqueda por voz va directo al reconocedor de Google TV (antes Android preguntaba cuál usar si había dos).
+
 ## 1.2.1 (2026-10-26)
 
 - Probada en la TCL: el enlace directo reanuda el episodio donde quedó y la pantalla solo se fuerza encendida durante la reproducción.

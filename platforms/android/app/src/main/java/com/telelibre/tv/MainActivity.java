@@ -33,6 +33,8 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "TeleLibre";
     private static final int VOICE_REQUEST = 42;
+    // Búsqueda por voz de Google TV (la interfaz pensada para el control remoto).
+    private static final String GOOGLE_TV_VOICE = "com.google.android.katniss";
 
     private WebView web;
     // Contenido pedido desde "Seguir viendo" de Google TV, esperando a que la app lo recoja.
@@ -225,6 +227,9 @@ public class MainActivity extends Activity {
                 i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-419");
                 i.putExtra(RecognizerIntent.EXTRA_PROMPT, "¿Qué quieres ver?");
+                // Con varios reconocedores Android pregunta cuál usar: se va directo al de Google TV si está.
+                Intent google = new Intent(i).setPackage(GOOGLE_TV_VOICE);
+                if (!getPackageManager().queryIntentActivities(google, 0).isEmpty()) i = google;
                 try {
                     startActivityForResult(i, VOICE_REQUEST);
                 } catch (Exception e) {
