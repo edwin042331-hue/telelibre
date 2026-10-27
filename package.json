@@ -1,6 +1,6 @@
 {
   "name": "telelibre",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "TeleLibre: TV gratis y legal estilo streaming para Samsung (Tizen) y LG (webOS)",
   "type": "module",

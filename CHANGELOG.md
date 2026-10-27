@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.1.1 (2026-10-26)
+
+- Probada en la TCL: menú de opciones, lista de canales con ◀ (cambio desde la lista), canal anterior y migración de datos al perfil principal.
+- Los iconos del menú quedan centrados con el texto.
+
 ## 1.1.0 (2026-10-26): ronda 3, perfiles y control de cable
 
 - **Mantén OK = menú de opciones** (Mi lista, ver, guía, Sorpréndeme; en el reproductor: lista de canales, canal anterior, subtítulos). Así todo funciona con controles sin botones de colores, como el de la TCL. También abre con la tecla Menú.
