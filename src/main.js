@@ -38,6 +38,11 @@ const app = {
   raw: []
 };
 
+// Se consulta antes de crear las pantallas: Buscar decide al construirse si muestra el botón de voz.
+app.canVoice = (function () {
+  try { return !!(window.TeleLibreNative && window.TeleLibreNative.canListen && window.TeleLibreNative.canListen()); } catch (e) { return false; }
+})();
+
 // ---------- Estructura ----------
 const root = document.getElementById('app');
 const sidebar = createSidebar(id => navigate(id));
@@ -381,7 +386,6 @@ function nativeCall(name, arg) {
   return null;
 }
 
-app.canVoice = !!nativeCall('canListen');
 
 // Fila "Seguir viendo" de la pantalla de inicio de Google TV: películas y episodios a medias del perfil activo.
 let lastWatchNext = '';

@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.2.1 (2026-10-26)
+
+- Probada en la TCL: el enlace directo reanuda el episodio donde quedó y la pantalla solo se fuerza encendida durante la reproducción.
+- Corrección: el botón "Buscar por voz" no aparecía porque Buscar se creaba antes de consultar si hay micrófono.
+- Nota: Google TV arma su fila "Seguir mirando" con el Engage SDK (solo apps de Google Play integradas); la publicación en Watch Next queda para TVs con Android TV clásico.
+
 ## 1.2.0 (2026-10-26): ronda 4
 
 - **Búsqueda por voz** en Android TV: botón en Buscar, "Buscar por voz" en el menú y tecla de búsqueda del control.
