@@ -4,6 +4,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Publicar en la fila "Seguir viendo" de Google TV (permiso normal: se concede al instalar). -->
     <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
+    <!-- Actualizarse desde la propia TV (la primera vez Android pide permitirlo para TeleLibre). -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
 
     <!-- Android 11+: declarar que se usa el reconocedor de voz (si no, la app no lo "ve"). -->
     <queries>

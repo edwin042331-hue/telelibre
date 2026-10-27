@@ -28,7 +28,7 @@ import { installErrorCapture } from './diag.js';
 // Lo primero: capturar errores para verlos en Ajustes → Diagnóstico.
 installErrorCapture();
 import { buildDominicanRows } from './dominican.js';
-import { loadEpg } from './epg.js';
+import { loadEpg, loadPlutoEpg } from './epg.js';
 import { formatClock } from './ui/format.js';
 
 const HTTPS_ONLY = location.protocol === 'https:';
@@ -42,6 +42,9 @@ const app = {
 app.canVoice = (function () {
   try { return !!(window.TeleLibreNative && window.TeleLibreNative.canListen && window.TeleLibreNative.canListen()); } catch (e) { return false; }
 })();
+
+// La APK 1.3+ sabe descargarse e instalarse sola; las anteriores siguen con Downloader.
+app.canSelfUpdate = !!(window.TeleLibreNative && window.TeleLibreNative.installUpdate);
 
 // ---------- Estructura ----------
 const root = document.getElementById('app');
@@ -436,6 +439,32 @@ app.voiceSearch = function () {
   nativeCall('listen');
 };
 
+// Actualizar desde la misma TV: Java descarga la APK, comprueba que tenga la llave de TeleLibre y abre el instalador.
+const APK_URL = 'https://edwin042331-hue.github.io/telelibre/TeleLibre.apk';
+let updating = false;
+app.installUpdate = function () {
+  if (!app.canSelfUpdate) { app.toast('Abre Downloader y vuelve a instalar desde edwin042331-hue.github.io/telelibre/TeleLibre.apk', 8000); return; }
+  if (updating) { app.toast('Ya se está descargando la actualización'); return; }
+  updating = true;
+  app.toast('Descargando la actualización…');
+  nativeCall('installUpdate', APK_URL);
+};
+
+window.__telelibreUpdate = function (stateName, percent, message) {
+  if (stateName === 'download') { app.toast('Descargando la actualización… ' + percent + ' %', 4000); return; }
+  if (stateName === 'installing') { updating = false; app.toast('Abriendo el instalador de Android…', 6000); return; }
+  updating = false;
+  if (stateName === 'permission') {
+    menu.open({
+      title: 'Falta un permiso (solo la primera vez)',
+      subtitle: 'En la pantalla que se abrió, activa "Permitir de esta fuente" para TeleLibre, vuelve con Atrás y elige Actualizar otra vez.',
+      items: [{ label: 'Entendido', icon: 'check' }]
+    });
+    return;
+  }
+  app.toast('No se pudo actualizar' + (message ? ': ' + message : ''), 8000);
+};
+
 window.__telelibreVoice = function (text) {
   if (!text) { app.toast('No te escuché bien, intenta de nuevo'); return; }
   if (player.isOpen()) player.onAction('stop');
@@ -637,12 +666,20 @@ app.reload = function (force) {
   ]).then(() => {
     clearTimeout(earlyTimer);
     if (opened) { clearTimeout(partialTimer); publish(); app.rebuild(player.isOpen()); } else open();
+    refreshPlutoGuide();
     if (!app.raw.length && !app.data.movies.length) app.toast('Sin conexión y sin copia guardada. Revisa el internet de la TV.');
   });
 };
 
 // La programación cambia: cada 10 minutos se rearma "Ahora en la TV dominicana" y el orden por hora del día.
 setInterval(() => { if (started) app.rebuild(true); }, 10 * 60 * 1000);
+
+// "Ahora:" en los canales de Pluto TV. Su API no permite CORS: solo en las apps de TV.
+function refreshPlutoGuide() {
+  if (platform === 'web') return;
+  loadPlutoEpg(app.raw || []).then(ok => { if (ok && started) app.rebuild(true); });
+}
+setInterval(refreshPlutoGuide, 60 * 60 * 1000);
 
 // ---------- Control remoto ----------
 let lastBack = 0;
@@ -928,6 +965,17 @@ if (platform !== 'web') {
   setTimeout(() => checkUpdate(__APP_VERSION__).then(v => {
     if (!v) return;
     app.data.update = v;
-    app.toast('Hay una versión nueva de TeleLibre (' + v + '). Mira Ajustes para actualizar.', 8000);
+    if (!app.canSelfUpdate || player.isOpen() || menu.isOpen()) {
+      app.toast('Hay una versión nueva de TeleLibre (' + v + '). Mira Ajustes para actualizar.', 8000);
+      return;
+    }
+    menu.open({
+      title: 'Hay una versión nueva: ' + v,
+      subtitle: 'Tienes la ' + __APP_VERSION__ + '. Se actualiza sin borrar Mi lista ni lo que dejaste a medias.',
+      items: [
+        { label: 'Actualizar ahora', icon: 'restart', action: () => app.installUpdate() },
+        { label: 'Después', icon: 'clock' }
+      ]
+    });
   }), 15000);
 }

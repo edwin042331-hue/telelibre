@@ -1,15 +1,21 @@
 package com.telelibre.tv;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.tv.TvContract;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,7 +28,16 @@ import android.webkit.WebView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Contenedor de TeleLibre para Android TV / Google TV: carga la web empaquetada en assets/www
@@ -35,6 +50,8 @@ public class MainActivity extends Activity {
     private static final int VOICE_REQUEST = 42;
     // Búsqueda por voz de Google TV (la interfaz pensada para el control remoto).
     private static final String GOOGLE_TV_VOICE = "com.google.android.katniss";
+    // El instalador de Android avisa el resultado abriendo la app con esta acción.
+    private static final String ACTION_INSTALL_STATUS = "com.telelibre.tv.INSTALL_STATUS";
 
     private WebView web;
     // Contenido pedido desde "Seguir viendo" de Google TV, esperando a que la app lo recoja.
@@ -77,8 +94,136 @@ public class MainActivity extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (ACTION_INSTALL_STATUS.equals(intent.getAction())) {
+            onInstallStatus(intent);
+            return;
+        }
         setIntent(intent);
         if (takeDeepLink(intent)) js("window.__telelibreCheckOpen && window.__telelibreCheckOpen()");
+    }
+
+    // ---------- Actualización desde la propia TV ----------
+
+    private void updateStatus(String state, int percent, String message) {
+        js("window.__telelibreUpdate && window.__telelibreUpdate(" + JSONObject.quote(state) + "," + percent + ","
+                + JSONObject.quote(message == null ? "" : message) + ")");
+    }
+
+    /** Descarga la APK, comprueba que esté firmada con la misma llave y se la pasa al instalador de Android. */
+    private void downloadAndInstall(String url) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !getPackageManager().canRequestPackageInstalls()) {
+                // Primera vez: Android pide permitir que TeleLibre instale actualizaciones.
+                updateStatus("permission", 0, null);
+                runOnUiThread(() -> {
+                    try {
+                        startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName())));
+                    } catch (Exception e) {
+                        Log.w(TAG, "No se pudo abrir el permiso de instalación: " + e);
+                    }
+                });
+                return;
+            }
+            File apk = new File(getCacheDir(), "update.apk");
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setInstanceFollowRedirects(true);
+            conn.setConnectTimeout(20000);
+            conn.setReadTimeout(30000);
+            long total = conn.getContentLength();
+            long done = 0;
+            int lastPercent = -1;
+            try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(apk)) {
+                byte[] buf = new byte[65536];
+                int n;
+                while ((n = in.read(buf)) > 0) {
+                    out.write(buf, 0, n);
+                    done += n;
+                    int percent = total > 0 ? (int) (done * 100 / total) : 0;
+                    if (percent / 10 != lastPercent / 10) {
+                        lastPercent = percent;
+                        updateStatus("download", percent, null);
+                    }
+                }
+            }
+            if (!sameSigner(apk)) {
+                apk.delete();
+                updateStatus("error", 0, "la descarga no está firmada con la llave de TeleLibre");
+                return;
+            }
+            PackageInstaller installer = getPackageManager().getPackageInstaller();
+            PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+            params.setAppPackageName(getPackageName());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+            }
+            int sessionId = installer.createSession(params);
+            try (PackageInstaller.Session session = installer.openSession(sessionId)) {
+                try (InputStream src = new FileInputStream(apk); OutputStream dst = session.openWrite("telelibre.apk", 0, apk.length())) {
+                    byte[] buf = new byte[65536];
+                    int n;
+                    while ((n = src.read(buf)) > 0) dst.write(buf, 0, n);
+                    session.fsync(dst);
+                }
+                // El resultado vuelve como Intent; debe ser mutable para que Android agregue el estado.
+                Intent callback = new Intent(this, MainActivity.class).setAction(ACTION_INSTALL_STATUS);
+                int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) flags |= PendingIntent.FLAG_MUTABLE;
+                PendingIntent pending = PendingIntent.getActivity(this, sessionId, callback, flags);
+                updateStatus("installing", 100, null);
+                session.commit(pending.getIntentSender());
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Actualización fallida: " + e);
+            updateStatus("error", 0, e.getMessage());
+        }
+    }
+
+    private void onInstallStatus(Intent intent) {
+        int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
+        if (status == PackageInstaller.STATUS_PENDING_USER_ACTION) {
+            // Android muestra su pantalla de confirmación ("¿Quieres actualizar esta app?").
+            Intent confirm = intent.getParcelableExtra(Intent.EXTRA_INTENT);
+            if (confirm != null) startActivity(confirm);
+        } else if (status != PackageInstaller.STATUS_SUCCESS) {
+            updateStatus("error", 0, intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+        }
+    }
+
+    /** Solo se instala una APK firmada con la misma llave que la app actual. */
+    private boolean sameSigner(File apk) {
+        try {
+            PackageManager pm = getPackageManager();
+            int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? PackageManager.GET_SIGNING_CERTIFICATES : PackageManager.GET_SIGNATURES;
+            PackageInfo update = pm.getPackageArchiveInfo(apk.getPath(), flags);
+            PackageInfo current = pm.getPackageInfo(getPackageName(), flags);
+            if (update == null || !getPackageName().equals(update.packageName)) return false;
+            String[] a = signerHashes(update);
+            String[] b = signerHashes(current);
+            return a.length > 0 && Arrays.equals(a, b);
+        } catch (Exception e) {
+            Log.w(TAG, "No se pudo verificar la firma: " + e);
+            return false;
+        }
+    }
+
+    private static String[] signerHashes(PackageInfo info) throws Exception {
+        Signature[] sigs;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            sigs = info.signingInfo == null ? null : info.signingInfo.getApkContentsSigners();
+        } else {
+            sigs = info.signatures;
+        }
+        if (sigs == null) return new String[0];
+        String[] out = new String[sigs.length];
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
+        for (int i = 0; i < sigs.length; i++) {
+            byte[] d = sha.digest(sigs[i].toByteArray());
+            StringBuilder hex = new StringBuilder();
+            for (byte x : d) hex.append(String.format("%02X", x));
+            out[i] = hex.toString();
+        }
+        Arrays.sort(out);
+        return out;
     }
 
     private boolean takeDeepLink(Intent intent) {
@@ -244,6 +389,11 @@ public class MainActivity extends Activity {
             String key = pendingOpen;
             pendingOpen = null;
             return key == null ? "" : key;
+        }
+
+        @JavascriptInterface
+        public void installUpdate(final String url) {
+            new Thread(() -> downloadAndInstall(url)).start();
         }
 
         @JavascriptInterface

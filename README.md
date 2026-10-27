@@ -15,6 +15,7 @@ Contenido:
 
 - **Más de 15,000 canales en vivo**: en español primero, con su propia sección en inglés y otra "Del mundo" por país. Incluye dominicanos, noticias, deportes, novelas, series y cine 24/7, e infantiles. Fuentes: [iptv-org](https://github.com/iptv-org/iptv) (lista en español, en inglés y mundial), [Free-TV](https://github.com/Free-TV/IPTV), [TDTChannels](https://github.com/LaQuay/TDTChannels) (TV abierta de España), y Pluto TV, Samsung TV Plus, Roku y Plex vía [BuddyChewChew/app-m3u-generator](https://github.com/BuddyChewChew/app-m3u-generator).
 - **Apartado República Dominicana**: los grandes en orden del dial (Teleantillas, Telemicro, Antena 7, Color Visión, Telesistema…), noticias, deportes, música, cristianos, regionales y todos de la A a la Z. Muestra **qué programa pasa ahora y cuál sigue**, con la guía de [iptv-epg.org](https://iptv-epg.org/guides).
+- **"Ahora:" también en Pluto TV**: unos 190 canales de Pluto en español muestran el programa en curso y el siguiente (en los canales de una sola serie, la temporada y el episodio). Sale de la guía oficial de Pluto y se renueva cada hora.
 - **Perfiles**: "¿Quién está viendo?" con avatares; cada persona tiene su Mi lista, lo que dejó a medias y sus recomendaciones. También hay perfil infantil, que pide PIN para salir.
 - **Control como el cable**: lista de canales dentro del reproductor (◀), marcar el número del canal, canal anterior y menú con "mantener OK".
 - **Series por episodios** (Pluto TV, ~1,500 series en español): temporadas, episodios con sinopsis, ✓ en los vistos, "Continuar T1:E5" y **siguiente episodio automático** con cuenta regresiva. Arriba van latinas y novelas, luego drama, comedia, anime (Naruto y One Piece por arcos), Nickelodeon, reality y más.
@@ -22,7 +23,11 @@ Contenido:
 - **Guía de TV tipo cable** (República Dominicana): una cuadrícula de 5 horas con lo que pasa ahora. Con OK se ve el programa, y sobre uno que viene se pone un **recordatorio**: cuando empieza aparece un aviso y con ● Verde se va directo al canal.
 - **Sorpréndeme** (menú o ● Amarillo): elige algo según la hora y tus gustos, y solo propone canales que funcionan.
 - **Modo infantil con PIN**: solo canales y películas para niños, sin el historial del adulto y con los ajustes bloqueados.
-- **Revisión nocturna**: GitHub Actions prueba cada noche unos 3,500 canales en español y la app pone primero los que respondieron. En la TV aparece un aviso cuando hay una versión nueva.
+- **Revisión nocturna**: GitHub Actions prueba cada noche unos 3,500 canales en español y la app pone primero los que respondieron.
+- **Se actualiza desde la misma TV** (Android): cuando sale una versión nueva aparece "Actualizar ahora". La app descarga la APK, **comprueba que esté firmada con la llave de TeleLibre** (si no, la rechaza) y abre el instalador de Android, que conserva Mi lista y el progreso. En Samsung y LG aparece el aviso con las instrucciones.
+- **Búsqueda por voz** (Android TV): con el botón del micrófono del control, el de Buscar o el menú. Va directo al reconocedor de Google TV.
+- **Temporizador para dormir** (15 a 120 min, en el menú), con aviso un minuto antes. La pantalla solo se mantiene encendida mientras se reproduce algo.
+- **Abrir donde quedó**: el enlace `telelibre://open?key=…` abre una película o episodio a medias en el punto exacto. La app también publica lo que dejaste a medias en *Watch Next* de Android TV. **Google TV no lo muestra**: su fila "Seguir mirando" solo admite apps de Google Play integradas con el Engage SDK. Sí aparece en televisores con Android TV clásico.
 - **Inteligente sin servidores**: todo se calcula en la TV.
   - Aprende tus gustos por el tiempo que ves cada género y te arma filas "Para ti".
   - Reordena Inicio según la hora: noticias en la mañana, novelas en la tarde, películas de noche, deportes el fin de semana.
@@ -82,7 +87,7 @@ En el navegador de la PC algunos canales fallan por CORS (el servidor no deja qu
 1. **En la TV:** ve a *Ajustes → Sistema → Información* y presiona 7 veces *Compilación del SO* para activar las opciones de desarrollador.
 2. Instala la app **Downloader** (de AFTVnews) desde Google Play en la TV. En *Ajustes → Apps → Seguridad → Fuentes desconocidas*, permite que Downloader instale apps.
 3. Abre Downloader, escribe `edwin042331-hue.github.io/telelibre/TeleLibre.apk` y luego presiona *Instalar*.
-4. Para actualizar, repite el paso 3: se instala encima y conserva Mi lista y el progreso.
+4. Para actualizar (desde la 1.3.0): cuando la app avise, elige **Actualizar ahora** (también está en *Ajustes → Actualización disponible*). La primera vez, Android pide activar *Permitir de esta fuente* para TeleLibre. Después hay que volver con Atrás y elegir Actualizar otra vez. Con versiones anteriores a la 1.3.0, repite el paso 3. En ambos casos la app se instala encima y conserva Mi lista y el progreso.
 
 La APK se compila en GitHub Actions (`.github/workflows/ci.yml`). La llave de firma está en la carpeta `.telelibre` de tu usuario de Windows (fuera del repo) y en los *secrets* del repositorio. **No la borres**: sin ella, las versiones nuevas no se pueden instalar encima de la anterior.
 
@@ -148,6 +153,9 @@ Todo funciona con un control sin botones de colores (como el de la TCL): **mante
 | Película / episodio | OK / ⏯ | Pausa |
 | Película / episodio | ◀ ▶ (pulsaciones seguidas aceleran: 10 s, 30 s, 60 s) · ⏪ ⏩ | Retroceder / adelantar |
 | Película / episodio | Mantener OK (o ● Verde) | Subtítulos, volver al inicio, Mi lista |
+| Cualquier pantalla | Menú | Las mismas opciones que mantener OK, más "Apagar en…" y "Buscar por voz" |
+| Cualquier pantalla | 🎤 / Buscar (Android TV) | Búsqueda por voz |
+| Cualquier pantalla | Guía / Info / Canal anterior (Android TV) | Guía de TV / detalles / canal anterior |
 | Inicio | Atrás dos veces | Salir |
 
 ## Agregar más contenido

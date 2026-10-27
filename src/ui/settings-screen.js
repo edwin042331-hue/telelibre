@@ -63,12 +63,16 @@ export function createSettingsScreen(app) {
 
     if (app.data.update) {
       section('Actualización disponible');
-      const how = {
+      if (platform === 'android' && app.canSelfUpdate) {
+        list.appendChild(item('Actualizar ahora a la ' + app.data.update + ' (tienes ' + __APP_VERSION__ + ')',
+          'Se descarga, se comprueba la firma y abre el instalador de Android. Conserva Mi lista y el progreso.', () => app.installUpdate()));
+      }
+      const how = app.canSelfUpdate ? '' : {
         android: 'Abre Downloader y vuelve a instalar desde edwin042331-hue.github.io/telelibre/TeleLibre.apk',
         tizen: 'Vuelve a instalar TeleLibre-Samsung.wgt con Apps2Samsung',
         webos: 'Vuelve a instalar TeleLibre-LG.ipk con ares-install'
       }[platform] || '';
-      list.appendChild(item('Versión ' + app.data.update + ' (tienes ' + __APP_VERSION__ + ')', how, () => app.toast(how, 8000)));
+      if (how) list.appendChild(item('Versión ' + app.data.update + ' (tienes ' + __APP_VERSION__ + ')', how, () => app.toast(how, 8000)));
     }
 
     section('Familia');

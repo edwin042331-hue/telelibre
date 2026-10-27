@@ -66,6 +66,40 @@ export function plutoSession() {
   });
 }
 
+const GUIDE = 'https://service-channels.clusters.pluto.tv/v2/guide/timelines';
+const GUIDE_BATCH = 100;
+
+// "T2:E15 · Objetivo en movimiento": sirve en los canales de una sola serie, donde el título repite el del canal.
+function episodeLabel(t) {
+  const e = t.episode || {};
+  // "Episodio 7" no agrega nada a "T1:E7".
+  const name = e.name && e.name !== t.title && !/^(episodio|episode|cap[ií]tulo|cap\.?)\s*\d+$/i.test(e.name) ? e.name : '';
+  const se = e.season > 0 && e.number > 0 ? 'T' + e.season + ':E' + e.number : '';
+  return se && name ? se + ' · ' + name : se || name;
+}
+
+// Programación de los canales en vivo de Pluto (los tvg-id de las listas son los ids de Pluto):
+// 4 horas desde la media hora en curso, de 100 en 100 canales. Devuelve id -> [[inicioMs, finMs, título], ...].
+export function loadLiveGuide(ids) {
+  if (!ids.length) return Promise.resolve({});
+  const start = new Date(Math.floor(Date.now() / 1800000) * 1800000).toISOString();
+  return plutoSession().then(s => {
+    const out = {};
+    const batches = [];
+    for (let i = 0; i < ids.length; i += GUIDE_BATCH) batches.push(ids.slice(i, i + GUIDE_BATCH));
+    return Promise.all(batches.map(b =>
+      getJson(GUIDE + '?start=' + encodeURIComponent(start) + '&channelIds=' + b.join(',') + '&duration=240', s.token).then(r => {
+        (r.data || []).forEach(ch => {
+          const list = (ch.timelines || [])
+            .map(t => [Date.parse(t.start), Date.parse(t.stop), String(t.title || '').trim(), episodeLabel(t)])
+            .filter(p => p[0] && p[1] && p[2]);
+          if (list.length) out[ch.channelId] = list.sort((a, c) => a[0] - c[0]);
+        });
+      }, () => null)
+    )).then(() => out);
+  });
+}
+
 function poster(covers, width) {
   const c = (covers || []).filter(x => x.aspectRatio === '347:500')[0] || (covers || [])[0];
   if (!c) return '';

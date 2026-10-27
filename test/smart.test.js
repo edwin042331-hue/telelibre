@@ -76,6 +76,24 @@ test('EPG: coincidencias de nombre sin falsos positivos', async () => {
   assert.equal(nowNext({ key: 'x', name: 'Telemicro', country: 'mx' }), null);
 });
 
+test('EPG de Pluto: por id del canal, con "Después"', async () => {
+  const { usePlutoGuide, nowNext, plutoIdOf } = await import('../src/epg.js');
+  const now = Date.now();
+  const id = '646ccd3681844c000974d6f4';
+  usePlutoGuide({ [id]: [[now - 60000, now + 600000, 'Noticias ADN'], [now + 600000, now + 1200000, 'Deportes']] });
+  const ch = { key: 'id:' + id, name: 'ADN Noticias', country: 'mx' };
+  assert.equal(plutoIdOf(ch), id);
+  assert.equal(plutoIdOf({ key: 'id:telemicro.do' }), null);
+  const np = nowNext(ch);
+  assert.equal(np.now.title, 'Noticias ADN');
+  assert.equal(np.next.title, 'Deportes');
+  assert.equal(nowNext({ key: 'id:aaaaaaaaaaaaaaaaaaaaaaaa', name: 'Otro', country: 'us' }), null);
+  // Canal de una sola serie: en vez de repetir el nombre, el episodio.
+  const bb = 'bbbbbbbbbbbbbbbbbbbbbbbb';
+  usePlutoGuide({ [bb]: [[now - 60000, now + 600000, 'Blue Bloods', 'T3:E5 · Mentiras']] });
+  assert.equal(nowNext({ key: 'id:' + bb, name: 'Blue Bloods', country: 'us' }).now.title, 'T3:E5 · Mentiras');
+});
+
 test('versiones, recordatorios, verificados y Sorpréndeme', async () => {
   const { isNewer } = await import('../src/remote.js');
   assert.equal(isNewer('0.10.0', '0.9.3'), true);

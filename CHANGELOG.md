@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.3.0 (2026-10-27): ronda 5
+
+- **Actualizar desde la misma TV** (Android): al salir una versión nueva aparece "Actualizar ahora / Después", y también está en Ajustes. La app descarga la APK y comprueba que tenga la misma firma que la instalada (SHA-256 de los certificados; si no coincide, la descarta). Después se la pasa al instalador de Android (`PackageInstaller`), que conserva los datos. La primera vez Android pide el permiso *Permitir de esta fuente*.
+- **"Ahora:" en los canales de Pluto TV**: unos 190 canales muestran el programa en curso y el siguiente en las tarjetas, en la lista de canales y en el reproductor. En los canales de una sola serie se ve la temporada y el episodio (por ejemplo, "T2:E15 · Objetivo en movimiento") en vez de repetir el nombre. Viene de la guía de Pluto y se renueva cada hora.
+- README al día con las rondas 3 y 4. Incluye una nota sobre Watch Next: Google TV no lo muestra, porque su fila "Seguir mirando" usa el Engage SDK, que solo admite apps de Google Play integradas.
+
 ## 1.2.2 (2026-10-26)
 
 - La búsqueda por voz va directo al reconocedor de Google TV (antes Android preguntaba cuál usar si había dos).

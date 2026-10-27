@@ -49,6 +49,7 @@ El script descarga adb (oficial de Google), descarga la APK, verifica la firma, 
 
 - **Si la conexión falla:** en algunas Google TV la depuración inalámbrica usa un puerto distinto y un código de emparejamiento. Ese caso se resuelve con `adb pair IP:PUERTO_DE_EMPAREJAMIENTO` usando el código que muestra la TV, y luego se pasa `-Port` con el puerto de conexión.
 - **Si no se puede usar ADB:** instala *Downloader* (AFTVnews) desde Google Play. En la TV permítele instalar apps desconocidas y abre `edwin042331-hue.github.io/telelibre/TeleLibre.apk`.
+- **Desde la 1.3.0 no hace falta repetir esto en cada versión.** La app avisa sola y ofrece *Actualizar ahora*: descarga la APK, rechaza cualquier archivo que no tenga la firma de TeleLibre y abre el instalador de Android. Solo la primera vez hay que activar *Permitir de esta fuente* para TeleLibre.
 
 ## B. Samsung (Tizen)
 

@@ -1,10 +1,11 @@
-// Guía de programación (EPG) de los canales dominicanos: "Ahora" y "Después".
+// Guía de programación (EPG): "Ahora" y "Después" de los canales dominicanos y de los de Pluto TV.
 // Fuente: iptv-epg.org (XMLTV de ~3 MB, se actualiza cada hora). Del archivo solo se guardan las próximas
 // 12 horas, ya resumidas, para que la TV no tenga que volver a procesarlo en cada arranque.
 // En la versión web el servidor no permite CORS y la guía simplemente no aparece.
 import { getText } from './net.js';
 import { load, save } from './store.js';
 import { normalizeText } from './catalog.js';
+import { loadLiveGuide } from './pluto.js';
 
 const EPG_URL = 'https://iptv-epg.org/files/epg-do.xml';
 const TTL = 3 * 60 * 60 * 1000;
@@ -84,7 +85,40 @@ function matches(c, n) {
   return n.length >= 6 && c.indexOf(n) === 0 && !/^[0-9]/.test(c.slice(n.length));
 }
 
+// ---------- Canales de Pluto TV ----------
+// Su guía viene de la API de Pluto (también sin CORS fuera de las apps de TV). Se guarda solo en memoria:
+// es barata de pedir y se renueva cada hora.
+let pluto = {};
+const PLUTO_KEY = /^id:([0-9a-f]{24})$/;
+
+export function plutoIdOf(channel) {
+  const m = PLUTO_KEY.exec(channel.key || '');
+  return m ? m[1] : null;
+}
+
+export function loadPlutoEpg(channels) {
+  const seen = {};
+  const ids = [];
+  channels.forEach(c => {
+    const id = plutoIdOf(c);
+    if (id && !seen[id]) { seen[id] = true; ids.push(id); }
+  });
+  if (!ids.length) return Promise.resolve(false);
+  return loadLiveGuide(ids).then(g => {
+    if (!Object.keys(g).length) return false;
+    pluto = g;
+    return true;
+  }, () => false);
+}
+
+// Tests: carga una guía de Pluto ya procesada.
+export function usePlutoGuide(g) {
+  pluto = g;
+}
+
 function guideFor(channel) {
+  const pid = plutoIdOf(channel);
+  if (pid && pluto[pid]) return pluto[pid];
   if (channel.country !== 'do') return null;
   if (matchCache[channel.key] !== undefined) return matchCache[channel.key];
   const raw = compact(channel.name);
@@ -97,6 +131,11 @@ function guideFor(channel) {
   return found;
 }
 
+// Si el programa se llama igual que el canal ("Blue Bloods" en el canal Blue Bloods), se muestra el episodio.
+function programTitle(p, channel) {
+  return p[3] && compact(p[2]) === compact(channel.name) ? p[3] : p[2];
+}
+
 // { now: {title, start, stop}, next: {...} } o null si el canal no tiene guía.
 export function nowNext(channel, at) {
   const list = guideFor(channel);
@@ -106,7 +145,10 @@ export function nowNext(channel, at) {
     const p = list[i];
     if (p[0] <= t && t < p[1]) {
       const n = list[i + 1];
-      return { now: { title: p[2], start: p[0], stop: p[1] }, next: n ? { title: n[2], start: n[0], stop: n[1] } : null };
+      return {
+        now: { title: programTitle(p, channel), start: p[0], stop: p[1] },
+        next: n ? { title: programTitle(n, channel), start: n[0], stop: n[1] } : null
+      };
     }
   }
   return null;
