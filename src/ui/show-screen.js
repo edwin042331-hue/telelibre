@@ -28,6 +28,7 @@ export function createShowScreen(app) {
   let current = 0;
   let token = 0;
   let resumeKey = null;
+  let autoplay = false;
 
   function button(iconName, label, onEnter, primary) {
     const b = h('div', { class: 'btn focusable' + (primary ? ' primary' : '') }, [icon(iconName), h('span', { text: label })]);
@@ -120,6 +121,13 @@ export function createShowScreen(app) {
       renderSeasons();
       renderEpisodes();
       focus(actions.firstChild || seasonsEl.firstChild);
+      // Abierto desde "Seguir viendo" de Google TV: arrancar ese episodio donde quedó.
+      if (autoplay) {
+        autoplay = false;
+        const ep = allEpisodes().filter(e => e.key === target)[0];
+        const p = ep && getProgress(ep.key);
+        if (ep) play(ep, p ? p.t : 0);
+      }
     }, err => {
       if (my !== token) return;
       status.textContent = 'No se pudo cargar la serie (' + err.message + '). Las series de Pluto funcionan en la app instalada en la TV.';
@@ -133,6 +141,7 @@ export function createShowScreen(app) {
     mount(params) {
       series = params.series;
       resumeKey = params.resumeKey || null;
+      autoplay = !!params.autoplay;
       seasons = [];
       bg.style.backgroundImage = 'url("' + (series.art || series.poster) + '")';
       poster.src = series.poster;

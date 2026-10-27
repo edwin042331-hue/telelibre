@@ -585,3 +585,5 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 .menu-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; line-height: normal; }
 .menu-item .icon { margin-top: 0; -webkit-flex-shrink: 0; flex-shrink: 0; }
 .menu-item span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.voice-btn { display: block; margin: 22px 0 0; text-align: center; }
+.search-left .search-query { margin-top: 18px; }

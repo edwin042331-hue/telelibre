@@ -15,7 +15,7 @@ import { createShowScreen } from './ui/show-screen.js';
 import { createMenu } from './ui/menu.js';
 import { loadSeriesCatalog, episodeUrl, plutoApiMovies } from './pluto.js';
 import { keyAction, registerKeys, exitApp, platform } from './platform.js';
-import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile } from './store.js';
+import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile, getProgress } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
@@ -113,7 +113,8 @@ function tick() {
   const theme = resolveTheme(state.settings.theme, now);
   document.body.className = 'theme-' + theme + ' platform-' + platform;
   const who = activeProfile().name;
-  topbar.textContent = (kidsOn() ? 'Modo infantil  ·  ' : '') + greeting(now) + (who && who !== 'Principal' ? ', ' + who : '') + '  ·  ' + formatClock(now);
+  const sleeping = app.sleepLeft ? app.sleepLeft() : 0;
+  topbar.textContent = (kidsOn() ? 'Modo infantil  ·  ' : '') + greeting(now) + (who && who !== 'Principal' ? ', ' + who : '') + '  ·  ' + formatClock(now) + (sleeping ? '  ·  Se apaga en ' + sleeping + ' min' : '');
 }
 tick();
 setInterval(tick, 30000);
@@ -270,12 +271,7 @@ function refreshCurrent() {
 app.open = function (item, list, index) {
   if (item.type === 'series') { app.push('show', { series: item }); return; }
   // Desde "Continuar viendo": abrir la ficha de su serie en ese episodio.
-  if (item.type === 'episode') {
-    const series = app.data.seriesByKey && app.data.seriesByKey[item.seriesKey] ||
-      { type: 'series', key: item.seriesKey, plutoId: item.seriesId, name: item.seriesName, poster: item.poster, art: item.art, genre: '', summary: '', seasons: 0 };
-    app.push('show', { series, resumeKey: item.key });
-    return;
-  }
+  if (item.type === 'episode') { openEpisode(item, false); return; }
   if (item.type === 'movie') {
     // Desde favoritos/progreso llega una copia guardada: usar la del catálogo actual (URLs de Pluto con token vigente).
     const fresh = app.data.moviesByKey[item.key] || item;
@@ -360,9 +356,136 @@ app.loadSeries = function () {
 };
 
 app.onPlayerClosed = function () {
+  nativeCall('keepScreenOn', false);
   app.markDirty();
   refreshCurrent();
+  publishWatchNext();
 };
+
+app.onPlayerOpened = function () {
+  nativeCall('keepScreenOn', true);
+};
+
+// autoplay: desde "Seguir viendo" de Google TV, el episodio arranca solo donde quedó.
+function openEpisode(item, autoplay) {
+  const series = app.data.seriesByKey && app.data.seriesByKey[item.seriesKey] ||
+    { type: 'series', key: item.seriesKey, plutoId: item.seriesId, name: item.seriesName, poster: item.poster, art: item.art, genre: '', summary: '', seasons: 0 };
+  app.push('show', { series, resumeKey: item.key, autoplay });
+}
+
+// ---------- Integraciones de Android TV (MainActivity.java) ----------
+const native = window.TeleLibreNative || null;
+
+function nativeCall(name, arg) {
+  try { if (native && native[name]) return arg === undefined ? native[name]() : native[name](arg); } catch (e) { /* puente no disponible */ }
+  return null;
+}
+
+app.canVoice = !!nativeCall('canListen');
+
+// Fila "Seguir viendo" de la pantalla de inicio de Google TV: películas y episodios a medias del perfil activo.
+let lastWatchNext = '';
+function publishWatchNext() {
+  if (!native || !native.setWatchNext) return;
+  const items = continueWatching().slice(0, 10).map(it => {
+    const p = getProgress(it.key);
+    if (!p) return null;
+    const episode = it.type === 'episode';
+    return {
+      key: it.key, type: episode ? 'episode' : 'movie',
+      title: episode ? it.seriesName : it.name,
+      subtitle: episode ? 'T' + it.season + ':E' + it.number + ' · ' + it.title : '',
+      poster: it.poster || '', position: p.t * 1000, duration: p.d * 1000, at: p.at
+    };
+  }).filter(Boolean);
+  const json = JSON.stringify(items);
+  if (json === lastWatchNext) return;
+  lastWatchNext = json;
+  nativeCall('setWatchNext', json);
+}
+setInterval(publishWatchNext, 2 * 60 * 1000);
+
+// Google TV abrió la app desde "Seguir viendo": ir directo a ese contenido, en el punto donde quedó.
+window.__telelibreCheckOpen = function () {
+  if (!started) return;
+  const key = nativeCall('takePendingOpen');
+  if (key) openFromLauncher(key);
+};
+
+function openFromLauncher(key) {
+  const p = state.progress[key];
+  if (!p) { app.toast('Ese contenido ya no está en Continuar viendo'); return; }
+  menu.close();
+  if (player.isOpen()) player.onAction('stop');
+  stack = [];
+  navigate('home');
+  const item = p.item;
+  if (item.type === 'episode') { openEpisode(item, true); return; }
+  const fresh = app.data.moviesByKey[key] || item;
+  if (fresh.direct && fresh.urls && !fresh.path) app.playMovie(fresh, [fresh], 0, { urls: fresh.urls, subtitles: [], duration: fresh.runtime || 0 }, p.t);
+  else app.playMovie(fresh, [fresh], 0, null, p.t);
+}
+
+// Búsqueda por voz (micrófono del control o botón en Buscar).
+app.voiceSearch = function () {
+  if (!app.canVoice) { app.toast('La búsqueda por voz funciona en la app de Android TV'); return; }
+  nativeCall('listen');
+};
+
+window.__telelibreVoice = function (text) {
+  if (!text) { app.toast('No te escuché bien, intenta de nuevo'); return; }
+  if (player.isOpen()) player.onAction('stop');
+  navigate('search');
+  screens.search.setQuery(text);
+};
+
+// ---------- Temporizador para dormir ----------
+let sleepAt = 0;
+let sleepWarned = false;
+
+function setSleep(min) {
+  sleepAt = min ? Date.now() + min * 60000 : 0;
+  sleepWarned = false;
+  tick();
+  app.toast(min ? 'TeleLibre se apagará en ' + min + ' minutos' : 'Temporizador cancelado');
+}
+
+app.sleepLeft = function () {
+  return sleepAt ? Math.max(0, Math.ceil((sleepAt - Date.now()) / 60000)) : 0;
+};
+
+app.sleepMenu = function () {
+  const opts = [15, 30, 60, 90, 120].map(n => ({ label: n + ' minutos', icon: 'clock', action: () => setSleep(n) }));
+  if (sleepAt) opts.push({ label: 'Cancelar el temporizador', icon: 'check', action: () => setSleep(0) });
+  menu.open({ title: 'Apagar TeleLibre en…', subtitle: sleepAt ? 'Ahora se apaga en ' + app.sleepLeft() + ' min' : 'Para quedarse dormido viendo algo', items: opts });
+};
+
+function doSleep() {
+  sleepAt = 0;
+  menu.close();
+  if (player.isOpen()) player.onAction('stop');
+  tick();
+  if (!exitApp()) app.toast('Temporizador: se detuvo la reproducción');
+}
+
+setInterval(() => {
+  if (!sleepAt) return;
+  const left = sleepAt - Date.now();
+  if (left <= 0) { doSleep(); return; }
+  if (left <= 60000 && !sleepWarned) {
+    sleepWarned = true;
+    menu.open({
+      title: 'TeleLibre se apagará en 1 minuto',
+      subtitle: 'Por el temporizador para dormir',
+      items: [
+        { label: 'Seguir viendo 30 minutos más', icon: 'play', action: () => setSleep(30) },
+        { label: 'Apagar ya', icon: 'clock', action: doSleep }
+      ]
+    });
+  }
+  tick();
+}, 15000);
+
 
 let toastTimer = null;
 // ms: cuánto se muestra (los recordatorios duran más).
@@ -478,6 +601,7 @@ app.reload = function (force) {
     app.rebuild();
     // Con más de un perfil, primero "¿Quién está viendo?".
     if (firstRun) { if (profiles.list.length > 1) show('profiles'); else { profileChosen = true; show('home'); } }
+    if (firstRun) { publishWatchNext(); setTimeout(() => window.__telelibreCheckOpen(), 300); }
     if (full) {
       splashFill.style.width = '100%';
       splashStatus.textContent = app.data.channels.length.toLocaleString('es') + ' canales y ' + app.data.movies.length.toLocaleString('es') + ' películas listos';
@@ -570,7 +694,9 @@ function openContextMenu() {
     title: 'TeleLibre',
     items: [
       { label: 'Sorpréndeme', icon: 'dice', action: () => app.surprise() },
+      app.canVoice ? { label: 'Buscar por voz', icon: 'mic', action: () => app.voiceSearch() } : null,
       { label: 'Buscar', icon: 'search', action: () => navigate('search') },
+      { label: 'Apagar en…', icon: 'clock', action: () => app.sleepMenu() },
       { label: 'Guía de TV', icon: 'guide', action: () => navigate('guide') },
       { label: 'Ajustes', icon: 'gear', action: () => navigate('settings') }
     ]
@@ -621,6 +747,7 @@ function runAction(a) {
   if (!started) { if (a === 'back') tryExit(); return; }
   if (menu.isOpen()) { menu.onAction(a); return; }
   if (a === 'menu') { openContextMenu(); return; }
+  if (a === 'voice') { app.voiceSearch(); return; }
   if (a === 'guide') { if (player.isOpen()) player.onAction('stop'); navigate('guide'); return; }
   if (a === 'chlist' && !player.isOpen()) { navigate('live'); return; }
   if (a === 'chlist') { player.onAction('left'); return; }
@@ -717,6 +844,8 @@ function switchProfile(id) {
   stack = [];
   navigate('home');
   app.toast('Hola, ' + activeProfile().name);
+  lastWatchNext = '';
+  publishWatchNext();
 }
 
 // Salir de un perfil infantil pide el PIN (si hay uno creado).

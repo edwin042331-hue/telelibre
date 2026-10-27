@@ -398,6 +398,7 @@ export function createPlayer(app) {
   }
 
   function start(newMode, newList, newIndex, opts) {
+    if (!open && app.onPlayerOpened) app.onPlayerOpened();
     mode = newMode;
     list = newList;
     index = newIndex;
@@ -445,12 +446,14 @@ export function createPlayer(app) {
         { label: 'Lista de canales', icon: 'live', action: openList },
         prevIndex >= 0 && list[prevIndex] ? { label: 'Canal anterior: ' + list[prevIndex].name, icon: 'prev', action: () => tune(prevIndex) } : null,
         { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => this.onAction('red') },
+        { label: 'Apagar en…', icon: 'clock', action: () => app.sleepMenu() },
         { label: 'Salir del canal', icon: 'home', action: close }
       ] : [
         { label: video.paused ? 'Seguir viendo' : 'Pausa', icon: video.paused ? 'play' : 'pause', action: togglePause },
         tracks ? { label: subtitlesOn ? 'Quitar subtítulos' : 'Poner subtítulos', icon: 'check', action: toggleSubtitles } : null,
         { label: 'Volver al inicio de la película', icon: 'restart', action: () => { try { video.currentTime = 0; } catch (e) { /* sin seek */ } } },
         { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => this.onAction('red') },
+        { label: 'Apagar en…', icon: 'clock', action: () => app.sleepMenu() },
         { label: 'Salir', icon: 'home', action: close }
       ];
       return { title: item.name, items };

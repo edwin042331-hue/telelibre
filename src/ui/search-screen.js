@@ -3,6 +3,7 @@ import { h, clear, closest } from './dom.js';
 import { focus } from './focus.js';
 import { createKeyboard, handlePhysicalKey } from './keyboard.js';
 import { itemCard, loadVisibleImages } from './card.js';
+import { icon } from './icons.js';
 import { searchChannels, normalizeText } from '../catalog.js';
 import { searchArchive } from '../vod.js';
 
@@ -22,8 +23,11 @@ export function createSearchScreen(app) {
     timer = setTimeout(() => run(value), 220);
   });
 
+  // Solo donde hay micrófono (app de Android TV): dictar es mucho más rápido que el teclado en pantalla.
+  const voiceBtn = app.canVoice ? h('div', { class: 'btn primary focusable voice-btn' }, [icon('mic'), h('span', { text: 'Buscar por voz' })]) : null;
+  if (voiceBtn) voiceBtn._onEnter = () => app.voiceSearch();
   const el = h('section', { class: 'screen search-screen' }, [
-    h('div', { class: 'search-left' }, [h('h1', { class: 'screen-title', text: 'Buscar' }), query, kb.el]),
+    h('div', { class: 'search-left' }, [h('h1', { class: 'screen-title', text: 'Buscar' }), voiceBtn, query, kb.el]),
     h('div', { class: 'search-right' }, [status, resultsScroll])
   ]);
 
@@ -90,6 +94,14 @@ export function createSearchScreen(app) {
     mount() {
       query.textContent = kb.getValue() || ' ';
       query.classList.toggle('placeholder', !kb.getValue());
+    },
+    // Texto dictado por voz: se escribe en la búsqueda y se busca de inmediato.
+    setQuery(text) {
+      const v = text.toLowerCase();
+      kb.setValue(v);
+      query.textContent = v;
+      query.classList.remove('placeholder');
+      run(v);
     },
     firstFocus() {
       return kb.el.querySelector('.focusable');

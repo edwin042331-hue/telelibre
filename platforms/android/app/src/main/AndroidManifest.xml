@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Publicar en la fila "Seguir viendo" de Google TV (permiso normal: se concede al instalar). -->
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
+
+    <!-- Android 11+: declarar que se usa el reconocedor de voz (si no, la app no lo "ve"). -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+    </queries>
 
     <!-- Funciona en TV (sin pantalla táctil) y también se puede instalar en teléfonos y tabletas. -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
@@ -25,6 +34,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <!-- "Seguir viendo" de Google TV abre telelibre://open?key=… -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="telelibre" android:host="open" />
             </intent-filter>
         </activity>
     </application>
