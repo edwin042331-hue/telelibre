@@ -259,6 +259,8 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_LAST_CHANNEL: return "recall";
             case KeyEvent.KEYCODE_TV: return "chlist";
             case KeyEvent.KEYCODE_SEARCH: return "voice";
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_ENTER: return "enter";
             default: return null;
         }
     }
@@ -303,6 +305,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         web.onResume();
+        web.requestFocus();
     }
 
     @Override

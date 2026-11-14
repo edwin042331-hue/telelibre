@@ -13,7 +13,7 @@ export const isTV = platform !== 'web';
 
 // keyCode -> acción. Tizen y webOS comparten casi todo salvo Atrás y los canales.
 const KEYMAP = {
-  37: 'left', 38: 'up', 39: 'right', 40: 'down', 13: 'enter',
+  37: 'left', 38: 'up', 39: 'right', 40: 'down', 13: 'enter', 23: 'enter', 66: 'enter',
   10009: 'back', 461: 'back', 27: 'back', 8: 'back',
   427: 'chup', 33: 'chup', 428: 'chdown', 34: 'chdown',
   403: 'red', 70: 'red', 404: 'green', 71: 'green', 405: 'yellow', 406: 'blue',
