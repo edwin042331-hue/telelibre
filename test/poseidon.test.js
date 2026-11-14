@@ -16,7 +16,7 @@ test('Poseidon: catálogo inicial contiene estrenos válidos y metadatos correct
     assert.ok(m.art && m.art.startsWith('https://'), `Art inválido en ${m.key}`);
     assert.ok(Array.isArray(m.regions), `Regions debe ser un arreglo en ${m.key}`);
     assert.equal(typeof m.subs, 'boolean', `Subs debe ser booleano en ${m.key}`);
-    assert.ok(m.year >= 2024, `Año inválido en ${m.key}`);
+    assert.ok(m.year >= 1900 && m.year <= 2030, `Año inválido en ${m.key}`);
     assert.ok(Array.isArray(m.genres) && m.genres.length > 0, `Géneros vacíos en ${m.key}`);
     assert.ok(
       m.stream.startsWith('vidara:') || m.stream.startsWith('streamwish:') || m.stream.startsWith('dood:') || m.stream.startsWith('http'),

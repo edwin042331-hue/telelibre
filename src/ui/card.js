@@ -60,12 +60,13 @@ export function movieCard(movie) {
     h('span', { class: 'poster-title', text: movie.name })
   ]);
   poster.appendChild(lazyImage(movie.poster, poster));
+  if (movie.quality) poster.appendChild(h('span', { class: 'badge ' + movie.quality.toLowerCase(), text: movie.quality.toUpperCase() }));
   if (isFavorite(movie.key)) poster.appendChild(icon('star', 'fav-mark'));
   const p = getProgress(movie.key);
   if (p) poster.appendChild(h('div', { class: 'progress' }, h('div', { class: 'progress-fill', style: 'width:' + Math.round(100 * p.t / p.d) + '%' })));
   const meta = movie.type === 'series' ? (movie.seasons ? movie.seasons + (movie.seasons === 1 ? ' temporada' : ' temporadas') : 'Serie')
     : movie.type === 'episode' ? 'T' + movie.season + ':E' + movie.number + ' · ' + movie.title
-    : [movie.year, movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
+    : [movie.year, movie.quality ? movie.quality.toUpperCase() : '', movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
   const card = h('div', { class: 'card movie focusable', 'data-key': movie.key }, [
     poster,
     h('div', { class: 'card-name', text: movie.type === 'episode' ? movie.seriesName : movie.name }),

@@ -34,7 +34,7 @@ export function itemTags(item) {
     return ['T' + item.season + ':E' + item.number, item.title, formatDuration(item.runtime)].filter(Boolean);
   }
   if (item.type === 'movie') {
-    return [item.year, formatDuration(item.runtime)].concat(item.genres.slice(0, 3).map(genreLabel))
+    return [item.year, item.quality ? item.quality.toUpperCase() : '', formatDuration(item.runtime)].concat((item.genres || []).slice(0, 3).map(genreLabel))
       .concat(item.subs ? ['Subtitulada'] : []).concat(item.lang === 'en' ? ['Inglés'] : []).filter(Boolean);
   }
   return [countryName(item.country)].concat(item.cats.filter(c => c !== 'other').slice(0, 2).map(categoryLabel))

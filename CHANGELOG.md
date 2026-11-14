@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.4.2 (2026-11-13): Catálogo ampliado Poseidon, filtrado por Año y badges HD / CAM
+
+- **Catálogo masivo sincronizado (65 películas)**: integrado catálogo real extraído de PoseidonHD2 con títulos, sinopsis, año y portadas de TMDb en alta resolución.
+- **Insignias de calidad visibles (HD / CAM)**: cada póster y ficha muestra claramente si la película está disponible en **HD** (1080p Web-DL) o **CAM** (grabación directa de cine) para que el usuario decida libremente cuál ver.
+- **Navegación por AÑO y por GÉNERO**: filas dedicadas en Poseidon para *Estrenos 2026*, *Lo Mejor de 2025*, *Estrenos 2024*, *Disponibles en HD 1080p*, *Directo del Cine (CAM)*, *Acción*, *Terror*, *Ciencia Ficción*, *Comedia*, *Animación* y *Drama*.
+- **Herramienta de sincronización continua (`scripts/sync-poseidon.mjs`)**: script automatizado para actualizar el catálogo de Poseidon periódicamente.
+
 ## 1.4.1 (2026-11-13): Hotfix de arranque y metadatos Poseidon
 
 - **Corrección de bloqueo al iniciar ("19/19")**: asignadas propiedades `regions: []`, `subs: false` y metadatos completos a todas las películas de Poseidon para evitar excepción en el agrupador de filas de películas en español.
