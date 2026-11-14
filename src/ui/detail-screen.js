@@ -68,6 +68,12 @@ export function createDetailScreen(app) {
       clear(tags);
       itemTags(movie).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
       renderActions();
+      // Poseidon: catálogo de estrenos HD con sinopsis precargada.
+      if (movie.src === 'poseidon') {
+        resolved = null;
+        desc.textContent = movie.overview || movie.summary || 'Estreno cinematográfico en alta definición.';
+        return;
+      }
       // Película del catálogo de la API de Pluto: la URL se arma con la sesión al reproducir.
       if (movie.path) {
         resolved = null;

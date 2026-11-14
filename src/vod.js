@@ -294,16 +294,16 @@ export function buildMovieRows(movies) {
   if (subtitled.length >= 4) rows.push({ id: 'mv:subs', title: 'Subtituladas al español', items: subtitled });
   if (archive.length) rows.push({ id: 'mv:top', title: 'Joyas del cine en español', items: archive.slice(0, 40) });
   REGIONS.forEach(r => {
-    const items = es.filter(m => m.regions.indexOf(r[0]) >= 0);
+    const items = es.filter(m => (m.regions || []).indexOf(r[0]) >= 0);
     if (items.length >= 4) rows.push({ id: 'mv:r:' + r[0], title: r[1], items });
   });
   GENRES.forEach(g => {
-    const items = es.filter(m => m.genres.indexOf(g[0]) >= 0);
+    const items = es.filter(m => (m.genres || []).indexOf(g[0]) >= 0);
     if (items.length >= 4) rows.push({ id: 'mv:g:' + g[0], title: g[1], items });
   });
 
   const enPluto = en.filter(isFrom('pluto:'));
-  if (enPluto.length) rows.push({ id: 'mv:en:new', title: 'Movies · en inglés', items: enPluto.filter(m => m.genres.indexOf('anime') < 0).slice(0, 60) });
+  if (enPluto.length) rows.push({ id: 'mv:en:new', title: 'Movies · en inglés', items: enPluto.filter(m => (m.genres || []).indexOf('anime') < 0).slice(0, 60) });
   Object.keys(PLUTO_COLLECTIONS).forEach(k => {
     const label = PLUTO_COLLECTIONS[k];
     const items = en.filter(m => m.collection === label);
@@ -316,7 +316,7 @@ export function buildMovieRows(movies) {
 
 // Sección Anime: películas en español primero, luego en inglés.
 export function buildAnimeMovieRows(movies) {
-  const anime = movies.filter(m => m.genres.indexOf('anime') >= 0);
+  const anime = movies.filter(m => (m.genres || []).indexOf('anime') >= 0);
   const rows = [];
   const es = anime.filter(m => m.lang === 'es');
   const en = anime.filter(m => m.lang !== 'es');

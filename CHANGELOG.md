@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.4.1 (2026-11-13): Hotfix de arranque y metadatos Poseidon
+
+- **Corrección de bloqueo al iniciar ("19/19")**: asignadas propiedades `regions: []`, `subs: false` y metadatos completos a todas las películas de Poseidon para evitar excepción en el agrupador de filas de películas en español.
+- **Robustez en agregador de películas (`src/vod.js`)**: accesos protegidos a `(m.regions || [])` y `(m.genres || [])` para tolerar cualquier fuente externa con objetos incompletos.
+- **Ficha de detalle para estrenos (`src/ui/detail-screen.js`)**: visualización inmediata de la sinopsis predeterminada y backdrop en alta definición sin realizar peticiones innecesarias a Internet Archive.
+- **Catálogo público publicado (`public/poseidon.json`)**: servido directamente desde GitHub Pages para permitir actualizaciones en segundo plano sin recompilar la app.
+
 ## 1.4.0 (2026-11-13): Poseidon (Estrenos de Cine HD)
 
 - **Nueva sección dedicada «Poseidon» en el menú lateral**: pantalla independiente con los últimos estrenos de cine organizados por filas temáticas (Estrenos 2026, Acción y Aventura, Ciencia Ficción, Terror y Suspenso, Comedia y Familiar).

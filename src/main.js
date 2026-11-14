@@ -581,7 +581,7 @@ app.rebuild = function (quiet) {
   liveRows.forEach(r => { r.items = rankByHealth(r.items); });
   app.data.liveRows = liveRows;
   app.data.rdRows = buildDominicanRows(spanish);
-  const movies = kidsOn() ? app.data.movies.filter(m => m.genres.indexOf('animacion') >= 0 || m.genres.indexOf('familia') >= 0) : app.data.movies;
+  const movies = kidsOn() ? app.data.movies.filter(m => (m.genres || []).indexOf('animacion') >= 0 || (m.genres || []).indexOf('familia') >= 0) : app.data.movies;
   app.data.visibleMovies = movies;
   app.data.movieRows = buildMovieRows(movies);
   app.data.poseidonRows = buildPoseidonRows(getPoseidonMoviesSync());

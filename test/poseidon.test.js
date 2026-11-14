@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { INITIAL_POSEIDON_MOVIES, buildPoseidonRows } from '../src/poseidon.js';
+import { INITIAL_POSEIDON_MOVIES, buildPoseidonRows, formatPoseidonMovie } from '../src/poseidon.js';
 import { resolveDood, resolvePoseidon } from '../src/resolvers.js';
+import { buildMovieRows } from '../src/vod.js';
 import { state } from '../src/store.js';
 
 test('Poseidon: catálogo inicial contiene estrenos válidos y metadatos correctos', () => {
@@ -11,7 +12,10 @@ test('Poseidon: catálogo inicial contiene estrenos válidos y metadatos correct
     assert.equal(m.type, 'movie');
     assert.equal(m.src, 'poseidon');
     assert.ok(m.name && m.name.length > 2, `Nombre inválido en ${m.key}`);
-    assert.ok(m.img && m.img.startsWith('https://'), `Poster inválido en ${m.key}`);
+    assert.ok(m.poster && m.poster.startsWith('https://'), `Poster inválido en ${m.key}`);
+    assert.ok(m.art && m.art.startsWith('https://'), `Art inválido en ${m.key}`);
+    assert.ok(Array.isArray(m.regions), `Regions debe ser un arreglo en ${m.key}`);
+    assert.equal(typeof m.subs, 'boolean', `Subs debe ser booleano en ${m.key}`);
     assert.ok(m.year >= 2024, `Año inválido en ${m.key}`);
     assert.ok(Array.isArray(m.genres) && m.genres.length > 0, `Géneros vacíos en ${m.key}`);
     assert.ok(
@@ -19,6 +23,24 @@ test('Poseidon: catálogo inicial contiene estrenos válidos y metadatos correct
       `Stream inválido en ${m.key}: ${m.stream}`
     );
   });
+});
+
+test('Poseidon: buildMovieRows integra películas de Poseidon sin lanzar excepciones por regions', () => {
+  assert.doesNotThrow(() => {
+    const rows = buildMovieRows(INITIAL_POSEIDON_MOVIES);
+    assert.ok(Array.isArray(rows));
+  }, 'buildMovieRows no debe fallar al recibir películas de Poseidon');
+});
+
+test('Poseidon: formatPoseidonMovie asigna valores por defecto seguros ante objetos incompletos', () => {
+  const incomplete = { key: 'poseidon:test', name: 'Test Movie' };
+  const formatted = formatPoseidonMovie(incomplete);
+  assert.equal(formatted.type, 'movie');
+  assert.equal(formatted.src, 'poseidon');
+  assert.equal(formatted.lang, 'es');
+  assert.ok(Array.isArray(formatted.regions));
+  assert.ok(Array.isArray(formatted.genres));
+  assert.equal(formatted.subs, false);
 });
 
 test('Poseidon: buildPoseidonRows agrupa por estrenos y géneros sin romper', () => {
