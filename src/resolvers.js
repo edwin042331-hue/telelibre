@@ -4,6 +4,17 @@
 const cache = {};
 
 function requestPostJson(url, data, headers, timeoutMs) {
+  if (typeof XMLHttpRequest === 'undefined' && typeof fetch !== 'undefined') {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(timeoutMs || 8000)
+    }).then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
   return new Promise((resolve, reject) => {
     try {
       const xhr = new XMLHttpRequest();
@@ -135,7 +146,12 @@ export function resolveSingleDescriptor(target, timeoutMs) {
     if (target.indexOf('vidara:') === 0) return resolveVidara(target.slice(7), timeoutMs);
     if (target.indexOf('streamwish:') === 0) return resolveStreamWish(target.slice(11), timeoutMs);
     if (target.indexOf('dood:') === 0) return resolveDood(target.slice(5));
-    if (target.indexOf('http://') === 0 || target.indexOf('https://') === 0) return Promise.resolve(target);
+    if (target.indexOf('http://') === 0 || target.indexOf('https://') === 0) {
+      if (target.indexOf('voe.sx') >= 0 || target.indexOf('vidhide') >= 0) {
+        return Promise.reject(new Error('Servidor embed no reproducible directamente'));
+      }
+      return Promise.resolve(target);
+    }
   }
   return Promise.reject(new Error('Servidor no soportado: ' + JSON.stringify(target)));
 }

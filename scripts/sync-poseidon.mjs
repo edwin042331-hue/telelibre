@@ -70,10 +70,8 @@ function parseStreamTarget(embedUrl) {
   if (embedUrl.includes('dood')) {
     return { type: 'dood', url: embedUrl };
   }
-  if (embedUrl.includes('voe.sx')) {
-    return { type: 'voe', url: embedUrl };
-  }
-  return { type: 'direct', url: embedUrl };
+  // Excluir VOE y VidHide porque son páginas HTML protegidas con Altcha/Captcha
+  return null;
 }
 
 async function pMap(items, fn, concurrency = 8) {

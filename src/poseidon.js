@@ -37,238 +37,6 @@ export function formatPoseidonMovie(m) {
 // Catálogo base de estrenos con servidores reales y calidades verificadas (HD / CAM)
 export const INITIAL_POSEIDON_MOVIES = [
   {
-    "key": "poseidon:1567605",
-    "type": "movie",
-    "name": "Ebenezer: Los fantasmas de Navidad",
-    "year": 2026,
-    "quality": "CAM",
-    "runtime": 6900,
-    "duration": 6900,
-    "genres": [
-      "scifi",
-      "comedia"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "english"
-    ],
-    "servers": {
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/x7r3lhae39hr",
-          "cyberlocker": "voesx",
-          "quality": "CAM"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/sc2nosxrwlv3",
-          "cyberlocker": "doodstream",
-          "quality": "CAM"
-        },
-        {
-          "type": "streamwish",
-          "code": "ork8phpus011",
-          "url": "https://streamwish.to/e/ork8phpus011",
-          "cyberlocker": "streamwish",
-          "quality": "CAM"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/743rqTOaOxUCUVut7fyaf94MuMk.jpg",
-    "art": "https://image.tmdb.org/t/p/original/bF6nvHAt2jU7PnkOI4cnaUF2DZn.jpg",
-    "img": "https://image.tmdb.org/t/p/original/743rqTOaOxUCUVut7fyaf94MuMk.jpg",
-    "overview": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
-    "summary": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/x7r3lhae39hr",
-    "url": "https://voe.sx/e/x7r3lhae39hr",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1050981",
-    "type": "movie",
-    "name": "Ser Heumann",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 7620,
-    "duration": 7620,
-    "genres": [
-      "drama",
-      "historia"
-    ],
-    "regions": [],
-    "subs": false,
-    "languages": [
-      "castellano"
-    ],
-    "servers": {
-      "castellano": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/wd8do1wzukp0",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/brh3t3sdjt4z",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "y7erwv5aujvr",
-          "url": "https://streamwish.to/e/y7erwv5aujvr",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/bFw3y0v6xl24qxG36ve1ZjNnufo.jpg",
-    "art": "https://image.tmdb.org/t/p/original/25aB8RXP4mfQLFRSuEEhk0d0sTC.jpg",
-    "img": "https://image.tmdb.org/t/p/original/bFw3y0v6xl24qxG36ve1ZjNnufo.jpg",
-    "overview": "La valiente Judy Heumann convierte su indignación en revolución. En 1977, manifestantes por los derechos de las personas con discapacidad y ella levantaron la voz: El sistema es el que está roto, nosotros no.",
-    "summary": "La valiente Judy Heumann convierte su indignación en revolución. En 1977, manifestantes por los derechos de las personas con discapacidad y ella levantaron la voz: El sistema es el que está roto, nosotros no.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/wd8do1wzukp0",
-    "url": "https://voe.sx/e/wd8do1wzukp0",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1616687",
-    "type": "movie",
-    "name": "Serangan Balik",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 8220,
-    "duration": 8220,
-    "genres": [
-      "accion",
-      "crimen",
-      "suspenso"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "latino",
-      "english"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/1tn4xw8kyziz",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/tx2rfc5r7pdq",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "oxsn0s6ts3vn",
-          "url": "https://streamwish.to/e/oxsn0s6ts3vn",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ],
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/9uwlaowkcoo8",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/megrxcd0otql",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "z1vtuitpmcjf",
-          "url": "https://streamwish.to/e/z1vtuitpmcjf",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/6cHYHIv2tcUAZsyzUi5Hcwa1IAB.jpg",
-    "art": "https://image.tmdb.org/t/p/original/umxN2kMcUm6VoxSOdcEcQoXuC4q.jpg",
-    "img": "https://image.tmdb.org/t/p/original/6cHYHIv2tcUAZsyzUi5Hcwa1IAB.jpg",
-    "overview": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
-    "summary": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/1tn4xw8kyziz",
-    "url": "https://voe.sx/e/1tn4xw8kyziz",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1757324",
-    "type": "movie",
-    "name": "Insecta",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 5040,
-    "duration": 5040,
-    "genres": [
-      "terror"
-    ],
-    "regions": [],
-    "subs": false,
-    "languages": [
-      "latino"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/gyaawhvbtj8c",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/03uh9iyvrmum",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "80whngibhku3",
-          "url": "https://streamwish.to/e/80whngibhku3",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/qTnP6MKVuhPeSnpU4hl2I9uwmzK.jpg",
-    "art": "https://image.tmdb.org/t/p/original/tvpnFUro88R1AA3Nal3YsQoKnSZ.jpg",
-    "img": "https://image.tmdb.org/t/p/original/qTnP6MKVuhPeSnpU4hl2I9uwmzK.jpg",
-    "overview": "Al regresar a una finca aislada para despedirse de su padre moribundo, una escritora de terror descubre que el monstruoso insecto imaginario que la atormentó en su infancia acaso sea más real de lo que pensaba.",
-    "summary": "Al regresar a una finca aislada para despedirse de su padre moribundo, una escritora de terror descubre que el monstruoso insecto imaginario que la atormentó en su infancia acaso sea más real de lo que pensaba.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/gyaawhvbtj8c",
-    "url": "https://voe.sx/e/gyaawhvbtj8c",
-    "lang": "es"
-  },
-  {
     "key": "poseidon:1406492",
     "type": "movie",
     "name": "La venganza del Charro Negro",
@@ -290,17 +58,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/gdpcuxtll4wl",
-          "cyberlocker": "voesx",
-          "quality": "CAM"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/5dljl10wp9jz",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "SMerlbgLRKm6r",
+          "url": "https://vidara.to/e/SMerlbgLRKm6r",
+          "cyberlocker": "vidara",
           "quality": "CAM"
         },
         {
@@ -308,6 +69,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "ar5trq9zafd4",
           "url": "https://streamwish.to/e/ar5trq9zafd4",
           "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/5dljl10wp9jz",
+          "cyberlocker": "doodstream",
           "quality": "CAM"
         }
       ]
@@ -318,8 +86,112 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Después de varios años, el temible Charro Negro regresa con un nuevo propósito: vengarse de Leo San Juan y cobrar una deuda que ha quedado pendiente. Para lograrlo, liberará a algunas de las criaturas y leyendas sobrenaturales que Leo ha enfrentado a lo largo de sus aventuras, obligándolo a reencontrarse con sus antiguos enemigos. Pero esta vez, el Charro Negro tiene un objetivo mucho más personal: su hermano, Nando. Mientras las leyendas se desatan y el peligro crece, Leo deberá proteger a su hermano y reunir nuevamente a sus amigos para descubrir el verdadero plan del Charro Negro. En una aventura que llevará al grupo al límite, Leo tendrá que enfrentarse una vez más a las criaturas de su pasado y descubrir que, para derrotar al Charro Negro, no solo tendrá que demostrar su valentía, sino luchar por aquello que más quiere.",
     "summary": "Después de varios años, el temible Charro Negro regresa con un nuevo propósito: vengarse de Leo San Juan y cobrar una deuda que ha quedado pendiente. Para lograrlo, liberará a algunas de las criaturas y leyendas sobrenaturales que Leo ha enfrentado a lo largo de sus aventuras, obligándolo a reencontrarse con sus antiguos enemigos. Pero esta vez, el Charro Negro tiene un objetivo mucho más personal: su hermano, Nando. Mientras las leyendas se desatan y el peligro crece, Leo deberá proteger a su hermano y reunir nuevamente a sus amigos para descubrir el verdadero plan del Charro Negro. En una aventura que llevará al grupo al límite, Leo tendrá que enfrentarse una vez más a las criaturas de su pasado y descubrir que, para derrotar al Charro Negro, no solo tendrá que demostrar su valentía, sino luchar por aquello que más quiere.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/gdpcuxtll4wl",
-    "url": "https://voe.sx/e/gdpcuxtll4wl",
+    "stream": "vidara:SMerlbgLRKm6r",
+    "url": "vidara:SMerlbgLRKm6r",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1780407",
+    "type": "movie",
+    "name": "Snoopy presenta: 12 días de Snoopy",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 1980,
+    "duration": 1980,
+    "genres": [
+      "animacion",
+      "familia"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "vidara",
+          "code": "vaNz9a0XMWDQw",
+          "url": "https://vidara.to/e/vaNz9a0XMWDQw",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "ykyrzrq6u6gx",
+          "url": "https://streamwish.to/e/ykyrzrq6u6gx",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/amaowggb0lpf",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/bC0Rb0Mls2b493O3ic2IypUFo57.jpg",
+    "art": "https://image.tmdb.org/t/p/original/AkcxwZUldIwD6JSUknmzEgeoN4.jpg",
+    "img": "https://image.tmdb.org/t/p/original/bC0Rb0Mls2b493O3ic2IypUFo57.jpg",
+    "overview": "Ansioso por salir de la lista negra de Santa, Snoopy se esfuerza por ser el beagle más amable del pueblo.",
+    "summary": "Ansioso por salir de la lista negra de Santa, Snoopy se esfuerza por ser el beagle más amable del pueblo.",
+    "src": "poseidon",
+    "stream": "vidara:vaNz9a0XMWDQw",
+    "url": "vidara:vaNz9a0XMWDQw",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1567605",
+    "type": "movie",
+    "name": "Ebenezer: Los fantasmas de Navidad",
+    "year": 2026,
+    "quality": "CAM",
+    "runtime": 6900,
+    "duration": 6900,
+    "genres": [
+      "scifi",
+      "comedia"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "vidara",
+          "code": "sDHArCVY2ie4y",
+          "url": "https://vidara.to/e/sDHArCVY2ie4y",
+          "cyberlocker": "vidara",
+          "quality": "CAM"
+        },
+        {
+          "type": "streamwish",
+          "code": "ork8phpus011",
+          "url": "https://streamwish.to/e/ork8phpus011",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/sc2nosxrwlv3",
+          "cyberlocker": "doodstream",
+          "quality": "CAM"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/743rqTOaOxUCUVut7fyaf94MuMk.jpg",
+    "art": "https://image.tmdb.org/t/p/original/bF6nvHAt2jU7PnkOI4cnaUF2DZn.jpg",
+    "img": "https://image.tmdb.org/t/p/original/743rqTOaOxUCUVut7fyaf94MuMk.jpg",
+    "overview": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
+    "summary": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
+    "src": "poseidon",
+    "stream": "vidara:sDHArCVY2ie4y",
+    "url": "vidara:sDHArCVY2ie4y",
     "lang": "es"
   },
   {
@@ -343,17 +215,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/gkxbq94hmrhl",
-          "cyberlocker": "voesx",
-          "quality": "CAM"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/1jab8pun22c5",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "me2pyEd1ngnIm",
+          "url": "https://vidara.to/e/me2pyEd1ngnIm",
+          "cyberlocker": "vidara",
           "quality": "CAM"
         },
         {
@@ -361,6 +226,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "5tm6e9qnpd19",
           "url": "https://streamwish.to/e/5tm6e9qnpd19",
           "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/1jab8pun22c5",
+          "cyberlocker": "doodstream",
           "quality": "CAM"
         }
       ]
@@ -371,21 +243,124 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
     "summary": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/gkxbq94hmrhl",
-    "url": "https://voe.sx/e/gkxbq94hmrhl",
+    "stream": "vidara:me2pyEd1ngnIm",
+    "url": "vidara:me2pyEd1ngnIm",
     "lang": "es"
   },
   {
-    "key": "poseidon:1610820",
+    "key": "poseidon:1050981",
     "type": "movie",
-    "name": "Les Mariages de Saint Antoine",
+    "name": "Ser Heumann",
     "year": 2026,
     "quality": "HD",
-    "runtime": 7140,
-    "duration": 7140,
+    "runtime": 7620,
+    "duration": 7620,
     "genres": [
-      "comedia",
-      "familia"
+      "drama",
+      "historia"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [
+      "castellano"
+    ],
+    "servers": {
+      "castellano": [
+        {
+          "type": "vidara",
+          "code": "BTEFRenphqMbL",
+          "url": "https://vidara.to/e/BTEFRenphqMbL",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "y7erwv5aujvr",
+          "url": "https://streamwish.to/e/y7erwv5aujvr",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/brh3t3sdjt4z",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/bFw3y0v6xl24qxG36ve1ZjNnufo.jpg",
+    "art": "https://image.tmdb.org/t/p/original/25aB8RXP4mfQLFRSuEEhk0d0sTC.jpg",
+    "img": "https://image.tmdb.org/t/p/original/bFw3y0v6xl24qxG36ve1ZjNnufo.jpg",
+    "overview": "La valiente Judy Heumann convierte su indignación en revolución. En 1977, manifestantes por los derechos de las personas con discapacidad y ella levantaron la voz: El sistema es el que está roto, nosotros no.",
+    "summary": "La valiente Judy Heumann convierte su indignación en revolución. En 1977, manifestantes por los derechos de las personas con discapacidad y ella levantaron la voz: El sistema es el que está roto, nosotros no.",
+    "src": "poseidon",
+    "stream": "vidara:BTEFRenphqMbL",
+    "url": "vidara:BTEFRenphqMbL",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1757324",
+    "type": "movie",
+    "name": "Insecta",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 5040,
+    "duration": 5040,
+    "genres": [
+      "terror"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [
+      "latino"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "vidara",
+          "code": "4Y2q4yZDtxGWw",
+          "url": "https://vidara.to/e/4Y2q4yZDtxGWw",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "80whngibhku3",
+          "url": "https://streamwish.to/e/80whngibhku3",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/03uh9iyvrmum",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/qTnP6MKVuhPeSnpU4hl2I9uwmzK.jpg",
+    "art": "https://image.tmdb.org/t/p/original/tvpnFUro88R1AA3Nal3YsQoKnSZ.jpg",
+    "img": "https://image.tmdb.org/t/p/original/qTnP6MKVuhPeSnpU4hl2I9uwmzK.jpg",
+    "overview": "Al regresar a una finca aislada para despedirse de su padre moribundo, una escritora de terror descubre que el monstruoso insecto imaginario que la atormentó en su infancia acaso sea más real de lo que pensaba.",
+    "summary": "Al regresar a una finca aislada para despedirse de su padre moribundo, una escritora de terror descubre que el monstruoso insecto imaginario que la atormentó en su infancia acaso sea más real de lo que pensaba.",
+    "src": "poseidon",
+    "stream": "vidara:4Y2q4yZDtxGWw",
+    "url": "vidara:4Y2q4yZDtxGWw",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1543469",
+    "type": "movie",
+    "name": "Heartland",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6840,
+    "duration": 6840,
+    "genres": [
+      "suspenso",
+      "musical"
     ],
     "regions": [],
     "subs": true,
@@ -395,36 +370,88 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/tj0har4ngir6",
-          "cyberlocker": "voesx",
+          "type": "vidara",
+          "code": "CeSGqP3MrY2Bw",
+          "url": "https://vidara.to/e/CeSGqP3MrY2Bw",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "ujvpi58vxe7a",
+          "url": "https://streamwish.to/e/ujvpi58vxe7a",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
           "type": "dood",
           "code": "",
-          "url": "https://doodstream.com/e/liiq4xotf7gs",
+          "url": "https://doodstream.com/e/dq671mp0pp3a",
           "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "4p57181z7asd",
-          "url": "https://streamwish.to/e/4p57181z7asd",
-          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
     },
-    "poster": "https://image.tmdb.org/t/p/original/5mnKcKiskKCFYWQoGH1l8yLymDK.jpg",
-    "art": "https://image.tmdb.org/t/p/original/hILmNUH51sXpkLXd9ecEUCljU1q.jpg",
-    "img": "https://image.tmdb.org/t/p/original/5mnKcKiskKCFYWQoGH1l8yLymDK.jpg",
-    "overview": "Las tradicionales bodas de San Antonio de Lisboa han tocado fondo. Al menos, eso es lo que cree Stardust, una importante multinacional francesa a punto de hacerse cargo del evento. Carmo y Valentim, dos empleados del Ayuntamiento de Lisboa que llevan más de 25 años organizando las celebraciones, reciben un duro ultimátum: reinventar el evento y convertirlo en un éxito moderno, o perder sus puestos de trabajo.",
-    "summary": "Las tradicionales bodas de San Antonio de Lisboa han tocado fondo. Al menos, eso es lo que cree Stardust, una importante multinacional francesa a punto de hacerse cargo del evento. Carmo y Valentim, dos empleados del Ayuntamiento de Lisboa que llevan más de 25 años organizando las celebraciones, reciben un duro ultimátum: reinventar el evento y convertirlo en un éxito moderno, o perder sus puestos de trabajo.",
+    "poster": "https://image.tmdb.org/t/p/original/zhxlzxBlO1sWB1rPn7RmAoeQ2na.jpg",
+    "art": "https://image.tmdb.org/t/p/original/psTMZj8gvsfYVfvd7FZCHH4xL6P.jpg",
+    "img": "https://image.tmdb.org/t/p/original/zhxlzxBlO1sWB1rPn7RmAoeQ2na.jpg",
+    "overview": "La antigua estrella del country Misty Jones sale de su retiro de 20 años para investigar la desaparición de su sobrina, Charlie Heart, una prometedora cantante, y acaba enfrentándose tanto a su propio pasado como al lado más turbio de Nashville. Su búsqueda la lleva a descubrir una ciudad donde nadie, ni siquiera ella, es quien parece ser.",
+    "summary": "La antigua estrella del country Misty Jones sale de su retiro de 20 años para investigar la desaparición de su sobrina, Charlie Heart, una prometedora cantante, y acaba enfrentándose tanto a su propio pasado como al lado más turbio de Nashville. Su búsqueda la lleva a descubrir una ciudad donde nadie, ni siquiera ella, es quien parece ser.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/tj0har4ngir6",
-    "url": "https://voe.sx/e/tj0har4ngir6",
+    "stream": "vidara:CeSGqP3MrY2Bw",
+    "url": "vidara:CeSGqP3MrY2Bw",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1379486",
+    "type": "movie",
+    "name": "La Psicópata",
+    "year": 2026,
+    "quality": "CAM",
+    "runtime": 6120,
+    "duration": 6120,
+    "genres": [
+      "terror",
+      "suspenso"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "vidara",
+          "code": "cpTwBSBRAqI6i",
+          "url": "https://vidara.to/e/cpTwBSBRAqI6i",
+          "cyberlocker": "vidara",
+          "quality": "CAM"
+        },
+        {
+          "type": "streamwish",
+          "code": "nnrfyko2oj5d",
+          "url": "https://streamwish.to/e/nnrfyko2oj5d",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/rrgiq508rjdy",
+          "cyberlocker": "doodstream",
+          "quality": "CAM"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/eknMIThHWZCxMzDAcUDk4rK2Wpc.jpg",
+    "art": "https://image.tmdb.org/t/p/original/84Sh7J9uvMjqEqEyRsKXaiSBcjP.jpg",
+    "img": "https://image.tmdb.org/t/p/original/eknMIThHWZCxMzDAcUDk4rK2Wpc.jpg",
+    "overview": "Winifred Notty, una joven institutriz que llega a la remota Ensor House para hacerse cargo de la educación de los hijos de una familia adinerada. Sin embargo, detrás de su aparente compostura se esconde una personalidad profundamente perturbadora. A medida que se instala en la mansión y comienza a formar parte de la rutina familiar, sus impulsos más oscuros empiezan a salir a la superficie, convirtiendo ese hogar en el escenario de una historia inquietante.",
+    "summary": "Winifred Notty, una joven institutriz que llega a la remota Ensor House para hacerse cargo de la educación de los hijos de una familia adinerada. Sin embargo, detrás de su aparente compostura se esconde una personalidad profundamente perturbadora. A medida que se instala en la mansión y comienza a formar parte de la rutina familiar, sus impulsos más oscuros empiezan a salir a la superficie, convirtiendo ese hogar en el escenario de una historia inquietante.",
+    "src": "poseidon",
+    "stream": "vidara:cpTwBSBRAqI6i",
+    "url": "vidara:cpTwBSBRAqI6i",
     "lang": "es"
   },
   {
@@ -449,40 +476,19 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/qyhvsi3ovbxs",
-          "cyberlocker": "voesx",
-          "quality": "CAM"
-        },
-        {
           "type": "streamwish",
           "code": "bfilp8ihdad4",
           "url": "https://streamwish.to/e/bfilp8ihdad4",
           "cyberlocker": "streamwish",
           "quality": "CAM"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://vidhidepro.com/v/noeew9rv9kzn",
-          "cyberlocker": "vidhide",
-          "quality": "CAM"
         }
       ],
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/usommnnjtdla",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/0vodm6ek7p2k",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "pc0B3zGPie4rC",
+          "url": "https://vidara.to/e/pc0B3zGPie4rC",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -490,6 +496,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "ztfrmjdemdui",
           "url": "https://streamwish.to/e/ztfrmjdemdui",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/0vodm6ek7p2k",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -500,8 +513,209 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
     "summary": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/qyhvsi3ovbxs",
-    "url": "https://voe.sx/e/qyhvsi3ovbxs",
+    "stream": "streamwish:bfilp8ihdad4",
+    "url": "streamwish:bfilp8ihdad4",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1616687",
+    "type": "movie",
+    "name": "Serangan Balik",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 8220,
+    "duration": 8220,
+    "genres": [
+      "accion",
+      "crimen",
+      "suspenso"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "streamwish",
+          "code": "oxsn0s6ts3vn",
+          "url": "https://streamwish.to/e/oxsn0s6ts3vn",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/tx2rfc5r7pdq",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "z1vtuitpmcjf",
+          "url": "https://streamwish.to/e/z1vtuitpmcjf",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/megrxcd0otql",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/6cHYHIv2tcUAZsyzUi5Hcwa1IAB.jpg",
+    "art": "https://image.tmdb.org/t/p/original/umxN2kMcUm6VoxSOdcEcQoXuC4q.jpg",
+    "img": "https://image.tmdb.org/t/p/original/6cHYHIv2tcUAZsyzUi5Hcwa1IAB.jpg",
+    "overview": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
+    "summary": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
+    "src": "poseidon",
+    "stream": "streamwish:oxsn0s6ts3vn",
+    "url": "streamwish:oxsn0s6ts3vn",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1469342",
+    "type": "movie",
+    "name": "Su propio infierno",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6600,
+    "duration": 6600,
+    "genres": [
+      "suspenso",
+      "terror"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "streamwish",
+          "code": "zj5gq694sayn",
+          "url": "https://streamwish.to/e/zj5gq694sayn",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/hazwv0n2yxy4",
+          "cyberlocker": "doodstream",
+          "quality": "CAM"
+        }
+      ],
+      "english": [
+        {
+          "type": "vidara",
+          "code": "hv9RkFQzXYTJ1",
+          "url": "https://vidara.to/e/hv9RkFQzXYTJ1",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "dpgewthfg3bx",
+          "url": "https://streamwish.to/e/dpgewthfg3bx",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/kbesya88boet",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/xFXoPwN8zRtC0ayA6UKmCK11Isy.jpg",
+    "art": "https://image.tmdb.org/t/p/original/hS4FcOM5y71FurkBQgDLTBxmWZh.jpg",
+    "img": "https://image.tmdb.org/t/p/original/xFXoPwN8zRtC0ayA6UKmCK11Isy.jpg",
+    "overview": "Cuando una misteriosa niebla envuelve una metrópolis futurista, liberando a una entidad letal y escurridiza, una joven atormentada busca a su padre. Su búsqueda se cruza con la de un soldado estadounidense que emprende una angustiosa odisea para rescatar a su hija del infierno.",
+    "summary": "Cuando una misteriosa niebla envuelve una metrópolis futurista, liberando a una entidad letal y escurridiza, una joven atormentada busca a su padre. Su búsqueda se cruza con la de un soldado estadounidense que emprende una angustiosa odisea para rescatar a su hija del infierno.",
+    "src": "poseidon",
+    "stream": "streamwish:zj5gq694sayn",
+    "url": "streamwish:zj5gq694sayn",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1397485",
+    "type": "movie",
+    "name": "Chicas como chicas",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 5700,
+    "duration": 5700,
+    "genres": [
+      "romance",
+      "drama"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "vidara",
+          "code": "HWGsagq9GNHqZ",
+          "url": "https://vidara.to/e/HWGsagq9GNHqZ",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "s6n748zzx8m2",
+          "url": "https://streamwish.to/e/s6n748zzx8m2",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/x6dsouz0y8ob",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "vmjeg1pshdi0",
+          "url": "https://streamwish.to/e/vmjeg1pshdi0",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/h7v7l7ctem9u",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/xSqTUmD1gABnhQ0ciT735y1IVlF.jpg",
+    "art": "https://image.tmdb.org/t/p/original/hSdK33Mjsdfb8TpoUTI3A3OE3RO.jpg",
+    "img": "https://image.tmdb.org/t/p/original/xSqTUmD1gABnhQ0ciT735y1IVlF.jpg",
+    "overview": "Coley, una joven de 17 años del rural Oregón, enfrenta la intimidad tras la muerte de su madre. Conocer a Sonya despierta nuevos sentimientos, pero las dudas sobre sí misma dificultan su conexión.",
+    "summary": "Coley, una joven de 17 años del rural Oregón, enfrenta la intimidad tras la muerte de su madre. Conocer a Sonya despierta nuevos sentimientos, pero las dudas sobre sí misma dificultan su conexión.",
+    "src": "poseidon",
+    "stream": "vidara:HWGsagq9GNHqZ",
+    "url": "vidara:HWGsagq9GNHqZ",
     "lang": "es"
   },
   {
@@ -526,17 +740,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/rjiez2tzsqbv",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/t3gbwip3qxdi",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "3HK3aORmlWLQy",
+          "url": "https://vidara.to/e/3HK3aORmlWLQy",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -545,14 +752,21 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://streamwish.to/e/0xksw09dxzas",
           "cyberlocker": "streamwish",
           "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/t3gbwip3qxdi",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
         }
       ],
       "castellano": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/em2dyjp2iqjb",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "5puzbzyavety",
+          "url": "https://streamwish.to/e/5puzbzyavety",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -561,21 +775,14 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://doodstream.com/e/0keim2vp2e29",
           "cyberlocker": "doodstream",
           "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "5puzbzyavety",
-          "url": "https://streamwish.to/e/5puzbzyavety",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
         }
       ],
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/wylvvgtzcuzm",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "79uysjexkjp0",
+          "url": "https://streamwish.to/e/79uysjexkjp0",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -583,13 +790,6 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "",
           "url": "https://doodstream.com/e/r4ezyzhu6557",
           "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "79uysjexkjp0",
-          "url": "https://streamwish.to/e/79uysjexkjp0",
-          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
@@ -600,8 +800,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Dos hermanas que son como la noche y el día se ven obligadas a intercambiar sus vidas unas semanas antes de Navidad. En su nuevo entorno, ambas lidian con lo que han hecho hasta ahora y encuentran el amor donde menos se lo esperan.",
     "summary": "Dos hermanas que son como la noche y el día se ven obligadas a intercambiar sus vidas unas semanas antes de Navidad. En su nuevo entorno, ambas lidian con lo que han hecho hasta ahora y encuentran el amor donde menos se lo esperan.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/rjiez2tzsqbv",
-    "url": "https://voe.sx/e/rjiez2tzsqbv",
+    "stream": "vidara:3HK3aORmlWLQy",
+    "url": "vidara:3HK3aORmlWLQy",
     "lang": "es"
   },
   {
@@ -627,10 +827,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/o44mlukgwj3c",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "81xmw1ffstbp",
+          "url": "https://streamwish.to/e/81xmw1ffstbp",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -639,28 +839,21 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://doodstream.com/e/ulr1x417gu27",
           "cyberlocker": "doodstream",
           "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "81xmw1ffstbp",
-          "url": "https://streamwish.to/e/81xmw1ffstbp",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
         }
       ],
       "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/mwmcvdusgrsh",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
         {
           "type": "streamwish",
           "code": "ws8zxlxdsu9c",
           "url": "https://streamwish.to/e/ws8zxlxdsu9c",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/bzfza7ewntfo",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -671,180 +864,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "El mejor amigo de la infancia de Petey, un extraterrestre llamado Allen, desapareció sin despedirse. Dos décadas más tarde, Allen regresa con un secreto que podría cambiar el mundo, lo que obliga a Petey a madurar de una vez por todas y ayudar a salvarlo.",
     "summary": "El mejor amigo de la infancia de Petey, un extraterrestre llamado Allen, desapareció sin despedirse. Dos décadas más tarde, Allen regresa con un secreto que podría cambiar el mundo, lo que obliga a Petey a madurar de una vez por todas y ayudar a salvarlo.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/o44mlukgwj3c",
-    "url": "https://voe.sx/e/o44mlukgwj3c",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1780407",
-    "type": "movie",
-    "name": "Snoopy presenta: 12 días de Snoopy",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 1980,
-    "duration": 1980,
-    "genres": [
-      "animacion",
-      "familia"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "english"
-    ],
-    "servers": {
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/p3hdfwaedizv",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "ykyrzrq6u6gx",
-          "url": "https://streamwish.to/e/ykyrzrq6u6gx",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/bC0Rb0Mls2b493O3ic2IypUFo57.jpg",
-    "art": "https://image.tmdb.org/t/p/original/AkcxwZUldIwD6JSUknmzEgeoN4.jpg",
-    "img": "https://image.tmdb.org/t/p/original/bC0Rb0Mls2b493O3ic2IypUFo57.jpg",
-    "overview": "Ansioso por salir de la lista negra de Santa, Snoopy se esfuerza por ser el beagle más amable del pueblo.",
-    "summary": "Ansioso por salir de la lista negra de Santa, Snoopy se esfuerza por ser el beagle más amable del pueblo.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/p3hdfwaedizv",
-    "url": "https://voe.sx/e/p3hdfwaedizv",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1397485",
-    "type": "movie",
-    "name": "Chicas como chicas",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 5700,
-    "duration": 5700,
-    "genres": [
-      "romance",
-      "drama"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "latino",
-      "english"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/aqaprzs9ncj9",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/x6dsouz0y8ob",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "s6n748zzx8m2",
-          "url": "https://streamwish.to/e/s6n748zzx8m2",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ],
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/tjcrgpef7s76",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/h7v7l7ctem9u",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "vmjeg1pshdi0",
-          "url": "https://streamwish.to/e/vmjeg1pshdi0",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/xSqTUmD1gABnhQ0ciT735y1IVlF.jpg",
-    "art": "https://image.tmdb.org/t/p/original/hSdK33Mjsdfb8TpoUTI3A3OE3RO.jpg",
-    "img": "https://image.tmdb.org/t/p/original/xSqTUmD1gABnhQ0ciT735y1IVlF.jpg",
-    "overview": "Coley, una joven de 17 años del rural Oregón, enfrenta la intimidad tras la muerte de su madre. Conocer a Sonya despierta nuevos sentimientos, pero las dudas sobre sí misma dificultan su conexión.",
-    "summary": "Coley, una joven de 17 años del rural Oregón, enfrenta la intimidad tras la muerte de su madre. Conocer a Sonya despierta nuevos sentimientos, pero las dudas sobre sí misma dificultan su conexión.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/aqaprzs9ncj9",
-    "url": "https://voe.sx/e/aqaprzs9ncj9",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1238735",
-    "type": "movie",
-    "name": "The Floaters",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 6120,
-    "duration": 6120,
-    "genres": [
-      "comedia"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "english"
-    ],
-    "servers": {
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/lhvwq83jid0h",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/do3r2zo16qjp",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "4m3hd1ux3fwf",
-          "url": "https://streamwish.to/e/4m3hd1ux3fwf",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/6VHAOIOO4MJXv19EtW5WFVRWztH.jpg",
-    "art": "https://image.tmdb.org/t/p/original/p6VH952NTR5ZkZ8GZ2HAE2R3EoR.jpg",
-    "img": "https://image.tmdb.org/t/p/original/6VHAOIOO4MJXv19EtW5WFVRWztH.jpg",
-    "overview": "Struggling musician Nomi accepts a last-resort job from her overachiever best friend Mara: mentoring misfit campers, the “Floaters,” at their childhood Jewish summer camp. As the camp struggles to survive amidst competition with a longtime rival, Nomi, the Floaters, and Mara must overcome their differences to bring the community together and save the camp.",
-    "summary": "Struggling musician Nomi accepts a last-resort job from her overachiever best friend Mara: mentoring misfit campers, the “Floaters,” at their childhood Jewish summer camp. As the camp struggles to survive amidst competition with a longtime rival, Nomi, the Floaters, and Mara must overcome their differences to bring the community together and save the camp.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/lhvwq83jid0h",
-    "url": "https://voe.sx/e/lhvwq83jid0h",
+    "stream": "streamwish:81xmw1ffstbp",
+    "url": "streamwish:81xmw1ffstbp",
     "lang": "es"
   },
   {
@@ -866,17 +887,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/er6b4bcenkjv",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/8m595vsw7khu",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "Df4HHnCaZwKnj",
+          "url": "https://vidara.to/e/Df4HHnCaZwKnj",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -884,6 +898,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "1jdo55z5c9yz",
           "url": "https://streamwish.to/e/1jdo55z5c9yz",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/8m595vsw7khu",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -894,84 +915,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "A finales de los años 90, Sasha, de ocho años, y su familia de inmigrantes húngaros se mudan a una nueva casa en la isla de Vancouver. Su nuevo comienzo se ve interrumpido por el comportamiento cada vez más peligroso de Jeremy, el hijo mayor de la familia.",
     "summary": "A finales de los años 90, Sasha, de ocho años, y su familia de inmigrantes húngaros se mudan a una nueva casa en la isla de Vancouver. Su nuevo comienzo se ve interrumpido por el comportamiento cada vez más peligroso de Jeremy, el hijo mayor de la familia.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/er6b4bcenkjv",
-    "url": "https://voe.sx/e/er6b4bcenkjv",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:1263337",
-    "type": "movie",
-    "name": "El corazón de la bestia",
-    "year": 2026,
-    "quality": "HD",
-    "runtime": 6060,
-    "duration": 6060,
-    "genres": [
-      "aventura",
-      "suspenso"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "latino",
-      "english"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/wjg3ha8nh2oe",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/8mn65jrsfs32",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "zeju9laqdp33",
-          "url": "https://streamwish.to/e/zeju9laqdp33",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ],
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/grlsxprwy1p6",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/7pqdqjw6zx82",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "ltab5rc4c44g",
-          "url": "https://streamwish.to/e/ltab5rc4c44g",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
-    "art": "https://image.tmdb.org/t/p/original/kpqsljPQtWqPKJBTAEtoXtQZ9Ko.jpg",
-    "img": "https://image.tmdb.org/t/p/original/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
-    "overview": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
-    "summary": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/wjg3ha8nh2oe",
-    "url": "https://voe.sx/e/wjg3ha8nh2oe",
+    "stream": "vidara:Df4HHnCaZwKnj",
+    "url": "vidara:Df4HHnCaZwKnj",
     "lang": "es"
   },
   {
@@ -997,10 +942,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/fkx3upiscohy",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "bxv60pjdnzpx",
+          "url": "https://streamwish.to/e/bxv60pjdnzpx",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1009,21 +954,14 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://doodstream.com/e/icwfr77d0hr0",
           "cyberlocker": "doodstream",
           "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "bxv60pjdnzpx",
-          "url": "https://streamwish.to/e/bxv60pjdnzpx",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
         }
       ],
       "castellano": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/02q2q2ocegmo",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "ce9agtfrmc4j",
+          "url": "https://streamwish.to/e/ce9agtfrmc4j",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1032,21 +970,14 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://doodstream.com/e/8dr6pco620ru",
           "cyberlocker": "doodstream",
           "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "ce9agtfrmc4j",
-          "url": "https://streamwish.to/e/ce9agtfrmc4j",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
         }
       ],
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/lfpjfxwaxbil",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "pbt3yzyizxig",
+          "url": "https://streamwish.to/e/pbt3yzyizxig",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1054,13 +985,6 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "",
           "url": "https://doodstream.com/e/rwelnvqm4uoy",
           "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "pbt3yzyizxig",
-          "url": "https://streamwish.to/e/pbt3yzyizxig",
-          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
@@ -1071,8 +995,53 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
     "summary": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/fkx3upiscohy",
-    "url": "https://voe.sx/e/fkx3upiscohy",
+    "stream": "streamwish:bxv60pjdnzpx",
+    "url": "streamwish:bxv60pjdnzpx",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1462861",
+    "type": "movie",
+    "name": "Spider Island",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6300,
+    "duration": 6300,
+    "genres": [
+      "comedia",
+      "terror"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "w8k7io03hw0t",
+          "url": "https://streamwish.to/e/w8k7io03hw0t",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/lssvah5cibyn",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/eKw6aF7oNEaTnVvN396Q1is9R1n.jpg",
+    "art": "https://image.tmdb.org/t/p/original/gZt1KXQRawEg3CTqzTamXYkniT4.jpg",
+    "img": "https://image.tmdb.org/t/p/original/eKw6aF7oNEaTnVvN396Q1is9R1n.jpg",
+    "overview": "A group of social media influencers go to the launch of a new hotel on a tropical island, where they find deadly spiders.",
+    "summary": "A group of social media influencers go to the launch of a new hotel on a tropical island, where they find deadly spiders.",
+    "src": "poseidon",
+    "stream": "streamwish:w8k7io03hw0t",
+    "url": "streamwish:w8k7io03hw0t",
     "lang": "es"
   },
   {
@@ -1098,10 +1067,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/me7poa7a3cga",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "2nw3kl9ygrhz",
+          "url": "https://streamwish.to/e/2nw3kl9ygrhz",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1110,21 +1079,14 @@ export const INITIAL_POSEIDON_MOVIES = [
           "url": "https://doodstream.com/e/csltbfgd03rd",
           "cyberlocker": "doodstream",
           "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "2nw3kl9ygrhz",
-          "url": "https://streamwish.to/e/2nw3kl9ygrhz",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
         }
       ],
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/nihceuq6rxvd",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "z7kj99r5l3dr",
+          "url": "https://streamwish.to/e/z7kj99r5l3dr",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1132,13 +1094,6 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "",
           "url": "https://doodstream.com/e/rks3keqfauni",
           "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "z7kj99r5l3dr",
-          "url": "https://streamwish.to/e/z7kj99r5l3dr",
-          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
@@ -1149,138 +1104,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Después de reunirse con Gwen Stacy, Miles Morales, el amigable Spider-Man del vecindario de tiempo completo de Brooklyn, es catapultado a través del Multiverso, donde se encuentra con un equipo de Spider-People encargado de proteger su existencia. Pero cuando los héroes chocan sobre cómo manejar una nueva amenaza, Miles se enfrenta a las otras arañas y debe redefinir lo que significa ser un héroe para poder salvar a las personas que más ama.",
     "summary": "Después de reunirse con Gwen Stacy, Miles Morales, el amigable Spider-Man del vecindario de tiempo completo de Brooklyn, es catapultado a través del Multiverso, donde se encuentra con un equipo de Spider-People encargado de proteger su existencia. Pero cuando los héroes chocan sobre cómo manejar una nueva amenaza, Miles se enfrenta a las otras arañas y debe redefinir lo que significa ser un héroe para poder salvar a las personas que más ama.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/me7poa7a3cga",
-    "url": "https://voe.sx/e/me7poa7a3cga",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:558",
-    "type": "movie",
-    "name": "El hombre araña 2",
-    "year": 2004,
-    "quality": "HD",
-    "runtime": 7620,
-    "duration": 7620,
-    "genres": [
-      "accion",
-      "aventura",
-      "scifi"
-    ],
-    "regions": [],
-    "subs": false,
-    "languages": [
-      "latino"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/uvnhcfr0oj3l",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "61jwwcf6z1qe",
-          "url": "https://streamwish.to/e/61jwwcf6z1qe",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://filelions.to/v/b9kr5q3rvnkw",
-          "cyberlocker": "vidhide",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/p9R3lUNzpHnivyGpKwEPUNGdmmH.jpg",
-    "art": "https://image.tmdb.org/t/p/original/8G6HCS82vNxgg5wp7oBDSk32XpF.jpg",
-    "img": "https://image.tmdb.org/t/p/original/p9R3lUNzpHnivyGpKwEPUNGdmmH.jpg",
-    "overview": "Peter Parker se ve acosado por problemas en su fallida vida personal mientras lucha contra un brillante científico llamado Doctor Otto Octavius.",
-    "summary": "Peter Parker se ve acosado por problemas en su fallida vida personal mientras lucha contra un brillante científico llamado Doctor Otto Octavius.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/uvnhcfr0oj3l",
-    "url": "https://voe.sx/e/uvnhcfr0oj3l",
-    "lang": "es"
-  },
-  {
-    "key": "poseidon:559",
-    "type": "movie",
-    "name": "El hombre araña 3",
-    "year": 2007,
-    "quality": "HD",
-    "runtime": 8340,
-    "duration": 8340,
-    "genres": [
-      "accion",
-      "aventura",
-      "scifi"
-    ],
-    "regions": [],
-    "subs": true,
-    "languages": [
-      "latino",
-      "english"
-    ],
-    "servers": {
-      "latino": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/mev0nhfd9frk",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/u36dzyc6p8d7",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "tcd8uhnd2ety",
-          "url": "https://streamwish.to/e/tcd8uhnd2ety",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ],
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/swwzsrdrtic0",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/xg383i63bi7d",
-          "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "8gsyyp96ip75",
-          "url": "https://streamwish.to/e/8gsyyp96ip75",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ]
-    },
-    "poster": "https://image.tmdb.org/t/p/original/yqQRaD0uBWKLvSVe6LuMveb0ZLv.jpg",
-    "art": "https://image.tmdb.org/t/p/original/FfAU0PUs8AJkMU2VbkVNFtRXR4.jpg",
-    "img": "https://image.tmdb.org/t/p/original/yqQRaD0uBWKLvSVe6LuMveb0ZLv.jpg",
-    "overview": "Una extraña entidad negra de otro mundo se vincula con Peter Parker y le provoca confusión interna mientras lucha contra nuevos villanos, tentaciones y venganza.",
-    "summary": "Una extraña entidad negra de otro mundo se vincula con Peter Parker y le provoca confusión interna mientras lucha contra nuevos villanos, tentaciones y venganza.",
-    "src": "poseidon",
-    "stream": "https://voe.sx/e/mev0nhfd9frk",
-    "url": "https://voe.sx/e/mev0nhfd9frk",
+    "stream": "streamwish:2nw3kl9ygrhz",
+    "url": "streamwish:2nw3kl9ygrhz",
     "lang": "es"
   },
   {
@@ -1297,19 +1122,17 @@ export const INITIAL_POSEIDON_MOVIES = [
       "scifi"
     ],
     "regions": [],
-    "subs": true,
+    "subs": false,
     "languages": [
-      "latino",
-      "castellano",
-      "english"
+      "latino"
     ],
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/vgpqdd63yuxf",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "5aetniduaifo",
+          "url": "https://streamwish.to/e/5aetniduaifo",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1317,59 +1140,6 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "",
           "url": "https://doodstream.com/e/5q9ucqy2dv68",
           "cyberlocker": "doodstream",
-          "quality": "HD"
-        },
-        {
-          "type": "streamwish",
-          "code": "5aetniduaifo",
-          "url": "https://streamwish.to/e/5aetniduaifo",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        }
-      ],
-      "castellano": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/6y3gah5iovxw",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://streamtape.com/e/yGA4QD6W1kU19Gv",
-          "cyberlocker": "streamtape",
-          "quality": "HD"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://waaw.to/f/KXUsYuSMqA9y",
-          "cyberlocker": "netu",
-          "quality": "HD"
-        }
-      ],
-      "english": [
-        {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/ssqr3y426ojb",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://streamtape.com/e/q9WVrD9mgpFzmeW",
-          "cyberlocker": "streamtape",
-          "quality": "HD"
-        },
-        {
-          "type": "direct",
-          "code": "",
-          "url": "https://waaw.to/f/vCbGDqoH8DPx",
-          "cyberlocker": "netu",
           "quality": "HD"
         }
       ]
@@ -1380,59 +1150,89 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Peter Parker es desenmascarado y ya no puede separar su vida normal de los altos riesgos de ser un súper héroe. Cuando pide ayuda al Doctor Strange para recuperar su secreto, el hechizo crea un agujero en su mundo, liberando a los villanos más poderosos que han luchado con cualquier Spider-Man, en cualquier universo. Ahora Peter debe de superar su reto más grande, que no solo alterara su propio futuro pero el del multiverso, forzándolo a descubrir lo que realmente significa ser Spider-Man.",
     "summary": "Peter Parker es desenmascarado y ya no puede separar su vida normal de los altos riesgos de ser un súper héroe. Cuando pide ayuda al Doctor Strange para recuperar su secreto, el hechizo crea un agujero en su mundo, liberando a los villanos más poderosos que han luchado con cualquier Spider-Man, en cualquier universo. Ahora Peter debe de superar su reto más grande, que no solo alterara su propio futuro pero el del multiverso, forzándolo a descubrir lo que realmente significa ser Spider-Man.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/vgpqdd63yuxf",
-    "url": "https://voe.sx/e/vgpqdd63yuxf",
+    "stream": "streamwish:5aetniduaifo",
+    "url": "streamwish:5aetniduaifo",
     "lang": "es"
   },
   {
-    "key": "poseidon:1564004",
+    "key": "poseidon:324857",
     "type": "movie",
-    "name": "Rodeo Christmas Romance",
-    "year": 2025,
+    "name": "Spider-Man: Un nuevo universo",
+    "year": 2018,
     "quality": "HD",
-    "runtime": 5220,
-    "duration": 5220,
+    "runtime": 7020,
+    "duration": 7020,
     "genres": [
-      "romance"
+      "animacion",
+      "accion",
+      "aventura",
+      "scifi"
     ],
     "regions": [],
     "subs": true,
     "languages": [
+      "latino",
+      "castellano",
       "english"
     ],
     "servers": {
-      "english": [
+      "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/m52t1erv2kbg",
-          "cyberlocker": "voesx",
+          "type": "streamwish",
+          "code": "mw77czxchtq9",
+          "url": "https://streamwish.to/e/mw77czxchtq9",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
           "type": "dood",
           "code": "",
-          "url": "https://doodstream.com/e/je895a45ffj9",
+          "url": "https://doodstream.com/e/xlktsht4r8td",
           "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ],
+      "castellano": [
+        {
+          "type": "streamwish",
+          "code": "itwdpatvzzkx",
+          "url": "https://streamwish.to/e/itwdpatvzzkx",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/kxzqyz453l0o",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
           "type": "streamwish",
-          "code": "m7qqk8ebb0so",
-          "url": "https://streamwish.to/e/m7qqk8ebb0so",
+          "code": "woswdtfbf0ll",
+          "url": "https://streamwish.to/e/woswdtfbf0ll",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/pp3q39rggagh",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
     },
-    "poster": "https://image.tmdb.org/t/p/original/mP9JtC1d3gySB7Lqw8lKUYOTNg1.jpg",
-    "art": "https://image.tmdb.org/t/p/original/vSxmN8c7fLeWq209UfYJNvEiWf8.jpg",
-    "img": "https://image.tmdb.org/t/p/original/mP9JtC1d3gySB7Lqw8lKUYOTNg1.jpg",
-    "overview": "When fiercely independent equestrian Emma finds herself ranch-sitting for a friend while caring for her injured horse over Christmas, she clashes with brooding veteran Noal — only to discover that the magic of the season may be what they need to heal their hearts.",
-    "summary": "When fiercely independent equestrian Emma finds herself ranch-sitting for a friend while caring for her injured horse over Christmas, she clashes with brooding veteran Noal — only to discover that the magic of the season may be what they need to heal their hearts.",
+    "poster": "https://image.tmdb.org/t/p/original/9l9exwzYsEtSbtuLHJQoNQVQGp7.jpg",
+    "art": "https://image.tmdb.org/t/p/original/1ntePsIqeklfmrQJqZPncCydsqY.jpg",
+    "img": "https://image.tmdb.org/t/p/original/9l9exwzYsEtSbtuLHJQoNQVQGp7.jpg",
+    "overview": "En un universo paralelo donde Peter Parker ha muerto, un jóven de secundaria llamado Miles Morales es el nuevo Spider-Man. Sin embargo, cuando el líder mafioso Wilson Fisk (a.k.a Kingpin) construye el \"Super Colisionador\" trae a una versión alternativa de Peter Parker que tratará de enseñarle a Miles como ser un mejor Spider-Man. Pero no será el único Spider Man en entrar a este universo, 4 versiones alternas de Spidey aparecerán y buscarán regresar a su universo antes de que toda la realidad colapse.",
+    "summary": "En un universo paralelo donde Peter Parker ha muerto, un jóven de secundaria llamado Miles Morales es el nuevo Spider-Man. Sin embargo, cuando el líder mafioso Wilson Fisk (a.k.a Kingpin) construye el \"Super Colisionador\" trae a una versión alternativa de Peter Parker que tratará de enseñarle a Miles como ser un mejor Spider-Man. Pero no será el único Spider Man en entrar a este universo, 4 versiones alternas de Spidey aparecerán y buscarán regresar a su universo antes de que toda la realidad colapse.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/m52t1erv2kbg",
-    "url": "https://voe.sx/e/m52t1erv2kbg",
+    "stream": "streamwish:mw77czxchtq9",
+    "url": "streamwish:mw77czxchtq9",
     "lang": "es"
   },
   {
@@ -1456,17 +1256,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/c2nwylqowzjp",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/n03treoqqqqq",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "VrmkS6hu9g5mA",
+          "url": "https://vidara.to/e/VrmkS6hu9g5mA",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -1474,6 +1267,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "cnfugbs6prym",
           "url": "https://streamwish.to/e/cnfugbs6prym",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/n03treoqqqqq",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -1484,8 +1284,52 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Father Frost decides to send Yaga to be re-educated by Petya, a boy who has his own problems - he wants to reconcile his parents before the New Year. Petya's parents spend more time working than they do with their family, and Petya wants to fix this situation before the New Year.",
     "summary": "Father Frost decides to send Yaga to be re-educated by Petya, a boy who has his own problems - he wants to reconcile his parents before the New Year. Petya's parents spend more time working than they do with their family, and Petya wants to fix this situation before the New Year.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/c2nwylqowzjp",
-    "url": "https://voe.sx/e/c2nwylqowzjp",
+    "stream": "vidara:VrmkS6hu9g5mA",
+    "url": "vidara:VrmkS6hu9g5mA",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1564004",
+    "type": "movie",
+    "name": "Rodeo Christmas Romance",
+    "year": 2025,
+    "quality": "HD",
+    "runtime": 5220,
+    "duration": 5220,
+    "genres": [
+      "romance"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "m7qqk8ebb0so",
+          "url": "https://streamwish.to/e/m7qqk8ebb0so",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/je895a45ffj9",
+          "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/mP9JtC1d3gySB7Lqw8lKUYOTNg1.jpg",
+    "art": "https://image.tmdb.org/t/p/original/vSxmN8c7fLeWq209UfYJNvEiWf8.jpg",
+    "img": "https://image.tmdb.org/t/p/original/mP9JtC1d3gySB7Lqw8lKUYOTNg1.jpg",
+    "overview": "When fiercely independent equestrian Emma finds herself ranch-sitting for a friend while caring for her injured horse over Christmas, she clashes with brooding veteran Noal — only to discover that the magic of the season may be what they need to heal their hearts.",
+    "summary": "When fiercely independent equestrian Emma finds herself ranch-sitting for a friend while caring for her injured horse over Christmas, she clashes with brooding veteran Noal — only to discover that the magic of the season may be what they need to heal their hearts.",
+    "src": "poseidon",
+    "stream": "streamwish:m7qqk8ebb0so",
+    "url": "streamwish:m7qqk8ebb0so",
     "lang": "es"
   },
   {
@@ -1507,17 +1351,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "english": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/vy7gvc5pg9gb",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/dl7mumxgwvax",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "TSCHheC8bOTAA",
+          "url": "https://vidara.to/e/TSCHheC8bOTAA",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -1525,6 +1362,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "b2qqgxqp273r",
           "url": "https://streamwish.to/e/b2qqgxqp273r",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/dl7mumxgwvax",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -1535,8 +1379,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "«A Fighting Legacy» explora cómo un arte marcial tailandés con 700 años de historia se arraigó en el Medio Oeste de Estados Unidos, siguiendo los pasos del pionero que lo llevó a este país y de la comunidad que se formó en torno al mayor evento de combate del hemisferio occidental.",
     "summary": "«A Fighting Legacy» explora cómo un arte marcial tailandés con 700 años de historia se arraigó en el Medio Oeste de Estados Unidos, siguiendo los pasos del pionero que lo llevó a este país y de la comunidad que se formó en torno al mayor evento de combate del hemisferio occidental.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/vy7gvc5pg9gb",
-    "url": "https://voe.sx/e/vy7gvc5pg9gb",
+    "stream": "vidara:TSCHheC8bOTAA",
+    "url": "vidara:TSCHheC8bOTAA",
     "lang": "es"
   },
   {
@@ -1558,17 +1402,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/jw8t8clxwnni",
-          "cyberlocker": "voesx",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/v8t90xe9eull",
-          "cyberlocker": "doodstream",
+          "type": "vidara",
+          "code": "sr30CK6OTt3iI",
+          "url": "https://vidara.to/e/sr30CK6OTt3iI",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
@@ -1576,6 +1413,13 @@ export const INITIAL_POSEIDON_MOVIES = [
           "code": "s3fsi5y3wpyd",
           "url": "https://streamwish.to/e/s3fsi5y3wpyd",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/v8t90xe9eull",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
@@ -1586,61 +1430,84 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Mientras investiga en un hospital psiquiátrico, el Dr. Romanoski se topa con un misterioso archivo que lo lleva al límite de la razón y a lo profundo del reino de las paranorías.",
     "summary": "Mientras investiga en un hospital psiquiátrico, el Dr. Romanoski se topa con un misterioso archivo que lo lleva al límite de la razón y a lo profundo del reino de las paranorías.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/jw8t8clxwnni",
-    "url": "https://voe.sx/e/jw8t8clxwnni",
+    "stream": "vidara:sr30CK6OTt3iI",
+    "url": "vidara:sr30CK6OTt3iI",
     "lang": "es"
   },
   {
-    "key": "poseidon:1231695",
+    "key": "poseidon:1513319",
     "type": "movie",
-    "name": "A metros de distancia",
+    "name": "Hollywood Grit",
     "year": 2025,
     "quality": "HD",
-    "runtime": 5340,
-    "duration": 5340,
+    "runtime": 6120,
+    "duration": 6120,
     "genres": [
-      "comedia",
-      "aventura",
-      "drama"
+      "accion",
+      "suspenso"
     ],
     "regions": [],
-    "subs": false,
+    "subs": true,
     "languages": [
-      "latino"
+      "latino",
+      "english"
     ],
     "servers": {
       "latino": [
         {
-          "type": "voe",
-          "code": "",
-          "url": "https://voe.sx/e/pk9sx0otd6o6",
-          "cyberlocker": "voesx",
+          "type": "vidara",
+          "code": "La6CA8XvLM7Fn",
+          "url": "https://vidara.to/e/La6CA8XvLM7Fn",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "eayxenileriw",
+          "url": "https://streamwish.to/e/eayxenileriw",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
           "type": "dood",
           "code": "",
-          "url": "https://doodstream.com/e/q4k119vncvrz",
+          "url": "https://doodstream.com/e/tjrqoln7vzzm",
           "cyberlocker": "doodstream",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
+          "type": "vidara",
+          "code": "vZ5KPgfS6inPK",
+          "url": "https://vidara.to/e/vZ5KPgfS6inPK",
+          "cyberlocker": "vidara",
           "quality": "HD"
         },
         {
           "type": "streamwish",
-          "code": "6lted51qnewa",
-          "url": "https://streamwish.to/e/6lted51qnewa",
+          "code": "f46cqbs66xzd",
+          "url": "https://streamwish.to/e/f46cqbs66xzd",
           "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/i2u8k400e8be",
+          "cyberlocker": "doodstream",
           "quality": "HD"
         }
       ]
     },
-    "poster": "https://image.tmdb.org/t/p/original/A3tEYeLijo1PWXZLTckVSM05YVX.jpg",
-    "art": "https://image.tmdb.org/t/p/original/r5IbY1krzmv3YqW1DKzru9BJIjI.jpg",
-    "img": "https://image.tmdb.org/t/p/original/A3tEYeLijo1PWXZLTckVSM05YVX.jpg",
-    "overview": "Santiago, un joven de 20 años que utiliza una aplicación de citas móviles en busca de encuentros efímeros. Su búsqueda revela la soledad que subyace bajo la cultura moderna de las citas.",
-    "summary": "Santiago, un joven de 20 años que utiliza una aplicación de citas móviles en busca de encuentros efímeros. Su búsqueda revela la soledad que subyace bajo la cultura moderna de las citas.",
+    "poster": "https://image.tmdb.org/t/p/original/uImKVUa0IGSC670QhcWadT5Eh9p.jpg",
+    "art": "https://image.tmdb.org/t/p/original/o1jOMbNjDjkUZorJ8LxDjSJIrRg.jpg",
+    "img": "https://image.tmdb.org/t/p/original/uImKVUa0IGSC670QhcWadT5Eh9p.jpg",
+    "overview": "When his daughter vanishes from a Hollywood jazz club, a detective must battle mobsters, starlets, and his own demons to unearth the sinister truth lurking behind LA's neon lights.",
+    "summary": "When his daughter vanishes from a Hollywood jazz club, a detective must battle mobsters, starlets, and his own demons to unearth the sinister truth lurking behind LA's neon lights.",
     "src": "poseidon",
-    "stream": "https://voe.sx/e/pk9sx0otd6o6",
-    "url": "https://voe.sx/e/pk9sx0otd6o6",
+    "stream": "vidara:La6CA8XvLM7Fn",
+    "url": "vidara:La6CA8XvLM7Fn",
     "lang": "es"
   }
 ];
