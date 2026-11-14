@@ -9,7 +9,12 @@ import { searchArchive } from '../vod.js';
 import { searchPoseidonLive } from '../poseidon.js';
 
 export function createSearchScreen(app) {
-  const query = h('div', { class: 'search-query' });
+  const query = h('input', {
+    type: 'text',
+    class: 'search-query search-native-input focusable',
+    placeholder: 'Escribe aquí o con el teclado en pantalla…',
+    tabindex: '-1'
+  });
   const status = h('div', { class: 'search-status', text: 'Escribe el nombre de un canal o película' });
   const results = h('div', { class: 'grid results' });
   const resultsScroll = h('div', { class: 'grid-scroll', 'data-scroll': 'y', 'data-scroll-pad': '20' }, results);
@@ -17,9 +22,25 @@ export function createSearchScreen(app) {
   let remoteTimer = null;
   let token = 0;
 
+  query._onEnter = () => {
+    query.focus();
+    if (app.showKeyboard) app.showKeyboard();
+  };
+  query.addEventListener('input', () => {
+    const v = query.value;
+    kb.setValue(v);
+    clearTimeout(timer);
+    timer = setTimeout(() => run(v), 220);
+  });
+  query.addEventListener('keydown', e => {
+    if (e.keyCode === 13) {
+      if (app.hideKeyboard) app.hideKeyboard();
+      if (results.firstChild) focus(results.firstChild);
+    }
+  });
+
   const kb = createKeyboard('search', value => {
-    query.textContent = value || ' ';
-    query.classList.toggle('placeholder', !value);
+    query.value = value;
     clearTimeout(timer);
     timer = setTimeout(() => run(value), 220);
   });
@@ -102,27 +123,31 @@ export function createSearchScreen(app) {
     el,
     lastFocus: null,
     mount() {
-      query.textContent = kb.getValue() || ' ';
-      query.classList.toggle('placeholder', !kb.getValue());
+      query.value = kb.getValue() || '';
     },
     // Texto dictado por voz: se escribe en la búsqueda y se busca de inmediato.
     setQuery(text) {
       const v = text.toLowerCase();
       kb.setValue(v);
-      query.textContent = v;
-      query.classList.remove('placeholder');
+      query.value = v;
       run(v);
     },
     firstFocus() {
-      return kb.el.querySelector('.focusable');
+      return kb.el.querySelector('.focusable') || query;
     },
     onRawKey(e) {
       return handlePhysicalKey(e, kb);
     },
     // Si no hay nada a la derecha alineado, saltar igual a los resultados (y volver al teclado desde ellos).
     onEdge(dir, current) {
-      if (dir === 'right' && closest(current, '.keyboard') && results.firstChild) { focus(results.firstChild); return true; }
-      if (dir === 'left' && closest(current, '.results')) { focus(kb.el.querySelector('.focusable')); return true; }
+      if (dir === 'right' && (closest(current, '.keyboard') || current === query) && results.firstChild) {
+        focus(results.firstChild);
+        return true;
+      }
+      if (dir === 'left' && closest(current, '.results')) {
+        focus(kb.el.querySelector('.focusable') || query);
+        return true;
+      }
       return false;
     },
     onFocus() {

@@ -6,7 +6,7 @@ import { itemTags, formatTime, formatClock } from './format.js';
 import { getProgress } from '../store.js';
 import { nowNext } from '../epg.js';
 import { EDWIN_GENRES, buildPoseidonRows, getPoseidonMoviesSync } from '../poseidon.js';
-import { createKeyboard } from './keyboard.js';
+import { createKeyboard, handlePhysicalKey } from './keyboard.js';
 import { icon } from './icons.js';
 
 const ROW_LIMIT = 30;
@@ -30,15 +30,29 @@ export function createPoseidonScreen(app) {
   const empty = h('div', { class: 'empty', text: 'Cargando Películas Edwin…' });
 
   // Modal / overlay de búsqueda dentro de Películas Edwin
-  const searchInputVal = h('div', { class: 'search-query', text: '' });
+  const searchInputVal = h('input', {
+    type: 'text',
+    class: 'search-query edwin-native-input focusable',
+    placeholder: 'Escribe aquí o con el teclado en pantalla…',
+    tabindex: '-1'
+  });
   const searchStatus = h('div', { class: 'search-status', text: 'Escribe para filtrar el catálogo de Películas Edwin' });
+  const voiceSearchBtn = app.canVoice ? h('div', { class: 'btn primary focusable voice-btn', style: 'margin-bottom: 20px;' }, [
+    icon('mic'),
+    h('span', { text: 'Hablar con el micrófono' })
+  ]) : null;
   const searchBox = h('div', { class: 'edwin-search-box' });
+  const searchActions = h('div', { class: 'edwin-search-actions' }, [
+    h('div', { class: 'btn primary focusable', text: 'Ver resultados', style: 'margin-top: 15px;' })
+  ]);
   const searchModal = h('div', { class: 'edwin-search-modal' }, [
     h('div', { class: 'edwin-search-card' }, [
       h('h2', { class: 'edwin-search-title', text: 'Buscar en Películas Edwin' }),
+      voiceSearchBtn,
       searchInputVal,
       searchStatus,
-      searchBox
+      searchBox,
+      searchActions
     ])
   ]);
 
@@ -118,40 +132,66 @@ export function createPoseidonScreen(app) {
     }
   }
 
+  if (voiceSearchBtn) {
+    voiceSearchBtn._onEnter = () => {
+      closeSearchModal();
+      app.voiceSearch();
+    };
+  }
+
+  searchInputVal._onEnter = () => {
+    searchInputVal.focus();
+    if (app.showKeyboard) app.showKeyboard();
+  };
+
+  searchInputVal.addEventListener('input', () => {
+    searchQuery = searchInputVal.value;
+    if (searchKeyboard) searchKeyboard.setValue(searchQuery);
+    searchStatus.textContent = searchQuery ? 'Filtrando por "' + searchQuery + '"' : 'Escribe para filtrar el catálogo';
+    render();
+  });
+
+  searchInputVal.addEventListener('keydown', e => {
+    if (e.keyCode === 13) {
+      if (app.hideKeyboard) app.hideKeyboard();
+      closeSearchModal();
+      render();
+      const firstCard = rowsEl.querySelector('.focusable');
+      if (firstCard) focus(firstCard);
+    }
+  });
+
+  const confirmBtn = searchActions.firstChild;
+  if (confirmBtn) {
+    confirmBtn._onEnter = () => {
+      if (app.hideKeyboard) app.hideKeyboard();
+      closeSearchModal();
+      render();
+      const firstCard = rowsEl.querySelector('.focusable');
+      if (firstCard) focus(firstCard);
+    };
+  }
+
   function openSearchModal() {
     searchModal.classList.add('open');
-    searchInputVal.textContent = searchQuery || '';
+    searchInputVal.value = searchQuery || '';
     if (!searchKeyboard) {
-      searchKeyboard = createKeyboard({
-        onChar(ch) {
-          searchInputVal.textContent += ch;
-          searchQuery = searchInputVal.textContent;
-          searchStatus.textContent = searchQuery ? 'Filtrando por "' + searchQuery + '"' : 'Escribe para filtrar';
-        },
-        onBackspace() {
-          searchInputVal.textContent = searchInputVal.textContent.slice(0, -1);
-          searchQuery = searchInputVal.textContent;
-          searchStatus.textContent = searchQuery ? 'Filtrando por "' + searchQuery + '"' : 'Escribe para filtrar';
-        },
-        onClear() {
-          searchInputVal.textContent = '';
-          searchQuery = '';
-          searchStatus.textContent = 'Búsqueda limpia';
-        },
-        onSearch() {
-          closeSearchModal();
-          render();
-          const firstCard = rowsEl.querySelector('.focusable');
-          if (firstCard) focus(firstCard);
-        }
+      searchKeyboard = createKeyboard('search', val => {
+        searchQuery = val;
+        searchInputVal.value = val;
+        searchStatus.textContent = val ? 'Filtrando por "' + val + '"' : 'Escribe para filtrar el catálogo';
+        render();
       });
       searchBox.appendChild(searchKeyboard.el);
+    } else {
+      searchKeyboard.setValue(searchQuery || '');
     }
     const firstKey = searchKeyboard.el.querySelector('.key.focusable');
     if (firstKey) focus(firstKey);
   }
 
   function closeSearchModal() {
+    if (app.hideKeyboard) app.hideKeyboard();
     searchModal.classList.remove('open');
   }
 
@@ -292,6 +332,24 @@ export function createPoseidonScreen(app) {
           if (searchPill) focus(searchPill);
           return true;
         }
+      }
+      return false;
+    },
+    isSearching() {
+      return searchModal.classList.contains('open');
+    },
+    setQuery(text) {
+      searchQuery = text;
+      if (searchInputVal) searchInputVal.value = text;
+      if (searchKeyboard) searchKeyboard.setValue(text);
+      closeSearchModal();
+      render();
+      const first = rowsEl.querySelector('.focusable');
+      if (first) focus(first);
+    },
+    onRawKey(e) {
+      if (searchModal.classList.contains('open') && searchKeyboard) {
+        return handlePhysicalKey(e, searchKeyboard);
       }
       return false;
     },

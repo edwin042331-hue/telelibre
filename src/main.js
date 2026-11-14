@@ -422,6 +422,9 @@ function nativeCall(name, arg) {
   return null;
 }
 
+app.showKeyboard = function () { return nativeCall('showKeyboard'); };
+app.hideKeyboard = function () { return nativeCall('hideKeyboard'); };
+
 
 // Fila "Seguir viendo" de la pantalla de inicio de Google TV: películas y episodios a medias del perfil activo.
 let lastWatchNext = '';
@@ -501,6 +504,11 @@ window.__telelibreUpdate = function (stateName, percent, message) {
 window.__telelibreVoice = function (text) {
   if (!text) { app.toast('No te escuché bien, intenta de nuevo'); return; }
   if (player.isOpen()) player.onAction('stop');
+  const scr = current();
+  if (scr && scr.name === 'poseidon' && scr.setQuery) {
+    scr.setQuery(text);
+    return;
+  }
   navigate('search');
   screens.search.setQuery(text);
 };
@@ -870,7 +878,7 @@ document.addEventListener('keyup', onOkUp);
 
 function typingScreen() {
   const scr = current();
-  return !player.isOpen() && !!scr && (scr.name === 'search' || scr.name === 'addlist' || scr.name === 'pin');
+  return !player.isOpen() && !!scr && (scr.name === 'search' || scr.name === 'addlist' || scr.name === 'pin' || (scr.name === 'poseidon' && scr.isSearching && scr.isSearching()));
 }
 // Android TV entrega Atrás, canales, multimedia y colores por aquí (ver MainActivity.java).
 window.__telelibreKey = runAction;

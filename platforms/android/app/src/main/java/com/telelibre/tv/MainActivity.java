@@ -20,6 +20,7 @@ import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -258,7 +259,10 @@ public class MainActivity extends Activity {
             case KeyEvent.KEYCODE_INFO: return "info";
             case KeyEvent.KEYCODE_LAST_CHANNEL: return "recall";
             case KeyEvent.KEYCODE_TV: return "chlist";
-            case KeyEvent.KEYCODE_SEARCH: return "voice";
+            case KeyEvent.KEYCODE_SEARCH:
+            case KeyEvent.KEYCODE_VOICE_ASSIST:
+            case KeyEvent.KEYCODE_ASSIST:
+                return "voice";
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER: return "enter";
             default: return null;
@@ -402,6 +406,29 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void setWatchNext(final String json) {
             new Thread(() -> writeWatchNext(json)).start();
+        }
+
+        // Muestra el teclado virtual nativo de Android TV (Gboard / Leanback IME)
+        @JavascriptInterface
+        public void showKeyboard() {
+            runOnUiThread(() -> {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null && web != null) {
+                    web.requestFocus();
+                    imm.showSoftInput(web, InputMethodManager.SHOW_FORCED);
+                }
+            });
+        }
+
+        // Oculta el teclado virtual nativo de Android TV
+        @JavascriptInterface
+        public void hideKeyboard() {
+            runOnUiThread(() -> {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null && web != null) {
+                    imm.hideSoftInputFromWindow(web.getWindowToken(), 0);
+                }
+            });
         }
     }
 }

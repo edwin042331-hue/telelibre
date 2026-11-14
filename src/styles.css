@@ -198,6 +198,14 @@ body {
   margin: 26px 0 26px; padding: 0 24px; height: 80px; line-height: 80px; border-radius: 12px;
   background: rgba(255, 255, 255, 0.1); font-size: 36px; font-weight: 600; overflow: hidden; white-space: nowrap;
 }
+input.search-query {
+  border: none; outline: none; color: #fff; font-family: inherit; width: 100%; box-sizing: border-box;
+}
+input.search-query:focus,
+input.search-query.focused {
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 0 3px #e50914;
+}
 .search-query.placeholder:before { content: "Buscar…"; color: #6f6f7c; }
 .kb-row { white-space: nowrap; }
 .key {
@@ -350,6 +358,7 @@ body.theme-light { background: #e4e8ef; color: #15161d; }
 .theme-light .btn.primary { background: rgba(21, 22, 29, 0.18); }
 .theme-light .btn.focused { background: #15161d; color: #fff; }
 .theme-light .search-query { background: rgba(21, 22, 29, 0.08); }
+.theme-light input.search-query { color: #15161d; }
 .theme-light .key { background: rgba(21, 22, 29, 0.08); }
 .theme-light .key.focused { background: #15161d; color: #fff; }
 .theme-light .setting { background: rgba(21, 22, 29, 0.05); }

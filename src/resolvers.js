@@ -270,10 +270,49 @@ export function resolveDood(baseWithToken) {
   return Promise.resolve(baseWithToken + rnd + '?expiry=' + expiry);
 }
 
+/** Cifrado ROT13 estándar */
+export function rot13(str) {
+  if (!str) return '';
+  return str.replace(/[a-zA-Z]/g, c => {
+    const code = c.charCodeAt(0);
+    const base = code <= 90 ? 65 : 97;
+    return String.fromCharCode(((code - base + 13) % 26) + base);
+  });
+}
+
+/** Decodifica el payload ofuscado de VOE (rot13 -> replace -> atob -> charCode - 3 -> reverse -> atob -> json) */
+export function decodeVoePayload(encoded) {
+  if (!encoded || typeof encoded !== 'string') return null;
+  try {
+    let s = rot13(encoded);
+    s = s.replace(/@(?:\[email protected\])?~@%\?\*~!!#&/g, '_').replace(/_/g, '');
+    let s2 = typeof atob === 'function' ? atob(s) : Buffer.from(s, 'base64').toString('binary');
+    let s3 = '';
+    for (let i = 0; i < s2.length; i++) {
+      s3 += String.fromCharCode(s2.charCodeAt(i) - 3);
+    }
+    let s4 = s3.split('').reverse().join('');
+    let s5 = typeof atob === 'function' ? atob(s4) : Buffer.from(s4, 'base64').toString('binary');
+    return JSON.parse(s5);
+  } catch (e) {
+    return null;
+  }
+}
+
 /** Resuelve un descriptor de stream individual */
 export function resolveSingleDescriptor(target, timeoutMs) {
   if (!target) return Promise.reject(new Error('Destino vacío'));
   if (typeof target === 'object') {
+    if (target.type === 'voe' || target.cyberlocker === 'voesx') {
+      if (target.hls || target.source) return Promise.resolve(target.hls || target.source);
+      if (target.payload) {
+        const dec = decodeVoePayload(target.payload);
+        if (dec && (dec.source || dec.mp4)) return Promise.resolve(dec.source || dec.mp4);
+      }
+      if (target.url && (target.url.indexOf('.m3u8') >= 0 || target.url.indexOf('.mp4') >= 0)) {
+        return Promise.resolve(target.url);
+      }
+    }
     if (target.type === 'vidara' || target.cyberlocker === 'vidara') {
       return resolveVidara(target.code || target.filecode, timeoutMs);
     }
@@ -289,6 +328,13 @@ export function resolveSingleDescriptor(target, timeoutMs) {
     if (target.url) return resolveSingleDescriptor(target.url, timeoutMs);
   }
   if (typeof target === 'string') {
+    if (target.indexOf('voe:') === 0) {
+      const rest = target.slice(4);
+      if (rest.indexOf('http') === 0) return Promise.resolve(rest);
+      const dec = decodeVoePayload(rest);
+      if (dec && (dec.source || dec.mp4)) return Promise.resolve(dec.source || dec.mp4);
+      return Promise.reject(new Error('Payload VOE no válido'));
+    }
     if (target.indexOf('vidara:') === 0) return resolveVidara(target.slice(7), timeoutMs);
     if (target.indexOf('vidhide:') === 0) return resolveVidHide(target.slice(8), timeoutMs);
     if (target.indexOf('streamwish:') === 0) return resolveStreamWish(target.slice(11), timeoutMs);
