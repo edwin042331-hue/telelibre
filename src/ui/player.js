@@ -23,16 +23,23 @@ function isHlsUrl(url) {
 function attemptsFor(urls) {
   const out = [];
   urls.forEach(url => {
-    if (!isHlsUrl(url)) out.push({ url, engine: 'native' });
-    else if (isTV) out.push({ url, engine: 'native' }, { url, engine: 'hls' });
-    else out.push({ url, engine: 'hls' }, { url, engine: 'native' });
+    if (!isHlsUrl(url)) {
+      out.push({ url, engine: 'native' });
+    } else if (url.indexOf('97bf1') >= 0 || url.indexOf('.woff') >= 0 || url.indexOf('vidara') >= 0) {
+      // HLS con segmentos MPEG-TS protegidos (.woff): hls.js primero para evitar bloqueo de MediaPlayer
+      out.push({ url, engine: 'hls' }, { url, engine: 'native' });
+    } else if (isTV) {
+      out.push({ url, engine: 'native' }, { url, engine: 'hls' });
+    } else {
+      out.push({ url, engine: 'hls' }, { url, engine: 'native' });
+    }
   });
   return out;
 }
 
 let hlsModule = null;
 function loadHls() {
-  if (!hlsModule) hlsModule = import('hls.js/light').then(m => m.default || m);
+  if (!hlsModule) hlsModule = import('hls.js').then(m => m.default || m);
   return hlsModule;
 }
 

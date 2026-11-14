@@ -298,16 +298,16 @@ app.openGrid = function (title, items) {
   app.push('grid', { title, items });
 };
 
-app.playMovie = function (movie, list, index, resolved, startAt) {
+app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) {
   if (resolved) {
     if (!resolved.urls.length) { app.toast('Esta película no tiene un video compatible'); return; }
     player.playMovie(movie, resolved, startAt);
     return;
   }
-  // Películas de Poseidon (Vidara / StreamWish / Doodstream)
-  if (movie.src === 'poseidon' || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
+  // Películas de Poseidon (Vidara / StreamWish / Doodstream / Multi-servidor)
+  if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
     app.toast('Obteniendo video en HD…');
-    resolvePoseidon(movie).then(url => {
+    resolvePoseidon(movie, preferredLang).then(url => {
       player.playMovie(movie, { urls: [url], subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);
     }).catch(() => {
       app.toast('El servidor de video no respondió. Intenta de nuevo.');
@@ -324,9 +324,21 @@ app.playMovie = function (movie, list, index, resolved, startAt) {
   resolveMovie(movie).then(r => app.playMovie(movie, list, index, r, startAt), () => app.toast('Internet Archive no respondió, intenta de nuevo'));
 };
 
-// Episodio de Pluto: la URL lleva la sesión actual; al terminar sigue el próximo de la lista.
-app.playEpisode = function (ep, list, index, startAt) {
+// Episodio de Pluto o Poseidon: al terminar sigue el próximo de la lista.
+app.playEpisode = function (ep, list, index, startAt, preferredLang) {
   const next = list[index + 1];
+  if (ep.src === 'poseidon' || ep.servers || (ep.url && (ep.url.indexOf('vidara:') === 0 || ep.url.indexOf('streamwish:') === 0 || ep.url.indexOf('dood:') === 0))) {
+    app.toast('Obteniendo episodio en HD…');
+    resolvePoseidon(ep, preferredLang).then(url => {
+      player.playMovie(ep, { urls: [url], subtitles: [], duration: ep.runtime || 2700 }, startAt || 0, next ? {
+        next: () => app.playEpisode(next, list, index + 1, 0, preferredLang),
+        nextLabel: 'T' + next.season + ':E' + next.number + '  ·  ' + next.title
+      } : null);
+    }).catch(() => {
+      app.toast('El servidor de video no respondió. Intenta de nuevo.');
+    });
+    return;
+  }
   episodeUrl(ep).then(url => {
     player.playMovie(ep, { urls: [url], subtitles: [], duration: ep.runtime }, startAt || 0, next ? {
       next: () => app.playEpisode(next, list, index + 1, 0),

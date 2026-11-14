@@ -1,5 +1,26 @@
 # Cambios
 
+## 1.5.0 (2026-11-14): Poseidon 2.0 Senior — Catálogo Masivo 2026, Series, Multi-Idioma y Cascada de Servidores
+
+- **Catálogo Masivo (395 títulos)**:
+  - **249 estrenos del 2026**: incluye títulos modernos como *El corazón de la bestia*, *Ebenezer: Los fantasmas de Navidad*, *Ser Heumann*, *Insecta*, y cientos más.
+  - **Sagas y Superhéroes**: catálogo completo de *Spider-Man* (16 películas icónicas: Tobey Maguire, Andrew Garfield, Tom Holland, Spider-Verso animado), *Avengers*, *Batman* y *Deadpool*.
+  - **Series Poseidon completas**: soporte para series con temporadas y episodios organizados (*VisionQuest*, *El Señor de los Anillos: Los Anillos de Poder*, *12 12 12*, *Tierra de Mafia*, *El cuerpo*, *The Good Daughter*).
+- **Selector de Idioma de Audio (Latino, Castellano, Inglés / Subtitulado)**:
+  - Botón interactivo de audio en la ficha de detalle (`🌐 Audio: Latino / Castellano / Inglés`) que conmuta entre los tracks disponibles con el control remoto.
+  - Memoria del idioma preferido para que se aplique automáticamente en futuras reproducciones.
+- **Cascada Multi-Servidor Automática (Fallback de alta resiliencia)**:
+  - Si el servidor principal de video está ocupado, lento o no responde, el motor prueba transparentemente en cascada los servidores secundarios (Vidara HLS -> StreamWish MP4 -> Doodstream -> VOE) en menos de 4 segundos sin congelar la app.
+  - Eliminación de cabeceras prohibidas W3C (`Referer`, `Origin`) en llamadas XMLHttpRequest para prevenir bloqueos de CORS o excepciones silenciosas en WebViews estrictos.
+- **Soporte Completo de HLS con MPEG-TS (`hls.js`)**:
+  - Actualización del motor HLS a `hls.js` completo con demuxer nativo de MPEG-TS, resolviendo definitivamente el cuelgue en películas con segmentos camuflados (`.woff`).
+  - Priorización inteligente de MSE en Android TV para arranques de reproducción instantáneos.
+- **Nuevas Filas Temáticas**:
+  - *📅 Estrenos 2026 (249 títulos)*
+  - *📺 Series Poseidon*
+  - *🕷️ Sagas y Superhéroes*
+  - *💎 Disponibles en HD 1080p* y *🎟️ Directo del Cine (CAM)*
+
 ## 1.4.2 (2026-11-13): Catálogo ampliado Poseidon, filtrado por Año y badges HD / CAM
 
 - **Catálogo masivo sincronizado (65 películas)**: integrado catálogo real extraído de PoseidonHD2 con títulos, sinopsis, año y portadas de TMDb en alta resolución.

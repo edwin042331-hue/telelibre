@@ -108,7 +108,11 @@ export function createShowScreen(app) {
   function load() {
     const my = ++token;
     status.textContent = 'Cargando episodios…';
-    loadSeasons(series).then(list => {
+    const fetcher = (series.src === 'poseidon' && series.seasons && series.seasons.length)
+      ? Promise.resolve(series.seasons)
+      : loadSeasons(series);
+
+    fetcher.then(list => {
       if (my !== token) return;
       seasons = list;
       status.textContent = list.length ? '' : 'Esta serie no tiene episodios disponibles ahora.';
@@ -130,7 +134,7 @@ export function createShowScreen(app) {
       }
     }, err => {
       if (my !== token) return;
-      status.textContent = 'No se pudo cargar la serie (' + err.message + '). Las series de Pluto funcionan en la app instalada en la TV.';
+      status.textContent = 'No se pudo cargar la serie (' + err.message + ').';
     });
   }
 

@@ -82,3 +82,47 @@ test('Poseidon: resolvePoseidon enruta URLs directas HTTP de inmediato', async (
   const res = await resolvePoseidon({ stream: direct });
   assert.equal(res, direct);
 });
+
+test('Poseidon: resolvePoseidon soporta multi-idioma y cascada de servidores', async () => {
+  const movieMulti = {
+    key: 'poseidon:test_multi',
+    servers: {
+      latino: [
+        { type: 'invalido', url: '' }, // Debe fallar y pasar al siguiente
+        { type: 'direct', url: 'https://cdn.example.com/latino.mp4' }
+      ],
+      castellano: [
+        { type: 'direct', url: 'https://cdn.example.com/castellano.mp4' }
+      ],
+      english: [
+        { type: 'direct', url: 'https://cdn.example.com/english.mp4' }
+      ]
+    }
+  };
+
+  const resLatino = await resolvePoseidon(movieMulti, 'latino');
+  assert.equal(resLatino, 'https://cdn.example.com/latino.mp4');
+
+  const resCastellano = await resolvePoseidon(movieMulti, 'castellano');
+  assert.equal(resCastellano, 'https://cdn.example.com/castellano.mp4');
+
+  const resEnglish = await resolvePoseidon(movieMulti, 'english');
+  assert.equal(resEnglish, 'https://cdn.example.com/english.mp4');
+});
+
+test('Poseidon: buildPoseidonRows crea filas dedicadas para 2026, Series y Sagas', () => {
+  const sampleData = [
+    { key: 'poseidon:1', name: 'El sorprendente Hombre Araña', year: 2026, quality: 'HD', type: 'movie', genres: ['accion'] },
+    { key: 'poseidon:2', name: 'Spider-Man Sin Camino a Casa', year: 2021, quality: 'HD', type: 'movie', genres: ['accion'] },
+    { key: 'poseidon:3', name: 'Estreno Futurista', year: 2026, quality: 'CAM', type: 'movie', genres: ['scifi'] },
+    { key: 'poseidon:4', name: 'VisionQuest', year: 2026, quality: 'HD', type: 'series', genres: ['series'], seasons: [] }
+  ];
+
+  const rows = buildPoseidonRows(sampleData);
+  const rowIds = rows.map(r => r.id);
+
+  assert.ok(rowIds.includes('ps:estrenos'), 'Debe incluir fila de todos los estrenos');
+  assert.ok(rowIds.includes('ps:y2026'), 'Debe incluir fila de 2026');
+  assert.ok(rowIds.includes('ps:series'), 'Debe incluir fila de series');
+  assert.ok(rowIds.includes('ps:sagas'), 'Debe incluir fila de sagas y superhéroes');
+});

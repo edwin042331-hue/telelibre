@@ -25,6 +25,22 @@ export function createDetailScreen(app) {
   let index = 0;
   let resolved = null;
   let token = 0;
+  let selectedLang = 'latino';
+
+  function getAvailableLangs() {
+    if (!movie) return [];
+    if (Array.isArray(movie.languages) && movie.languages.length > 0) return movie.languages;
+    if (movie.servers && typeof movie.servers === 'object') return Object.keys(movie.servers);
+    return [];
+  }
+
+  function formatLangLabel(lang) {
+    if (lang === 'latino') return 'Audio: Latino';
+    if (lang === 'castellano' || lang === 'spanish') return 'Audio: Castellano';
+    if (lang === 'english') return 'Audio: Inglés';
+    if (lang === 'subtitulado') return 'Audio: Subtitulado';
+    return 'Audio: ' + lang.charAt(0).toUpperCase() + lang.slice(1);
+  }
 
   function button(iconName, label, onEnter, primary) {
     const b = h('div', { class: 'btn focusable' + (primary ? ' primary' : '') }, [icon(iconName), h('span', { text: label })]);
@@ -35,10 +51,23 @@ export function createDetailScreen(app) {
   function renderActions() {
     clear(actions);
     const p = getProgress(movie.key);
-    const play = start => app.playMovie(movie, list, index, resolved, start);
+    const play = start => app.playMovie(movie, list, index, resolved, start, selectedLang);
     const main = p ? button('play', 'Reanudar ' + formatTime(p.t), () => play(p.t), true) : button('play', 'Ver ahora', () => play(0), true);
     actions.appendChild(main);
     if (p) actions.appendChild(button('restart', 'Desde el inicio', () => play(0)));
+
+    const langs = getAvailableLangs();
+    if (langs.length > 1) {
+      if (langs.indexOf(selectedLang) < 0) selectedLang = langs[0];
+      actions.appendChild(button('globe', formatLangLabel(selectedLang), () => {
+        const nextIdx = (langs.indexOf(selectedLang) + 1) % langs.length;
+        selectedLang = langs[nextIdx];
+        app.toast('Audio: ' + formatLangLabel(selectedLang).replace('Audio: ', ''));
+        renderActions();
+        focus(actions.children[actions.children.length - 2] || actions.firstChild);
+      }));
+    }
+
     const fav = isFavorite(movie.key);
     actions.appendChild(button(fav ? 'check' : 'plus', fav ? 'En Mi lista' : 'Mi lista', () => {
       app.toast(toggleFavorite(movie) ? 'Agregada a Mi lista' : 'Quitada de Mi lista');
@@ -61,6 +90,8 @@ export function createDetailScreen(app) {
       list = params.list || [movie];
       index = params.index || 0;
       resolved = null;
+      const available = getAvailableLangs();
+      selectedLang = available.length > 0 ? available[0] : 'latino';
       const my = ++token;
       bg.style.backgroundImage = 'url("' + (movie.art || movie.poster) + '")';
       poster.src = movie.poster;
