@@ -64,7 +64,8 @@ export function movieCard(movie) {
   if (isFavorite(movie.key)) poster.appendChild(icon('star', 'fav-mark'));
   const p = getProgress(movie.key);
   if (p) poster.appendChild(h('div', { class: 'progress' }, h('div', { class: 'progress-fill', style: 'width:' + Math.round(100 * p.t / p.d) + '%' })));
-  const meta = movie.type === 'series' ? (movie.seasons ? movie.seasons + (movie.seasons === 1 ? ' temporada' : ' temporadas') : 'Serie')
+  const numSeasons = Array.isArray(movie.seasons) ? movie.seasons.length : (movie.seasons || 0);
+  const meta = movie.type === 'series' ? (numSeasons ? numSeasons + (numSeasons === 1 ? ' temporada' : ' temporadas') : 'Serie')
     : movie.type === 'episode' ? 'T' + movie.season + ':E' + movie.number + ' · ' + movie.title
     : [movie.year, movie.quality ? movie.quality.toUpperCase() : '', movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
   const card = h('div', { class: 'card movie focusable', 'data-key': movie.key }, [

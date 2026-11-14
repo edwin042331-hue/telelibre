@@ -28,7 +28,9 @@ export function formatClock(d) {
 // Etiquetas cortas que se muestran como "chips" en el panel superior y en el detalle.
 export function itemTags(item) {
   if (item.type === 'series') {
-    return [item.genre, item.seasons ? item.seasons + (item.seasons === 1 ? ' temporada' : ' temporadas') : '', 'Pluto TV'].filter(Boolean);
+    const sCount = Array.isArray(item.seasons) ? item.seasons.length : (item.seasons || 0);
+    const srcTag = item.src === 'poseidon' ? 'Poseidon HD' : 'Pluto TV';
+    return [item.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag].filter(Boolean);
   }
   if (item.type === 'episode') {
     return ['T' + item.season + ':E' + item.number, item.title, formatDuration(item.runtime)].filter(Boolean);

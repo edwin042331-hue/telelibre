@@ -151,7 +151,9 @@ export function createShowScreen(app) {
       poster.src = series.poster;
       title.textContent = series.name;
       clear(tags);
-      [series.genre, series.seasons ? series.seasons + (series.seasons === 1 ? ' temporada' : ' temporadas') : '', 'Pluto TV · gratis con anuncios']
+      const sCount = Array.isArray(series.seasons) ? series.seasons.length : (series.seasons || 0);
+      const srcTag = series.src === 'poseidon' ? 'Poseidon HD · Estreno' : 'Pluto TV · gratis con anuncios';
+      [series.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag]
         .filter(Boolean).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
       summary.textContent = series.summary || '';
       clear(actions);
