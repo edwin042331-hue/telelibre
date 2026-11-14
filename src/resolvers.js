@@ -94,6 +94,54 @@ function requestGetRedirect(url, headers, timeoutMs) {
   });
 }
 
+function requestGetText(url, timeoutMs) {
+  if (typeof XMLHttpRequest === 'undefined' && typeof fetch !== 'undefined') {
+    return fetch(url, { signal: AbortSignal.timeout(timeoutMs || 8000) }).then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    });
+  }
+  return new Promise((resolve, reject) => {
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.timeout = timeoutMs || 8000;
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 400) {
+          resolve(xhr.responseText);
+        } else {
+          reject(new Error('HTTP ' + xhr.status));
+        }
+      };
+      xhr.onerror = () => reject(new Error('Sin conexión con el servidor'));
+      xhr.ontimeout = () => reject(new Error('Tiempo de espera agotado'));
+      xhr.send();
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+/** Desempaquetador Dean Edwards p,a,c,k,e,d */
+export function unpackDeanEdwards(packed) {
+  if (!packed || typeof packed !== 'string') return null;
+  const match = packed.match(/}\s*\(\s*['"]([\s\S]+?)['"]\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*['"]([\s\S]+?)['"]\.split\('\|'\)/);
+  if (!match) return null;
+  let p = match[1];
+  const a = parseInt(match[2], 10);
+  let c = parseInt(match[3], 10);
+  const k = match[4].split('|');
+  function e(val) {
+    return (val < a ? '' : e(Math.floor(val / a))) + ((val = val % a) > 35 ? String.fromCharCode(val + 29) : val.toString(36));
+  }
+  while (c--) {
+    if (k[c]) {
+      p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c]);
+    }
+  }
+  return p;
+}
+
 /** Comprueba si el stream HLS y sus segmentos están disponibles y no truncados */
 export function checkStreamHealth(url, timeoutMs) {
   if (!url || typeof url !== 'string') return Promise.resolve(false);
@@ -159,8 +207,58 @@ export function resolveStreamWish(codeOrParam, timeoutMs) {
   });
 }
 
+/** Resuelve stream de VidHide (HLS .m3u8 maestro desempaquetado) */
+export function resolveVidHide(codeOrUrl, timeoutMs) {
+  let code = codeOrUrl;
+  if (!code) return Promise.reject(new Error('VidHide: código vacío'));
+  if (typeof code === 'object') {
+    code = code.code || code.url || '';
+  }
+  if (typeof code === 'string') {
+    if (code.indexOf('vidhide:') === 0) code = code.slice(8);
+    if (code.indexOf('http') === 0) {
+      const m = code.match(/\/v\/([a-zA-Z0-9]+)/);
+      if (m) code = m[1];
+    }
+  }
+  if (!code) return Promise.reject(new Error('VidHide: código no encontrado'));
+
+  const now = Date.now();
+  if (cache['vh_' + code] && cache['vh_' + code].expiresAt > now) {
+    return Promise.resolve(cache['vh_' + code].streamUrl);
+  }
+
+  const url = 'https://vidhidepre.com/v/' + code;
+  return requestGetText(url, timeoutMs || 6000).then(html => {
+    if (!html || html.indexOf('File is no longer available') >= 0) {
+      throw new Error('VidHide: archivo no disponible o expirado');
+    }
+    const packedMatch = html.match(/eval\(function\(p,a,c,k,e,d\)[\s\S]+?\.split\('\|'\)\)\)/);
+    if (!packedMatch) {
+      throw new Error('VidHide: no se encontró script empaquetado');
+    }
+    const unpacked = unpackDeanEdwards(packedMatch[0]);
+    if (!unpacked) {
+      throw new Error('VidHide: fallo al desempaquetar');
+    }
+    const hls2Match = unpacked.match(/["']hls2["']\s*:\s*["']([^"']+)["']/);
+    const m3u8Match = unpacked.match(/https?:\/\/[^"'\s]+\.m3u8[^"'\s]*/);
+    const streamUrl = hls2Match ? hls2Match[1] : (m3u8Match ? m3u8Match[0] : null);
+    if (!streamUrl) {
+      throw new Error('VidHide: no se encontró stream HLS');
+    }
+    // Token dura ~36h -> cache de 2 horas
+    cache['vh_' + code] = { streamUrl: streamUrl, expiresAt: now + 2 * 3600 * 1000 };
+    return streamUrl;
+  });
+}
+
 /** Resuelve stream de Doodstream (MP4 directo con 10 dígitos aleatorios y expiry) */
 export function resolveDood(baseWithToken) {
+  if (!baseWithToken || typeof baseWithToken !== 'string') return Promise.reject(new Error('Dood: URL vacía'));
+  if (baseWithToken.indexOf('/e/') >= 0) {
+    return Promise.reject(new Error('Dood: Embed protegido no reproducible'));
+  }
   const rnd = Math.floor(1000000000 + Math.random() * 9000000000).toString();
   const expiry = Date.now();
   if (baseWithToken.indexOf('?') >= 0) {
@@ -179,6 +277,9 @@ export function resolveSingleDescriptor(target, timeoutMs) {
     if (target.type === 'vidara' || target.cyberlocker === 'vidara') {
       return resolveVidara(target.code || target.filecode, timeoutMs);
     }
+    if (target.type === 'vidhide' || target.cyberlocker === 'vidhide') {
+      return resolveVidHide(target.code || target.url, timeoutMs);
+    }
     if (target.type === 'streamwish' || target.cyberlocker === 'streamwish') {
       return resolveStreamWish(target.code, timeoutMs);
     }
@@ -189,11 +290,15 @@ export function resolveSingleDescriptor(target, timeoutMs) {
   }
   if (typeof target === 'string') {
     if (target.indexOf('vidara:') === 0) return resolveVidara(target.slice(7), timeoutMs);
+    if (target.indexOf('vidhide:') === 0) return resolveVidHide(target.slice(8), timeoutMs);
     if (target.indexOf('streamwish:') === 0) return resolveStreamWish(target.slice(11), timeoutMs);
     if (target.indexOf('dood:') === 0) return resolveDood(target.slice(5));
     if (target.indexOf('http://') === 0 || target.indexOf('https://') === 0) {
-      if (target.indexOf('voe.sx') >= 0 || target.indexOf('vidhide') >= 0) {
+      if (target.indexOf('voe.sx') >= 0) {
         return Promise.reject(new Error('Servidor embed no reproducible directamente'));
+      }
+      if (target.indexOf('vidhide') >= 0 || target.indexOf('callistanise') >= 0) {
+        return resolveVidHide(target, timeoutMs);
       }
       return Promise.resolve(target);
     }

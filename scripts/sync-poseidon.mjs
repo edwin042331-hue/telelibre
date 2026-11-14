@@ -63,6 +63,10 @@ function parseStreamTarget(embedUrl) {
   if (embedUrl.includes('vidara.to/e/')) {
     return { type: 'vidara', code: embedUrl.split('/e/')[1], url: embedUrl };
   }
+  if (embedUrl.includes('vidhide') || embedUrl.includes('callistanise')) {
+    const parts = embedUrl.split('/v/');
+    return { type: 'vidhide', code: parts[1] || embedUrl, url: embedUrl };
+  }
   if (embedUrl.includes('streamwish')) {
     const parts = embedUrl.split('/e/');
     return { type: 'streamwish', code: parts[1] || embedUrl, url: embedUrl };
@@ -70,7 +74,7 @@ function parseStreamTarget(embedUrl) {
   if (embedUrl.includes('dood')) {
     return { type: 'dood', url: embedUrl };
   }
-  // Excluir VOE y VidHide porque son páginas HTML protegidas con Altcha/Captcha
+  // Excluir VOE porque usa reto Altcha
   return null;
 }
 
@@ -107,13 +111,13 @@ async function processMovie(m) {
 
     // Mapear idiomas: latino, spanish (castellano), english, subtitulado
     const langKeys = ['latino', 'spanish', 'subtitulado', 'english'];
-    const CYBER_PRIORITY = { vidara: 1, streamwish: 2, doodstream: 3, voesx: 4, vidhide: 5 };
+    const CYBER_PRIORITY = { vidara: 1, vidhide: 2, streamwish: 3, doodstream: 4, voesx: 5 };
 
     for (const lk of langKeys) {
       const streamList = (vids[lk] || []).slice();
       if (!streamList.length) continue;
 
-      // Ordenar por calidad y estabilidad: Vidara (HLS) > StreamWish (MP4) > Doodstream > VOE
+      // Ordenar por calidad y estabilidad: Vidara (HLS) > VidHide (HLS) > StreamWish > Doodstream
       streamList.sort((a, b) => (CYBER_PRIORITY[a.cyberlocker] || 99) - (CYBER_PRIORITY[b.cyberlocker] || 99));
 
       const serverList = [];
@@ -146,12 +150,14 @@ async function processMovie(m) {
     const hasHd = allParsedServers.some(s => (s.quality || '').toUpperCase() === 'HD');
     const quality = hasHd ? 'HD' : 'CAM';
 
-    // Stream primario por defecto: preferir Vidara en latino, o el primer servidor disponible
+    // Stream primario por defecto: preferir Vidara o VidHide en latino, o el primer servidor disponible
     const primaryCandidate = (servers['latino'] || allParsedServers).find(s => s.type === 'vidara') ||
+                             (servers['latino'] || allParsedServers).find(s => s.type === 'vidhide') ||
                              (servers['latino'] || allParsedServers)[0];
 
     let streamTarget = '';
     if (primaryCandidate.type === 'vidara') streamTarget = 'vidara:' + primaryCandidate.code;
+    else if (primaryCandidate.type === 'vidhide') streamTarget = 'vidhide:' + primaryCandidate.code;
     else if (primaryCandidate.type === 'streamwish') streamTarget = 'streamwish:' + primaryCandidate.code;
     else if (primaryCandidate.type === 'dood') streamTarget = 'dood:' + primaryCandidate.url;
     else streamTarget = primaryCandidate.url;
@@ -227,7 +233,7 @@ async function processSerie(s) {
             const epData = await fetchJson(epUrl);
             const epObj = epData.props?.pageProps?.episode || {};
             const vids = epObj.videos || {};
-            const CYBER_PRIORITY = { vidara: 1, streamwish: 2, doodstream: 3, voesx: 4, vidhide: 5 };
+            const CYBER_PRIORITY = { vidara: 1, vidhide: 2, streamwish: 3, doodstream: 4, voesx: 5 };
             for (const lk of ['latino', 'spanish', 'english']) {
               const list = (vids[lk] || []).slice();
               if (list.length) {
@@ -245,9 +251,11 @@ async function processSerie(s) {
                 }
               }
             }
-            const prim = (epServers['latino'] || Object.values(epServers)[0] || [])[0];
+            const prim = (epServers['latino'] || Object.values(epServers)[0] || []).find(s => s.type === 'vidara') ||
+                         (epServers['latino'] || Object.values(epServers)[0] || []).find(s => s.type === 'vidhide') ||
+                         (epServers['latino'] || Object.values(epServers)[0] || [])[0];
             if (prim) {
-              epStream = prim.type === 'vidara' ? 'vidara:' + prim.code : (prim.url || '');
+              epStream = prim.type === 'vidara' ? 'vidara:' + prim.code : (prim.type === 'vidhide' ? 'vidhide:' + prim.code : (prim.url || ''));
             }
           } catch (e) { /* fallback */ }
         }

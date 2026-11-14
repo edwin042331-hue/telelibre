@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { INITIAL_POSEIDON_MOVIES, buildPoseidonRows, formatPoseidonMovie } from '../src/poseidon.js';
-import { resolveDood, resolvePoseidon } from '../src/resolvers.js';
+import { resolveDood, resolvePoseidon, unpackDeanEdwards } from '../src/resolvers.js';
 import { buildMovieRows } from '../src/vod.js';
 import { state } from '../src/store.js';
 
@@ -19,7 +19,7 @@ test('Poseidon: catálogo inicial contiene estrenos válidos y metadatos correct
     assert.ok(m.year >= 1900 && m.year <= 2030, `Año inválido en ${m.key}`);
     assert.ok(Array.isArray(m.genres) && m.genres.length > 0, `Géneros vacíos en ${m.key}`);
     assert.ok(
-      m.stream.startsWith('vidara:') || m.stream.startsWith('streamwish:') || m.stream.startsWith('dood:') || m.stream.startsWith('http'),
+      m.stream.startsWith('vidara:') || m.stream.startsWith('vidhide:') || m.stream.startsWith('streamwish:') || m.stream.startsWith('dood:') || m.stream.startsWith('http'),
       `Stream inválido en ${m.key}: ${m.stream}`
     );
   });
@@ -125,4 +125,10 @@ test('Poseidon: buildPoseidonRows crea filas dedicadas para 2026, Series y Sagas
   assert.ok(rowIds.includes('ps:y2026'), 'Debe incluir fila de 2026');
   assert.ok(rowIds.includes('ps:series'), 'Debe incluir fila de series');
   assert.ok(rowIds.includes('ps:sagas'), 'Debe incluir fila de sagas y superhéroes');
+});
+
+test('Poseidon: unpackDeanEdwards desempaqueta correctamente scripts empaquetados', () => {
+  const packed = "eval(function(p,a,c,k,e,d){while(c--)if(k[c])p=p.replace(new RegExp('\\\\b'+e(c)+'\\\\b','g'),k[c]);return p;}('1 0=\"2\";',3,3,'stream|var|https'.split('|'),0,{}))";
+  const unpacked = unpackDeanEdwards(packed);
+  assert.equal(unpacked, 'var stream="https";');
 });

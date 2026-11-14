@@ -304,8 +304,8 @@ app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) 
     player.playMovie(movie, resolved, startAt);
     return;
   }
-  // Películas de Poseidon (Vidara / StreamWish / Doodstream / Multi-servidor)
-  if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
+  // Películas de Poseidon (Vidara / VidHide / StreamWish / Doodstream / Multi-servidor)
+  if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('vidhide:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0)) || (movie.stream && (movie.stream.indexOf('vidara:') === 0 || movie.stream.indexOf('vidhide:') === 0 || movie.stream.indexOf('streamwish:') === 0 || movie.stream.indexOf('dood:') === 0))) {
     const hasStream = (movie.servers && Object.keys(movie.servers).some(k => Array.isArray(movie.servers[k]) && movie.servers[k].length > 0)) ||
       (movie.stream && movie.stream.length > 5) || (movie.url && movie.url.length > 5);
     if (!hasStream) {
@@ -333,7 +333,7 @@ app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) 
 // Episodio de Pluto o Poseidon: al terminar sigue el próximo de la lista.
 app.playEpisode = function (ep, list, index, startAt, preferredLang) {
   const next = list[index + 1];
-  if (ep.src === 'poseidon' || ep.servers || (ep.url && (ep.url.indexOf('vidara:') === 0 || ep.url.indexOf('streamwish:') === 0 || ep.url.indexOf('dood:') === 0))) {
+  if (ep.src === 'poseidon' || ep.servers || (ep.url && (ep.url.indexOf('vidara:') === 0 || ep.url.indexOf('vidhide:') === 0 || ep.url.indexOf('streamwish:') === 0 || ep.url.indexOf('dood:') === 0)) || (ep.stream && (ep.stream.indexOf('vidara:') === 0 || ep.stream.indexOf('vidhide:') === 0 || ep.stream.indexOf('streamwish:') === 0 || ep.stream.indexOf('dood:') === 0))) {
     app.toast('Obteniendo episodio en HD…');
     resolvePoseidonUrls(ep, preferredLang).then(urls => {
       player.playMovie(ep, { urls: urls, subtitles: [], duration: ep.runtime || 2700 }, startAt || 0, next ? {

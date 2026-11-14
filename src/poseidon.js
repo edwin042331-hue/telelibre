@@ -37,6 +37,68 @@ export function formatPoseidonMovie(m) {
 // Catálogo base de estrenos con servidores reales y calidades verificadas (HD / CAM)
 export const INITIAL_POSEIDON_MOVIES = [
   {
+    "key": "poseidon:1263337",
+    "type": "movie",
+    "name": "El corazón de la bestia",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6060,
+    "duration": 6060,
+    "genres": [
+      "aventura",
+      "suspenso"
+    ],
+    "regions": [],
+    "subs": true,
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "vidara",
+          "code": "q7qIyEuH2S69t",
+          "url": "https://vidara.to/e/q7qIyEuH2S69t",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "vidhide",
+          "code": "utjn5qblgave",
+          "url": "https://vidhidepre.com/v/utjn5qblgave",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
+          "type": "vidara",
+          "code": "7k5Db4K1O3TJ3",
+          "url": "https://vidara.to/e/7k5Db4K1O3TJ3",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "vidhide",
+          "code": "utjn5qblgave",
+          "url": "https://vidhidepre.com/v/utjn5qblgave",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
+    "art": "https://image.tmdb.org/t/p/original/kpqsljPQtWqPKJBTAEtoXtQZ9Ko.jpg",
+    "img": "https://image.tmdb.org/t/p/original/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
+    "overview": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
+    "summary": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
+    "src": "poseidon",
+    "stream": "vidara:q7qIyEuH2S69t",
+    "url": "vidara:q7qIyEuH2S69t",
+    "lang": "es"
+  },
+  {
     "key": "poseidon:1406492",
     "type": "movie",
     "name": "La venganza del Charro Negro",
@@ -476,10 +538,10 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "streamwish",
-          "code": "bfilp8ihdad4",
-          "url": "https://streamwish.to/e/bfilp8ihdad4",
-          "cyberlocker": "streamwish",
+          "type": "vidhide",
+          "code": "noeew9rv9kzn",
+          "url": "https://vidhidepre.com/v/noeew9rv9kzn",
+          "cyberlocker": "vidhide",
           "quality": "CAM"
         }
       ],
@@ -492,17 +554,10 @@ export const INITIAL_POSEIDON_MOVIES = [
           "quality": "HD"
         },
         {
-          "type": "streamwish",
-          "code": "ztfrmjdemdui",
-          "url": "https://streamwish.to/e/ztfrmjdemdui",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/0vodm6ek7p2k",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "noeew9rv9kzn",
+          "url": "https://vidhidepre.com/v/noeew9rv9kzn",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ]
@@ -513,8 +568,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
     "summary": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
     "src": "poseidon",
-    "stream": "streamwish:bfilp8ihdad4",
-    "url": "streamwish:bfilp8ihdad4",
+    "stream": "vidara:pc0B3zGPie4rC",
+    "url": "vidara:pc0B3zGPie4rC",
     "lang": "es"
   },
   {
@@ -539,33 +594,19 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "streamwish",
-          "code": "oxsn0s6ts3vn",
-          "url": "https://streamwish.to/e/oxsn0s6ts3vn",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/tx2rfc5r7pdq",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "btgczmusnfdo",
+          "url": "https://vidhidepre.com/v/btgczmusnfdo",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ],
       "english": [
         {
-          "type": "streamwish",
-          "code": "z1vtuitpmcjf",
-          "url": "https://streamwish.to/e/z1vtuitpmcjf",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/megrxcd0otql",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "yeplk7o515p9",
+          "url": "https://vidhidepre.com/v/yeplk7o515p9",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ]
@@ -576,8 +617,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
     "summary": "Un exsoldado y sus nietos luchan contra despiadados criminales en un pueblo aislado. Si quieren sobrevivir, también deben enfrentarse a sus miedos y a los remordimientos.",
     "src": "poseidon",
-    "stream": "streamwish:oxsn0s6ts3vn",
-    "url": "streamwish:oxsn0s6ts3vn",
+    "stream": "vidhide:btgczmusnfdo",
+    "url": "vidhide:btgczmusnfdo",
     "lang": "es"
   },
   {
@@ -942,49 +983,28 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
-          "type": "streamwish",
-          "code": "bxv60pjdnzpx",
-          "url": "https://streamwish.to/e/bxv60pjdnzpx",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/icwfr77d0hr0",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "7p0egbcbsti2",
+          "url": "https://vidhidepre.com/v/7p0egbcbsti2",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ],
       "castellano": [
         {
-          "type": "streamwish",
-          "code": "ce9agtfrmc4j",
-          "url": "https://streamwish.to/e/ce9agtfrmc4j",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/8dr6pco620ru",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "7p0egbcbsti2",
+          "url": "https://vidhidepre.com/v/7p0egbcbsti2",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ],
       "english": [
         {
-          "type": "streamwish",
-          "code": "pbt3yzyizxig",
-          "url": "https://streamwish.to/e/pbt3yzyizxig",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
-          "type": "dood",
-          "code": "",
-          "url": "https://doodstream.com/e/rwelnvqm4uoy",
-          "cyberlocker": "doodstream",
+          "type": "vidhide",
+          "code": "hjjel7a5q965",
+          "url": "https://vidhidepre.com/v/hjjel7a5q965",
+          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ]
@@ -995,8 +1015,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
     "summary": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
     "src": "poseidon",
-    "stream": "streamwish:bxv60pjdnzpx",
-    "url": "streamwish:bxv60pjdnzpx",
+    "stream": "vidhide:7p0egbcbsti2",
+    "url": "vidhide:7p0egbcbsti2",
     "lang": "es"
   },
   {

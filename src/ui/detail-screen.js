@@ -55,13 +55,13 @@ export function createDetailScreen(app) {
       (movie.stream && movie.stream.length > 5) ||
       (movie.url && movie.url.length > 5)
     );
+    const p = hasStream ? getProgress(movie.key) : null;
 
     if (!hasStream) {
       actions.appendChild(button('clock', 'Próximamente en Poseidon', () => {
         app.toast('PoseidonHD aún no ha publicado enlaces de video para este título.');
       }, true));
     } else {
-      const p = getProgress(movie.key);
       const play = start => app.playMovie(movie, list, index, resolved, start, selectedLang);
       const main = p ? button('play', 'Reanudar ' + formatTime(p.t), () => play(p.t), true) : button('play', 'Ver ahora', () => play(0), true);
       actions.appendChild(main);
