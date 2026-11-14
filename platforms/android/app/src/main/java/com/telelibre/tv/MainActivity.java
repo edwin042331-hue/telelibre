@@ -415,7 +415,7 @@ public class MainActivity extends Activity {
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 if (imm != null && web != null) {
                     web.requestFocus();
-                    imm.showSoftInput(web, InputMethodManager.SHOW_FORCED);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 }
             });
         }
