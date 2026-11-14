@@ -1,5 +1,128 @@
 [
   {
+    "key": "poseidon:1339713",
+    "type": "movie",
+    "name": "Obsesión",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6540,
+    "duration": 6540,
+    "genres": [
+      "terror",
+      "suspenso"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [
+      "latino"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "streamwish",
+          "code": "gfzxxlaq6uox",
+          "url": "https://streamwish.to/e/gfzxxlaq6uox",
+          "cyberlocker": "streamwish",
+          "quality": "SCR"
+        },
+        {
+          "type": "dood",
+          "code": "",
+          "url": "https://doodstream.com/e/ymjsn1l81he3",
+          "cyberlocker": "doodstream",
+          "quality": "SCR"
+        }
+      ]
+    },
+    "poster": "https://image.tmdb.org/t/p/original/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+    "art": "https://image.tmdb.org/t/p/original/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+    "img": "https://image.tmdb.org/t/p/original/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+    "overview": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+    "summary": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+    "src": "poseidon",
+    "stream": "streamwish:gfzxxlaq6uox",
+    "url": "streamwish:gfzxxlaq6uox",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1375441",
+    "type": "movie",
+    "name": "Primetime",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 6600,
+    "duration": 6600,
+    "genres": [
+      "suspenso",
+      "drama"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [],
+    "servers": {},
+    "poster": "https://image.tmdb.org/t/p/original/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
+    "art": "https://image.tmdb.org/t/p/original/sEsMwSDUWGIx9EfNxzM6KzVSsSQ.jpg",
+    "img": "https://image.tmdb.org/t/p/original/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
+    "overview": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
+    "summary": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
+    "src": "poseidon",
+    "stream": "",
+    "url": "",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1381071",
+    "type": "movie",
+    "name": "Godzilla Minus Zero",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 8100,
+    "duration": 8100,
+    "genres": [
+      "scifi",
+      "terror",
+      "accion"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [],
+    "servers": {},
+    "poster": "https://image.tmdb.org/t/p/original/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+    "art": "https://image.tmdb.org/t/p/original/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
+    "img": "https://image.tmdb.org/t/p/original/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+    "overview": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+    "summary": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+    "src": "poseidon",
+    "stream": "",
+    "url": "",
+    "lang": "es"
+  },
+  {
+    "key": "poseidon:1400837",
+    "type": "movie",
+    "name": "Madre siniestra",
+    "year": 2026,
+    "quality": "HD",
+    "runtime": 5580,
+    "duration": 5580,
+    "genres": [
+      "terror"
+    ],
+    "regions": [],
+    "subs": false,
+    "languages": [],
+    "servers": {},
+    "poster": "https://image.tmdb.org/t/p/original/5yUwsjgWlYCIF5ck1NaUr5zEGg7.jpg",
+    "art": "https://image.tmdb.org/t/p/original/ncm7djsVTHQQMX2HEbEVxMUFchG.jpg",
+    "img": "https://image.tmdb.org/t/p/original/5yUwsjgWlYCIF5ck1NaUr5zEGg7.jpg",
+    "overview": "Bela, una niña de 8 años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su clóset. La presencia, a quien llama “Otra Mamá”, se vuelve cada vez más amenazante para ella y su familia.",
+    "summary": "Bela, una niña de 8 años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su clóset. La presencia, a quien llama “Otra Mamá”, se vuelve cada vez más amenazante para ella y su familia.",
+    "src": "poseidon",
+    "stream": "",
+    "url": "",
+    "lang": "es"
+  },
+  {
     "key": "poseidon:1406492",
     "type": "movie",
     "name": "La venganza del Charro Negro",

@@ -140,12 +140,9 @@ export function resolveVidara(filecode, timeoutMs) {
   }, null, timeoutMs || 6000).then(res => {
     const stream = res && res.streaming_url;
     if (!stream) throw new Error('Vidara: No se encontró URL de stream');
-    return checkStreamHealth(stream, 2500).then(healthy => {
-      if (!healthy) throw new Error('Vidara: Servidor edge con segmentos incompletos');
-      // Token dura ~8h -> cache de 4 horas
-      cache[filecode] = { streamUrl: stream, expiresAt: now + 4 * 3600 * 1000 };
-      return stream;
-    });
+    // Token dura ~8h -> cache de 4 horas
+    cache[filecode] = { streamUrl: stream, expiresAt: now + 4 * 3600 * 1000 };
+    return stream;
   });
 }
 

@@ -1514,20 +1514,32 @@ export const INITIAL_POSEIDON_MOVIES = [
 
 let cachedMovies = null;
 
-// Carga el catálogo de Poseidon (remoto si existe, o inicial local)
+// Carga el catálogo de Poseidon (local en la app para arranque instantáneo, o remoto)
 export function loadPoseidonCatalog() {
   if (cachedMovies) return Promise.resolve(cachedMovies);
+  const LOCAL_URL = './poseidon.json';
   const REMOTE_URL = 'https://edwin042331-hue.github.io/telelibre/poseidon.json';
 
-  return getText(REMOTE_URL + '?t=' + Date.now(), 6000)
+  const tryParse = function(text) {
+    try {
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed) && parsed.length) {
+        cachedMovies = parsed.map(formatPoseidonMovie);
+        return cachedMovies;
+      }
+    } catch (e) {}
+    return null;
+  };
+
+  return getText(LOCAL_URL, 1500)
     .then(text => {
-      try {
-        const remote = JSON.parse(text);
-        if (Array.isArray(remote) && remote.length) {
-          cachedMovies = remote.map(formatPoseidonMovie);
-          return cachedMovies;
-        }
-      } catch (e) { /* fallback a local */ }
+      const res = tryParse(text);
+      if (res) return res;
+      throw new Error('Local vacío');
+    })
+    .catch(() => getText(REMOTE_URL + '?t=' + Date.now(), 5000).then(tryParse))
+    .then(res => {
+      if (res) return res;
       cachedMovies = INITIAL_POSEIDON_MOVIES.map(formatPoseidonMovie);
       return cachedMovies;
     })
@@ -1549,6 +1561,44 @@ export function buildPoseidonRows(movies) {
   }
   const list = movies || getPoseidonMoviesSync();
   const rows = [];
+
+  // Fila 0: Tendencias Poseidon (Cartelera oficial de poseidonhd2.co)
+  const TOP_IDS = [
+    1368337, // La Odisea
+    1400837, // Madre siniestra
+    1263337, // El corazón de la bestia
+    1423191, // Resident Evil: Noche cero
+    1381071, // Godzilla Minus Zero
+    1567605, // Ebenezer: Los fantasmas de Navidad
+    1616687, // Serangan Balik
+    969681,  // Spider-Man: Un nuevo día
+    1483525, // Un amor posible
+    1050981, // Ser Heumann
+    1375441, // Primetime
+    656908,  // Ramayana: Rise of a Legend
+    1153576, // Street Fighter
+    891621,  // Caballo salvaje nueve
+    1294189, // The Mongoose
+    791523,  // Wildwood: El bosque salvaje
+    1400940, // Clayface
+    1339713, // Obsesión
+    1616419, // Un buen abogado
+    1283515  // Verity: La sombra de un engaño
+  ];
+  const tendencias = [];
+  TOP_IDS.forEach(id => {
+    const item = list.find(m => m.key === 'poseidon:' + id);
+    if (item && tendencias.indexOf(item) < 0) {
+      tendencias.push(item);
+    }
+  });
+  if (tendencias.length >= 3) {
+    rows.push({
+      id: 'ps:tendencias',
+      title: '🔥 Tendencias Poseidon (' + tendencias.length + ')',
+      items: tendencias
+    });
+  }
 
   // Fila 1: Todos los estrenos de cine
   const moviesOnly = list.filter(m => m.type !== 'series');

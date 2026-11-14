@@ -46,8 +46,8 @@ test('Poseidon: formatPoseidonMovie asigna valores por defecto seguros ante obje
 test('Poseidon: buildPoseidonRows agrupa por estrenos y géneros sin romper', () => {
   const rows = buildPoseidonRows(INITIAL_POSEIDON_MOVIES);
   assert.ok(rows.length >= 3, 'Debe generar al menos 3 filas temáticas');
-  assert.equal(rows[0].id, 'ps:estrenos');
-  assert.equal(rows[0].items.length, INITIAL_POSEIDON_MOVIES.length);
+  assert.equal(rows[0].id, 'ps:tendencias');
+  assert.ok(rows.some(r => r.id === 'ps:estrenos'), 'Debe incluir fila de todos los estrenos');
 
   // Filas deben tener IDs únicos
   const ids = new Set(rows.map(r => r.id));

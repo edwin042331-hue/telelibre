@@ -306,6 +306,12 @@ app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) 
   }
   // Películas de Poseidon (Vidara / StreamWish / Doodstream / Multi-servidor)
   if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
+    const hasStream = (movie.servers && Object.keys(movie.servers).some(k => Array.isArray(movie.servers[k]) && movie.servers[k].length > 0)) ||
+      (movie.stream && movie.stream.length > 5) || (movie.url && movie.url.length > 5);
+    if (!hasStream) {
+      app.toast('Próximamente en PoseidonHD (sin enlaces de video aún)');
+      return;
+    }
     app.toast('Obteniendo video en HD…');
     resolvePoseidonUrls(movie, preferredLang).then(urls => {
       player.playMovie(movie, { urls: urls, subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);

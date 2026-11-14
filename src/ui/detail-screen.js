@@ -50,11 +50,23 @@ export function createDetailScreen(app) {
 
   function renderActions() {
     clear(actions);
-    const p = getProgress(movie.key);
-    const play = start => app.playMovie(movie, list, index, resolved, start, selectedLang);
-    const main = p ? button('play', 'Reanudar ' + formatTime(p.t), () => play(p.t), true) : button('play', 'Ver ahora', () => play(0), true);
-    actions.appendChild(main);
-    if (p) actions.appendChild(button('restart', 'Desde el inicio', () => play(0)));
+    const hasStream = (movie.src !== 'poseidon') || (
+      (movie.servers && Object.keys(movie.servers).some(k => Array.isArray(movie.servers[k]) && movie.servers[k].length > 0)) ||
+      (movie.stream && movie.stream.length > 5) ||
+      (movie.url && movie.url.length > 5)
+    );
+
+    if (!hasStream) {
+      actions.appendChild(button('clock', 'Próximamente en Poseidon', () => {
+        app.toast('PoseidonHD aún no ha publicado enlaces de video para este título.');
+      }, true));
+    } else {
+      const p = getProgress(movie.key);
+      const play = start => app.playMovie(movie, list, index, resolved, start, selectedLang);
+      const main = p ? button('play', 'Reanudar ' + formatTime(p.t), () => play(p.t), true) : button('play', 'Ver ahora', () => play(0), true);
+      actions.appendChild(main);
+      if (p) actions.appendChild(button('restart', 'Desde el inicio', () => play(0)));
+    }
 
     const langs = getAvailableLangs();
     if (langs.length > 1) {
