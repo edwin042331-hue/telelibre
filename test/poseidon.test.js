@@ -132,3 +132,27 @@ test('Poseidon: unpackDeanEdwards desempaqueta correctamente scripts empaquetado
   const unpacked = unpackDeanEdwards(packed);
   assert.equal(unpacked, 'var stream="https";');
 });
+
+test('Películas Edwin: filtrado por género y búsqueda de texto dentro del módulo', () => {
+  const sampleData = [
+    { key: 'poseidon:1', name: 'El sorprendente Hombre Araña', year: 2026, quality: 'HD', type: 'movie', genres: ['accion'] },
+    { key: 'poseidon:2', name: 'Spider-Man Sin Camino a Casa', year: 2021, quality: 'HD', type: 'movie', genres: ['accion'] },
+    { key: 'poseidon:3', name: 'Estreno Futurista', year: 2026, quality: 'CAM', type: 'movie', genres: ['scifi'] },
+    { key: 'poseidon:4', name: 'Terror en la Noche', year: 2026, quality: 'HD', type: 'movie', genres: ['terror'] }
+  ];
+
+  // Filtro por acción
+  const rowsAccion = buildPoseidonRows(sampleData, 'accion');
+  assert.ok(rowsAccion.length > 0, 'Debe devolver filas para acción');
+  assert.ok(rowsAccion.some(r => r.id === 'ps:acc_all'), 'Debe incluir fila completa de acción');
+
+  // Filtro por año 2026
+  const rows2026 = buildPoseidonRows(sampleData, '2026');
+  assert.ok(rows2026.some(r => r.id === 'ps:y2026_all'), 'Debe incluir fila completa de 2026');
+
+  // Búsqueda dentro del módulo
+  const rowsSearch = buildPoseidonRows(sampleData, 'all', 'Futurista');
+  assert.equal(rowsSearch[0].id, 'ps:search');
+  assert.equal(rowsSearch[0].items.length, 1);
+  assert.equal(rowsSearch[0].items[0].name, 'Estreno Futurista');
+});

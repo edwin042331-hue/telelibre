@@ -100,7 +100,7 @@ export function createSettingsScreen(app) {
 
     section('Películas');
     const poseidonOn = s.sources['poseidon'] !== false;
-    list.appendChild(item('Poseidon · Estrenos de Cine HD', onOff(poseidonOn), () => {
+    list.appendChild(item('Películas Edwin · Estrenos de Cine y Series', onOff(poseidonOn), () => {
       s.sources['poseidon'] = !poseidonOn;
       saveSettings();
       app.rebuild();

@@ -4,6 +4,7 @@ import { focus, getFocused, move, onFocusChange } from './ui/focus.js';
 import { icon } from './ui/icons.js';
 import { createSidebar } from './ui/sidebar.js';
 import { createRowsScreen } from './ui/rows-screen.js';
+import { createPoseidonScreen } from './ui/poseidon-screen.js';
 import { createGridScreen } from './ui/grid-screen.js';
 import { createDetailScreen } from './ui/detail-screen.js';
 import { createSearchScreen } from './ui/search-screen.js';
@@ -174,7 +175,7 @@ const screens = {
   home: createRowsScreen(app, 'home', homeRows, 'Cargando contenido…'),
   live: createRowsScreen(app, 'live', () => app.data.liveRows, 'No se pudieron cargar canales. Revisa la conexión o las fuentes en Ajustes.'),
   movies: createRowsScreen(app, 'movies', () => app.data.movieRows, 'No se pudieron cargar películas. Revisa la conexión.'),
-  poseidon: createRowsScreen(app, 'poseidon', () => app.data.poseidonRows, 'Cargando estrenos de Poseidon…'),
+  poseidon: createPoseidonScreen(app),
   anime: createRowsScreen(app, 'anime', () => app.data.animeRows, 'No hay anime disponible ahora. Revisa la conexión o las fuentes en Ajustes.'),
   rd: createRowsScreen(app, 'rd', () => app.data.rdRows, 'No se pudieron cargar los canales dominicanos. Revisa la conexión.'),
   grid: createGridScreen(app),

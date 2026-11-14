@@ -1629,15 +1629,182 @@ export function searchPoseidonLive(q) {
   }).catch(() => []);
 }
 
+export const EDWIN_GENRES = [
+  { id: 'all', label: '🎬 Todos' },
+  { id: '2026', label: '🔥 Estrenos 2026' },
+  { id: 'accion', label: '💥 Acción' },
+  { id: 'terror', label: '👻 Terror' },
+  { id: 'scifi', label: '🚀 Ciencia Ficción' },
+  { id: 'comedia', label: '😂 Comedia' },
+  { id: 'suspenso', label: '🔍 Suspenso' },
+  { id: 'familia', label: '👨‍👩‍👧 Familiar' },
+  { id: 'drama', label: '🎭 Drama' },
+  { id: 'romance', label: '💘 Romance' },
+  { id: 'series', label: '📺 Series' },
+  { id: 'sagas', label: '🕷️ Sagas' },
+  { id: 'hd', label: '💎 Solo HD' }
+];
+
 // Organiza las películas en filas temáticas por AÑO y por GÉNERO
-export function buildPoseidonRows(movies) {
+export function buildPoseidonRows(movies, filterGenre, searchQuery) {
   if (state.settings && state.settings.sources && state.settings.sources['poseidon'] === false) {
     return [];
   }
   const list = movies || getPoseidonMoviesSync();
   const rows = [];
 
-  // Fila 0: Tendencias Poseidon (Cartelera oficial de poseidonhd2.co)
+  // Búsqueda por texto dentro de Películas Edwin
+  if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim()) {
+    const q = searchQuery.trim().toLowerCase();
+    const matches = list.filter(m => {
+      const n = (m.name || '').toLowerCase();
+      const o = (m.overview || m.summary || '').toLowerCase();
+      const y = String(m.year || '');
+      return n.indexOf(q) >= 0 || o.indexOf(q) >= 0 || y === q;
+    });
+    rows.push({
+      id: 'ps:search',
+      title: '🔍 Resultados para "' + searchQuery.trim() + '" (' + matches.length + ')',
+      items: matches
+    });
+    const extra2026 = list.filter(m => m.year === 2026 && matches.indexOf(m) < 0).slice(0, 15);
+    if (extra2026.length) {
+      rows.push({
+        id: 'ps:search_suggestions',
+        title: '🔥 Otros Estrenos 2026 recomendados (' + extra2026.length + ')',
+        items: extra2026
+      });
+    }
+    return rows;
+  }
+
+  const genre = filterGenre || 'all';
+
+  // Si se filtra por un género específico dentro de Películas Edwin
+  if (genre !== 'all') {
+    if (genre === '2026') {
+      const y2026 = list.filter(m => m.year === 2026 && m.type !== 'series');
+      const hd2026 = y2026.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      const acc2026 = y2026.filter(m => (m.genres || []).indexOf('accion') >= 0);
+      const ter2026 = y2026.filter(m => (m.genres || []).indexOf('terror') >= 0 || (m.genres || []).indexOf('suspenso') >= 0);
+      const com2026 = y2026.filter(m => (m.genres || []).indexOf('comedia') >= 0);
+      const sci2026 = y2026.filter(m => (m.genres || []).indexOf('scifi') >= 0);
+
+      rows.push({ id: 'ps:y2026_all', title: '🔥 Todos los Estrenos 2026 (' + y2026.length + ')', items: y2026 });
+      if (hd2026.length) rows.push({ id: 'ps:y2026_hd', title: '💎 Estrenos 2026 en HD 1080p (' + hd2026.length + ')', items: hd2026 });
+      if (acc2026.length) rows.push({ id: 'ps:y2026_acc', title: '💥 Acción 2026 (' + acc2026.length + ')', items: acc2026 });
+      if (ter2026.length) rows.push({ id: 'ps:y2026_ter', title: '👻 Terror y Suspenso 2026 (' + ter2026.length + ')', items: ter2026 });
+      if (sci2026.length) rows.push({ id: 'ps:y2026_sci', title: '🚀 Ciencia Ficción 2026 (' + sci2026.length + ')', items: sci2026 });
+      if (com2026.length) rows.push({ id: 'ps:y2026_com', title: '😂 Comedia 2026 (' + com2026.length + ')', items: com2026 });
+      return rows;
+    }
+
+    if (genre === 'accion') {
+      const items = list.filter(m => ((m.genres || []).indexOf('accion') >= 0 || (m.genres || []).indexOf('aventura') >= 0) && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:acc_26', title: '🔥 Estrenos 2026 de Acción y Aventura (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:acc_hd', title: '💎 Acción en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:acc_all', title: '💥 Catálogo Completo de Acción (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'terror') {
+      const items = list.filter(m => ((m.genres || []).indexOf('terror') >= 0 || (m.genres || []).indexOf('suspenso') >= 0) && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:ter_26', title: '🔥 Estrenos 2026 de Terror y Suspenso (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:ter_hd', title: '💎 Terror en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:ter_all', title: '👻 Catálogo Completo de Terror y Suspenso (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'scifi') {
+      const items = list.filter(m => (m.genres || []).indexOf('scifi') >= 0 && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:sci_26', title: '🔥 Estrenos 2026 de Ciencia Ficción (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:sci_hd', title: '💎 Ciencia Ficción en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:sci_all', title: '🚀 Toda la Ciencia Ficción y Futuro (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'comedia') {
+      const items = list.filter(m => (m.genres || []).indexOf('comedia') >= 0 && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:com_26', title: '🔥 Estrenos 2026 de Comedia (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:com_hd', title: '💎 Comedias en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:com_all', title: '😂 Todas las Comedias y Humor (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'suspenso') {
+      const items = list.filter(m => ((m.genres || []).indexOf('suspenso') >= 0 || (m.genres || []).indexOf('crimen') >= 0) && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:susp_26', title: '🔥 Estrenos 2026 de Suspenso y Misterio (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:susp_hd', title: '💎 Suspenso en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:susp_all', title: '🔍 Todo Suspenso y Misterio (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'familia') {
+      const items = list.filter(m => ((m.genres || []).indexOf('animacion') >= 0 || (m.genres || []).indexOf('familia') >= 0) && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:fam_26', title: '🔥 Estrenos 2026 Animados y Familiares (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:fam_hd', title: '💎 Animación y Familiar en HD (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:fam_all', title: '👨‍👩‍👧 Todo Animación y Familiar (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'drama') {
+      const items = list.filter(m => ((m.genres || []).indexOf('drama') >= 0 || (m.genres || []).indexOf('crimen') >= 0) && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:dra_26', title: '🔥 Estrenos 2026 de Drama y Crimen (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:dra_hd', title: '💎 Dramas en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:dra_all', title: '🎭 Todo Drama y Crimen (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'romance') {
+      const items = list.filter(m => (m.genres || []).indexOf('romance') >= 0 && m.type !== 'series');
+      const y26 = items.filter(m => m.year === 2026);
+      const hd = items.filter(m => (m.quality || '').toUpperCase() === 'HD');
+      if (y26.length) rows.push({ id: 'ps:rom_26', title: '🔥 Estrenos 2026 de Romance (' + y26.length + ')', items: y26 });
+      if (hd.length) rows.push({ id: 'ps:rom_hd', title: '💎 Romance en HD 1080p (' + hd.length + ')', items: hd });
+      rows.push({ id: 'ps:rom_all', title: '💘 Todo Romance y Pasión (' + items.length + ')', items: items });
+      return rows;
+    }
+
+    if (genre === 'series') {
+      const sList = list.filter(m => m.type === 'series');
+      rows.push({ id: 'ps:series', title: '📺 Series y Miniseries Completas (' + sList.length + ')', items: sList });
+      return rows;
+    }
+
+    if (genre === 'sagas') {
+      const sagas = list.filter(m => {
+        const n = (m.name || '').toLowerCase();
+        return n.indexOf('spider') >= 0 || n.indexOf('hombre araña') >= 0 || n.indexOf('avenger') >= 0 ||
+               n.indexOf('vengador') >= 0 || n.indexOf('batman') >= 0 || n.indexOf('deadpool') >= 0;
+      });
+      rows.push({ id: 'ps:sagas', title: '🕷️ Sagas y Superhéroes (' + sagas.length + ')', items: sagas });
+      return rows;
+    }
+
+    if (genre === 'hd') {
+      const hd = list.filter(m => (m.quality || '').toUpperCase() === 'HD' && m.type !== 'series');
+      const hd26 = hd.filter(m => m.year === 2026);
+      if (hd26.length) rows.push({ id: 'ps:hd_26', title: '🔥 Estrenos 2026 en HD 1080p (' + hd26.length + ')', items: hd26 });
+      rows.push({ id: 'ps:hd_all', title: '💎 Todas las Películas en HD 1080p (' + hd.length + ')', items: hd });
+      return rows;
+    }
+  }
+
+  // Fila 0: Cartelera Estelar Edwin (Tendencias oficiales de la portada)
   const TOP_IDS = [
     1368337, // La Odisea
     1400837, // Madre siniestra
@@ -1670,7 +1837,7 @@ export function buildPoseidonRows(movies) {
   if (tendencias.length >= 3) {
     rows.push({
       id: 'ps:tendencias',
-      title: '🔥 Tendencias Poseidon (' + tendencias.length + ')',
+      title: '🔥 Cartelera Estelar Edwin (' + tendencias.length + ')',
       items: tendencias
     });
   }
@@ -1698,7 +1865,7 @@ export function buildPoseidonRows(movies) {
   if (seriesList.length >= 1) {
     rows.push({
       id: 'ps:series',
-      title: '📺 Series Poseidon (' + seriesList.length + ')',
+      title: '📺 Series Películas Edwin (' + seriesList.length + ')',
       items: seriesList
     });
   }

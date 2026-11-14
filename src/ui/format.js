@@ -29,7 +29,7 @@ export function formatClock(d) {
 export function itemTags(item) {
   if (item.type === 'series') {
     const sCount = Array.isArray(item.seasons) ? item.seasons.length : (item.seasons || 0);
-    const srcTag = item.src === 'poseidon' ? 'Poseidon HD' : 'Pluto TV';
+    const srcTag = item.src === 'poseidon' ? 'Películas Edwin' : 'Pluto TV';
     return [item.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag].filter(Boolean);
   }
   if (item.type === 'episode') {

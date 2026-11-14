@@ -58,8 +58,8 @@ export function createDetailScreen(app) {
     const p = hasStream ? getProgress(movie.key) : null;
 
     if (!hasStream) {
-      actions.appendChild(button('clock', 'Próximamente en Poseidon', () => {
-        app.toast('PoseidonHD aún no ha publicado enlaces de video para este título.');
+      actions.appendChild(button('clock', 'Próximamente en Películas Edwin', () => {
+        app.toast('Este título aún no tiene enlaces de video disponibles.');
       }, true));
     } else {
       const play = start => app.playMovie(movie, list, index, resolved, start, selectedLang);

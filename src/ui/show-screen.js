@@ -152,7 +152,7 @@ export function createShowScreen(app) {
       title.textContent = series.name;
       clear(tags);
       const sCount = Array.isArray(series.seasons) ? series.seasons.length : (series.seasons || 0);
-      const srcTag = series.src === 'poseidon' ? 'Poseidon HD · Estreno' : 'Pluto TV · gratis con anuncios';
+      const srcTag = series.src === 'poseidon' ? 'Películas Edwin · Serie' : 'Pluto TV · gratis con anuncios';
       [series.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag]
         .filter(Boolean).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
       summary.textContent = series.summary || '';
