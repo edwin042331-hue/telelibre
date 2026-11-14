@@ -51,6 +51,18 @@ function requestPostJson(url, data, headers, timeoutMs) {
 }
 
 function requestGetRedirect(url, headers, timeoutMs) {
+  if (typeof XMLHttpRequest === 'undefined' && typeof fetch !== 'undefined') {
+    return fetch(url, {
+      method: 'GET',
+      headers: headers || {},
+      redirect: 'follow',
+      signal: AbortSignal.timeout(timeoutMs || 8000)
+    }).then(r => {
+      if (r.url && r.url !== url) return r.url;
+      if (r.ok) return r.url || url;
+      throw new Error('HTTP ' + r.status);
+    });
+  }
   return new Promise((resolve, reject) => {
     try {
       const xhr = new XMLHttpRequest();
@@ -82,6 +94,39 @@ function requestGetRedirect(url, headers, timeoutMs) {
   });
 }
 
+/** Comprueba si el stream HLS y sus segmentos están disponibles y no truncados */
+export function checkStreamHealth(url, timeoutMs) {
+  if (!url || typeof url !== 'string') return Promise.resolve(false);
+  if (url.indexOf('97bf1') < 0 && url.indexOf('vidara') < 0) return Promise.resolve(true);
+  if (typeof fetch === 'undefined') return Promise.resolve(true);
+
+  const base = url.substring(0, url.lastIndexOf('/') + 1);
+  return fetch(url, { signal: AbortSignal.timeout(timeoutMs || 2500) })
+    .then(r => r.ok ? r.text() : '')
+    .then(txt => {
+      if (!txt || typeof txt !== 'string') return false;
+      const subline = txt.split('\n').find(l => l.indexOf('.m3u8') >= 0);
+      if (!subline) return true;
+      return fetch(base + subline.trim(), { signal: AbortSignal.timeout(timeoutMs || 2500) })
+        .then(sr => sr.ok ? sr.text() : '')
+        .then(subtxt => {
+          if (!subtxt) return false;
+          const segline = subtxt.split('\n').find(l => l && l.charAt(0) !== '#');
+          if (!segline) return true;
+          return fetch(base + segline.trim(), { signal: AbortSignal.timeout(timeoutMs || 2500) })
+            .then(segr => {
+              const cr = segr.headers.get('content-range');
+              const cl = parseInt(segr.headers.get('content-length') || '0', 10);
+              if (cr && cl === 1024 && cr.indexOf('/') >= 0 && cr.indexOf('/1024') < 0) {
+                return false;
+              }
+              return segr.status >= 200 && segr.status < 400;
+            }).catch(() => false);
+        }).catch(() => false);
+    })
+    .catch(() => false);
+}
+
 /** Resuelve stream de Vidara (HLS .m3u8 maestro) */
 export function resolveVidara(filecode, timeoutMs) {
   const now = Date.now();
@@ -95,9 +140,12 @@ export function resolveVidara(filecode, timeoutMs) {
   }, null, timeoutMs || 6000).then(res => {
     const stream = res && res.streaming_url;
     if (!stream) throw new Error('Vidara: No se encontró URL de stream');
-    // Token dura ~8h -> cache de 4 horas
-    cache[filecode] = { streamUrl: stream, expiresAt: now + 4 * 3600 * 1000 };
-    return stream;
+    return checkStreamHealth(stream, 2500).then(healthy => {
+      if (!healthy) throw new Error('Vidara: Servidor edge con segmentos incompletos');
+      // Token dura ~8h -> cache de 4 horas
+      cache[filecode] = { streamUrl: stream, expiresAt: now + 4 * 3600 * 1000 };
+      return stream;
+    });
   });
 }
 
@@ -158,43 +206,57 @@ export function resolveSingleDescriptor(target, timeoutMs) {
 
 /**
  * Resolutor universal con cascada de servidores:
- * Si el servidor 1 falla o demora, pasa automáticamente al servidor 2 y 3.
+ * Devuelve un array de URLs funcionales [primaria, respaldo] ordenadas por salud y preferencia.
  */
-export function resolvePoseidon(movieOrServers, preferredLang) {
+export function resolvePoseidonUrls(movieOrServers, preferredLang) {
   if (!movieOrServers) return Promise.reject(new Error('No hay contenido'));
 
-  // Si tiene mapa de servidores multi-idioma (ej: movie.servers = { latino: [...], spanish: [...] })
   const serversMap = movieOrServers.servers || (movieOrServers.latino || movieOrServers.spanish ? movieOrServers : null);
   if (serversMap && typeof serversMap === 'object') {
     const lang = (preferredLang || 'latino').toLowerCase();
-    const list = serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || [];
-    if (Array.isArray(list) && list.length > 0) {
-      // Cascada secuencial con timeout rápido por intento (3.8 segundos)
-      let p = Promise.reject(new Error('Sin servidor inicial'));
-      list.forEach(candidate => {
-        p = p.catch(() => resolveSingleDescriptor(candidate, 3800));
+    const primaryList = serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || [];
+    const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
+
+    let p = Promise.reject(new Error('Sin servidor inicial'));
+    primaryList.forEach(candidate => {
+      p = p.catch(() => resolveSingleDescriptor(candidate, 3800));
+    });
+
+    return p.then(primaryUrl => {
+      const altCandidates = [];
+      otherLangs.forEach(altKey => {
+        const altList = serversMap[altKey] || [];
+        if (altList.length > 0) altCandidates.push(altList[0]);
       });
-      return p.catch(() => {
-        // Si falló el idioma preferido, probar cualquier otro idioma disponible
-        const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
-        let fallbackP = Promise.reject(new Error('Probando idiomas alternativos'));
-        otherLangs.forEach(altKey => {
-          const altList = serversMap[altKey] || [];
-          altList.forEach(cand => {
-            fallbackP = fallbackP.catch(() => resolveSingleDescriptor(cand, 3800));
-          });
+      if (!altCandidates.length) return [primaryUrl];
+
+      let altP = Promise.reject(new Error('Sin alt'));
+      altCandidates.forEach(cand => {
+        altP = altP.catch(() => resolveSingleDescriptor(cand, 2500));
+      });
+      return altP.then(altUrl => {
+        return (altUrl && altUrl !== primaryUrl) ? [primaryUrl, altUrl] : [primaryUrl];
+      }).catch(() => [primaryUrl]);
+    }).catch(() => {
+      let fallbackP = Promise.reject(new Error('Probando idiomas alternativos'));
+      otherLangs.forEach(altKey => {
+        const altList = serversMap[altKey] || [];
+        altList.forEach(cand => {
+          fallbackP = fallbackP.catch(() => resolveSingleDescriptor(cand, 3800));
         });
-        return fallbackP;
-      }).catch(() => {
-        // Último recurso: si tiene stream o url directo
-        const direct = movieOrServers.stream || movieOrServers.url;
-        if (direct) return resolveSingleDescriptor(direct, 4500);
-        return Promise.reject(new Error('Ningún servidor respondió'));
       });
-    }
+      return fallbackP.then(fallbackUrl => [fallbackUrl]);
+    }).catch(() => {
+      const direct = movieOrServers.stream || movieOrServers.url;
+      if (direct) return resolveSingleDescriptor(direct, 4500).then(u => [u]);
+      return Promise.reject(new Error('Ningún servidor respondió'));
+    });
   }
 
-  // Si es un movie normal con string stream o url
   const target = (typeof movieOrServers === 'object' ? (movieOrServers.stream || movieOrServers.url) : movieOrServers) || '';
-  return resolveSingleDescriptor(target);
+  return resolveSingleDescriptor(target).then(u => [u]);
+}
+
+export function resolvePoseidon(movieOrServers, preferredLang) {
+  return resolvePoseidonUrls(movieOrServers, preferredLang).then(urls => urls[0]);
 }

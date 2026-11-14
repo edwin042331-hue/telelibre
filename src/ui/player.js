@@ -162,7 +162,8 @@ export function createPlayer(app) {
     const my = ++token;
     const a = attempts[attempt];
     setState('loading');
-    watchdog = setTimeout(() => { if (my === token) fail(); }, mode === 'movie' ? MOVIE_TIMEOUT : LIVE_TIMEOUT);
+    const timeout = (attempt + 1 < attempts.length && mode === 'movie') ? 12000 : (mode === 'movie' ? MOVIE_TIMEOUT : LIVE_TIMEOUT);
+    watchdog = setTimeout(() => { if (my === token) fail(); }, timeout);
 
     if (mode === 'movie' && item._subtitles && item._subtitles.length) {
       // crossorigin solo con subtítulos: muchos streams en vivo no envían CORS y fallarían con él.

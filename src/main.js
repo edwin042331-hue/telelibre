@@ -19,7 +19,7 @@ import { state, toggleFavorite, continueWatching, isFavorite, profiles, activePr
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
 import { loadPoseidonCatalog, buildPoseidonRows, getPoseidonMoviesSync } from './poseidon.js';
-import { resolvePoseidon } from './resolvers.js';
+import { resolvePoseidon, resolvePoseidonUrls } from './resolvers.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
 import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise, reloadTaste } from './smart.js';
 import { createProfilesScreen, createNewProfileScreen } from './ui/profiles-screen.js';
@@ -307,8 +307,8 @@ app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) 
   // Películas de Poseidon (Vidara / StreamWish / Doodstream / Multi-servidor)
   if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
     app.toast('Obteniendo video en HD…');
-    resolvePoseidon(movie, preferredLang).then(url => {
-      player.playMovie(movie, { urls: [url], subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);
+    resolvePoseidonUrls(movie, preferredLang).then(urls => {
+      player.playMovie(movie, { urls: urls, subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);
     }).catch(() => {
       app.toast('El servidor de video no respondió. Intenta de nuevo.');
     });
@@ -329,8 +329,8 @@ app.playEpisode = function (ep, list, index, startAt, preferredLang) {
   const next = list[index + 1];
   if (ep.src === 'poseidon' || ep.servers || (ep.url && (ep.url.indexOf('vidara:') === 0 || ep.url.indexOf('streamwish:') === 0 || ep.url.indexOf('dood:') === 0))) {
     app.toast('Obteniendo episodio en HD…');
-    resolvePoseidon(ep, preferredLang).then(url => {
-      player.playMovie(ep, { urls: [url], subtitles: [], duration: ep.runtime || 2700 }, startAt || 0, next ? {
+    resolvePoseidonUrls(ep, preferredLang).then(urls => {
+      player.playMovie(ep, { urls: urls, subtitles: [], duration: ep.runtime || 2700 }, startAt || 0, next ? {
         next: () => app.playEpisode(next, list, index + 1, 0, preferredLang),
         nextLabel: 'T' + next.season + ':E' + next.number + '  ·  ' + next.title
       } : null);
