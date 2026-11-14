@@ -1,5 +1,11 @@
-// XHR en vez de fetch: los webOS 3.x (Chromium 38) no tienen fetch y core-js no lo polyfillea.
+// XHR para webOS 3.x (Chromium 38 sin fetch nativo) y fetch en entornos modernos / Node.js
 export function getText(url, timeoutMs) {
+  if (typeof XMLHttpRequest === 'undefined' && typeof fetch !== 'undefined') {
+    return fetch(url, { signal: AbortSignal.timeout(timeoutMs || 20000) }).then(res => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    });
+  }
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
