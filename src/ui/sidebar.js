@@ -9,6 +9,7 @@ export const NAV = [
   ['guide', 'guide', 'Guía de TV'],
   ['live', 'live', 'TV en vivo'],
   ['movies', 'movie', 'Películas'],
+  ['poseidon', 'trident', 'Poseidon'],
   ['series', 'series', 'Series'],
   ['anime', 'anime', 'Anime'],
   ['surprise', 'dice', 'Sorpréndeme'],

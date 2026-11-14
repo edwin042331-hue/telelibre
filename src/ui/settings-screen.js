@@ -99,6 +99,13 @@ export function createSettingsScreen(app) {
     list.appendChild(item('Agregar lista M3U propia', 'Pega o escribe la URL', () => app.push('addlist')));
 
     section('Películas');
+    const poseidonOn = s.sources['poseidon'] !== false;
+    list.appendChild(item('Poseidon · Estrenos de Cine HD', onOff(poseidonOn), () => {
+      s.sources['poseidon'] = !poseidonOn;
+      saveSettings();
+      app.rebuild();
+      render();
+    }));
     VOD_SOURCES.forEach(src => {
       const on = isVodSourceOn(src, s);
       const n = stats[src.id];

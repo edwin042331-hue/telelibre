@@ -18,6 +18,8 @@ import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile, getProgress } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
+import { loadPoseidonCatalog, buildPoseidonRows, getPoseidonMoviesSync } from './poseidon.js';
+import { resolvePoseidon } from './resolvers.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
 import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise, reloadTaste } from './smart.js';
 import { createProfilesScreen, createNewProfileScreen } from './ui/profiles-screen.js';
@@ -34,7 +36,7 @@ import { formatClock } from './ui/format.js';
 const HTTPS_ONLY = location.protocol === 'https:';
 
 const app = {
-  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], animeRows: [], rdRows: [], seriesRows: [], seriesAll: [], stats: {}, httpsHidden: 0 },
+  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], poseidonRows: [], animeRows: [], rdRows: [], seriesRows: [], seriesAll: [], stats: {}, httpsHidden: 0 },
   raw: []
 };
 
@@ -172,6 +174,7 @@ const screens = {
   home: createRowsScreen(app, 'home', homeRows, 'Cargando contenido…'),
   live: createRowsScreen(app, 'live', () => app.data.liveRows, 'No se pudieron cargar canales. Revisa la conexión o las fuentes en Ajustes.'),
   movies: createRowsScreen(app, 'movies', () => app.data.movieRows, 'No se pudieron cargar películas. Revisa la conexión.'),
+  poseidon: createRowsScreen(app, 'poseidon', () => app.data.poseidonRows, 'Cargando estrenos de Poseidon…'),
   anime: createRowsScreen(app, 'anime', () => app.data.animeRows, 'No hay anime disponible ahora. Revisa la conexión o las fuentes en Ajustes.'),
   rd: createRowsScreen(app, 'rd', () => app.data.rdRows, 'No se pudieron cargar los canales dominicanos. Revisa la conexión.'),
   grid: createGridScreen(app),
@@ -261,6 +264,7 @@ app.markDirty = function () {
   screens.home.dirty = true;
   screens.live.dirty = true;
   screens.movies.dirty = true;
+  screens.poseidon.dirty = true;
   screens.anime.dirty = true;
   screens.rd.dirty = true;
   screens.series.dirty = true;
@@ -298,6 +302,16 @@ app.playMovie = function (movie, list, index, resolved, startAt) {
   if (resolved) {
     if (!resolved.urls.length) { app.toast('Esta película no tiene un video compatible'); return; }
     player.playMovie(movie, resolved, startAt);
+    return;
+  }
+  // Películas de Poseidon (Vidara / StreamWish / Doodstream)
+  if (movie.src === 'poseidon' || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0))) {
+    app.toast('Obteniendo video en HD…');
+    resolvePoseidon(movie).then(url => {
+      player.playMovie(movie, { urls: [url], subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);
+    }).catch(() => {
+      app.toast('El servidor de video no respondió. Intenta de nuevo.');
+    });
     return;
   }
   // Películas de la API de Pluto: la URL lleva la sesión actual.
@@ -542,7 +556,10 @@ function setFavMark(card, on) {
 function mergeMovies() {
   const seen = {};
   app.data.movies = [];
-  plutoApiMovies().concat(app.data.listMovies || []).forEach(m => { if (!seen[m.key]) { seen[m.key] = true; app.data.movies.push(m); } });
+  const poseidon = getPoseidonMoviesSync();
+  poseidon.concat(plutoApiMovies()).concat(app.data.listMovies || []).forEach(m => {
+    if (!seen[m.key]) { seen[m.key] = true; app.data.movies.push(m); }
+  });
 }
 
 // quiet: recalcula los datos sin repintar la pantalla que el usuario está mirando.
@@ -567,6 +584,7 @@ app.rebuild = function (quiet) {
   const movies = kidsOn() ? app.data.movies.filter(m => m.genres.indexOf('animacion') >= 0 || m.genres.indexOf('familia') >= 0) : app.data.movies;
   app.data.visibleMovies = movies;
   app.data.movieRows = buildMovieRows(movies);
+  app.data.poseidonRows = buildPoseidonRows(getPoseidonMoviesSync());
   app.data.animeRows = kidsOn() ? [] : buildAnimeRows(spanish, english, movies);
   app.data.moviesByKey = indexByKey(app.data.movies);
   app.markDirty();
@@ -662,7 +680,8 @@ app.reload = function (force) {
       progressLine(r, 'películas');
       vodParts[VOD_SOURCES.indexOf(r.source)] = r;
       if (opened) arrivedLate();
-    } })
+    } }),
+    loadPoseidonCatalog().catch(() => {})
   ]).then(() => {
     clearTimeout(earlyTimer);
     if (opened) { clearTimeout(partialTimer); publish(); app.rebuild(player.isOpen()); } else open();

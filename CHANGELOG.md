@@ -1,5 +1,16 @@
 # Cambios
 
+## 1.4.0 (2026-11-13): Poseidon (Estrenos de Cine HD)
+
+- **Nueva sección dedicada «Poseidon» en el menú lateral**: pantalla independiente con los últimos estrenos de cine organizados por filas temáticas (Estrenos 2026, Acción y Aventura, Ciencia Ficción, Terror y Suspenso, Comedia y Familiar).
+- **Motor de resolución de streams en tiempo real (`src/resolvers.js`)**:
+  - Soporte para **Vidara** (HLS master `.m3u8` multi-calidad adaptativo con token firmado para la IP del cliente).
+  - Soporte para **StreamWish** (MP4 directo a 720p).
+  - Soporte para **Doodstream** (MP4 directo en alta velocidad con algoritmo de 10 dígitos aleatorios y expiry).
+- **Caché en memoria con TTL**: las resoluciones se almacenan en memoria para reproducir al instante sin reconsultar el servidor si se pausa o se reanuda.
+- **Control total en Ajustes**: interruptor para activar o desactivar la sección Poseidon en cualquier momento.
+- **Integración con favoritos y progreso**: las películas de Poseidon se pueden agregar a Mi lista, reanudar en Continuar viendo y buscar desde la búsqueda global.
+
 ## 1.3.0 (2026-10-27): ronda 5
 
 - **Actualizar desde la misma TV** (Android): al salir una versión nueva aparece "Actualizar ahora / Después", y también está en Ajustes. La app descarga la APK y comprueba que tenga la misma firma que la instalada (SHA-256 de los certificados; si no coincide, la descarta). Después se la pasa al instalador de Android (`PackageInstaller`), que conserva los datos. La primera vez Android pide el permiso *Permitir de esta fuente*.

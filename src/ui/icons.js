@@ -6,6 +6,7 @@ export const ICONS = {
   home: svg('<path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/>'),
   live: svg('<path d="M3 6h18v12H3zM8 2l4 3 4-3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5"/>'),
   movie: svg('<path d="M4 4h16v16H4zM4 8h16M4 16h16M8 4v4M12 4v4M16 4v4M8 16v4M12 16v4M16 16v4" fill="none" stroke="currentColor" stroke-width="2"/>'),
+  trident: svg('<path d="M12 2v20M12 2l-4 4v5c0 2.2 1.8 4 4 4s4-1.8 4-4V6l-4-4zM5 6v5a7 7 0 007 7 7 7 0 007-7V6" fill="none" stroke="currentColor" stroke-width="2"/>'),
   anime: svg('<path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path d="M19 2l.9 2.1L22 5l-2.1.9L19 8l-.9-2.1L16 5l2.1-.9z"/>'),
   // Bandera dominicana (a color, no usa currentColor).
   flag: '<svg viewBox="0 0 24 16" width="100%" height="100%" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#fff"/><rect x="0" y="0" width="10" height="6" fill="#002d62"/><rect x="14" y="0" width="10" height="6" fill="#ce1126"/><rect x="0" y="10" width="10" height="6" fill="#ce1126"/><rect x="14" y="10" width="10" height="6" fill="#002d62"/><circle cx="12" cy="8" r="1.6" fill="#2e7d32"/></svg>',
