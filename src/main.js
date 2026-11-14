@@ -18,7 +18,7 @@ import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile, getProgress } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
-import { loadPoseidonCatalog, buildPoseidonRows, getPoseidonMoviesSync } from './poseidon.js';
+import { loadPoseidonCatalog, buildPoseidonRows, getPoseidonMoviesSync, refreshPoseidonRemote } from './poseidon.js';
 import { resolvePoseidon, resolvePoseidonUrls } from './resolvers.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
 import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise, reloadTaste } from './smart.js';
@@ -717,6 +717,18 @@ function refreshPlutoGuide() {
   loadPlutoEpg(app.raw || []).then(ok => { if (ok && started) app.rebuild(true); });
 }
 setInterval(refreshPlutoGuide, 60 * 60 * 1000);
+
+// Sincronización automática silenciosa del catálogo Poseidon desde GitHub Pages
+function autoSyncPoseidon() {
+  refreshPoseidonRemote(newMovies => {
+    if (newMovies && started) {
+      mergeMovies();
+      app.rebuild(player.isOpen());
+    }
+  });
+}
+setTimeout(autoSyncPoseidon, 10000);
+setInterval(autoSyncPoseidon, 4 * 60 * 60 * 1000);
 
 // ---------- Control remoto ----------
 let lastBack = 0;

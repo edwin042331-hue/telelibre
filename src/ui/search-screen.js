@@ -6,6 +6,7 @@ import { itemCard, loadVisibleImages } from './card.js';
 import { icon } from './icons.js';
 import { searchChannels, normalizeText } from '../catalog.js';
 import { searchArchive } from '../vod.js';
+import { searchPoseidonLive } from '../poseidon.js';
 
 export function createSearchScreen(app) {
   const query = h('div', { class: 'search-query' });
@@ -63,14 +64,23 @@ export function createSearchScreen(app) {
     if (!q.trim()) { show([]); status.textContent = 'Escribe el nombre de un canal o película'; return; }
     const local = searchMovies(q).concat(searchSeries(q), searchChannels(app.data.channels, q, 40));
     show(local);
-    status.textContent = local.length ? local.length + ' resultados' : 'Buscando en Internet Archive…';
+    status.textContent = local.length ? local.length + ' resultados' : 'Buscando en PoseidonHD e Internet Archive…';
     if (app.kidsOn()) return;
     remoteTimer = setTimeout(() => {
-      searchArchive(q).then(found => {
+      Promise.all([
+        searchPoseidonLive(q).catch(() => []),
+        searchArchive(q).catch(() => [])
+      ]).then(([poseidonFound, archiveFound]) => {
         if (my !== token) return;
         const seen = {};
         local.forEach(i => { seen[i.key] = true; });
-        const extra = found.filter(m => !seen[m.key]);
+        const extra = [];
+        (poseidonFound || []).concat(archiveFound || []).forEach(item => {
+          if (!seen[item.key]) {
+            seen[item.key] = true;
+            extra.push(item);
+          }
+        });
         if (!extra.length) { if (!local.length) status.textContent = 'Sin resultados para "' + q + '"'; return; }
         const all = local.concat(extra);
         // Si el usuario está navegando los resultados no se le mueve el foco: solo se agregan al final.
@@ -79,12 +89,12 @@ export function createSearchScreen(app) {
           card._onEnter = () => app.open(item, all, local.length + j);
           results.appendChild(card);
         });
-        status.textContent = all.length + ' resultados (incluye Internet Archive)';
+        status.textContent = all.length + ' resultados (incluye PoseidonHD e Internet Archive)';
         loadVisibleImages(el);
       }, () => {
-        if (my === token && !local.length) status.textContent = 'Sin resultados (Internet Archive no respondió)';
+        if (my === token && !local.length) status.textContent = 'Sin resultados';
       });
-    }, 600);
+    }, 400);
   }
 
   const screen = {

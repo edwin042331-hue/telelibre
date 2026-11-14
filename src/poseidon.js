@@ -1574,6 +1574,61 @@ export function getPoseidonMoviesSync() {
   return cachedMovies;
 }
 
+// Actualización silenciosa en segundo plano desde GitHub Pages
+export function refreshPoseidonRemote(onUpdate) {
+  const REMOTE_URL = 'https://edwin042331-hue.github.io/telelibre/poseidon.json';
+  return getText(REMOTE_URL + '?t=' + Date.now(), 6000).then(text => {
+    try {
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed) && parsed.length) {
+        if (!cachedMovies || parsed.length !== cachedMovies.length) {
+          cachedMovies = parsed.map(formatPoseidonMovie);
+          if (typeof onUpdate === 'function') onUpdate(cachedMovies);
+          return cachedMovies;
+        }
+      }
+    } catch (e) {}
+    return null;
+  }).catch(() => null);
+}
+
+// Búsqueda en vivo en poseidonhd2.co para encontrar cualquier película o serie en tiempo real
+export function searchPoseidonLive(q) {
+  if (!q || q.trim().length < 2) return Promise.resolve([]);
+  const url = 'https://www.poseidonhd2.co/search?q=' + encodeURIComponent(q.trim());
+  return getText(url, 4500).then(html => {
+    if (!html) return [];
+    const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+    if (!match) return [];
+    try {
+      const data = JSON.parse(match[1]);
+      const pp = data.props && data.props.pageProps;
+      const list = (pp && pp.movies) || [];
+      return list.map(m => {
+        const isSeries = (m.url && m.url.slug && m.url.slug.indexOf('series/') === 0);
+        const poster = (m.images && (m.images.poster || m.images.backdrop)) || '';
+        const tmdbId = m.TMDbId || m.id || (m.url && m.url.slug ? m.url.slug.split('/')[1] : '');
+        return formatPoseidonMovie({
+          key: 'poseidon:' + (isSeries ? 'serie:' : '') + tmdbId,
+          type: isSeries ? 'series' : 'movie',
+          src: 'poseidon',
+          name: (m.titles && m.titles.name) || m.title || '',
+          slug: (m.url && m.url.slug) || '',
+          year: parseInt(((m.releaseDate || '') + '').slice(0, 4), 10) || 2026,
+          poster: poster,
+          art: (m.images && m.images.backdrop) || poster,
+          img: poster,
+          overview: m.overview || '',
+          summary: m.overview || '',
+          quality: 'HD'
+        });
+      });
+    } catch (e) {
+      return [];
+    }
+  }).catch(() => []);
+}
+
 // Organiza las películas en filas temáticas por AÑO y por GÉNERO
 export function buildPoseidonRows(movies) {
   if (state.settings && state.settings.sources && state.settings.sources['poseidon'] === false) {

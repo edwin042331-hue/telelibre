@@ -196,6 +196,7 @@ async function processMovie(m) {
       overview,
       summary: overview,
       src: 'poseidon',
+      slug: m.url?.slug || '',
       stream: streamTarget,
       url: streamTarget,
       lang: 'es'
@@ -321,8 +322,24 @@ async function main() {
   const seenKeys = new Set();
   const rawMovies = [];
 
-  // 1. Recolectar estrenos de las páginas 1 a 15 de /peliculas
-  console.log('Fase 1: Recolectando catálogo de películas (Páginas 1 a 15)...');
+  // 1. Recolectar estrenos de portada y de las páginas 1 a 15 de /peliculas
+  console.log('Fase 1: Recolectando catálogo de películas (Portada y Páginas 1 a 15)...');
+  try {
+    const homeData = await fetchJson(`${BASE}/`);
+    const hpp = homeData.props?.pageProps || {};
+    const homeList = (hpp.tabTopMovies || []).concat(hpp.tabLastMovies || [], hpp.tabLastReleasedMovies || [], hpp.sliderItems || []);
+    let homeAdded = 0;
+    for (const m of homeList) {
+      if (!m || !m.TMDbId || seenKeys.has('m:' + m.TMDbId)) continue;
+      seenKeys.add('m:' + m.TMDbId);
+      rawMovies.push(m);
+      homeAdded++;
+    }
+    console.log(`  Portada (Tendencias/Top): +${homeAdded} títulos.`);
+  } catch (e) {
+    console.warn(`  Aviso portada: ${e.message}`);
+  }
+
   for (let page = 1; page <= 15; page++) {
     const url = page === 1 ? `${BASE}/peliculas` : `${BASE}/peliculas/page/${page}`;
     try {

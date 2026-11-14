@@ -53,6 +53,14 @@ jobs:
             curl -fsSL https://edwin042331-hue.github.io/telelibre/verified.json -o dist/verified.json || echo "Aún no hay verified.json publicado"
           fi
 
+      # Sincronización nocturna del catálogo PoseidonHD (estrenos 2026 y servidores VidHide/Vidara)
+      - name: Actualizar catálogo PoseidonHD
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        run: |
+          node scripts/upgrade-poseidon-catalog.mjs
+          cp public/poseidon.json dist/poseidon.json
+
       - name: Empaquetar para LG (.ipk) y Samsung (.wgt)
         run: |
           node scripts/package-webos.mjs

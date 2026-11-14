@@ -306,6 +306,56 @@ export function resolveSingleDescriptor(target, timeoutMs) {
   return Promise.reject(new Error('Servidor no soportado: ' + JSON.stringify(target)));
 }
 
+/** Extrae servidores en vivo para películas encontradas en búsquedas de PoseidonHD */
+export function fetchLiveServers(slug, timeoutMs) {
+  if (!slug) return Promise.resolve(null);
+  const cleanSlug = slug.replace(/^movies\//, '').replace(/^series\//, '');
+  const url = 'https://www.poseidonhd2.co/pelicula/' + cleanSlug;
+  return requestGetText(url, timeoutMs || 5000).then(html => {
+    if (!html) return null;
+    const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+    if (!match) return null;
+    try {
+      const data = JSON.parse(match[1]);
+      const tm = data.props && data.props.pageProps && data.props.pageProps.thisMovie;
+      const vids = (tm && tm.videos) || {};
+      const servers = {};
+      const langKeys = ['latino', 'spanish', 'english', 'subtitulado'];
+      const extractPromises = [];
+
+      for (let i = 0; i < langKeys.length; i++) {
+        const lk = langKeys[i];
+        const streamList = (vids[lk] || []).slice(0, 4);
+        if (!streamList.length) continue;
+        const normLang = lk === 'spanish' ? 'castellano' : lk;
+        servers[normLang] = [];
+
+        streamList.forEach(s => {
+          if (s.cyberlocker === 'vidhide' || s.cyberlocker === 'vidara') {
+            extractPromises.push(
+              requestGetText(s.result, 3500).then(pHtml => {
+                const pMatch = pHtml && pHtml.match(/var\s+url\s*=\s*['"]([^'"]+)['"]/);
+                const embed = pMatch ? pMatch[1] : null;
+                if (!embed) return;
+                if (embed.indexOf('vidara.to/e/') >= 0) {
+                  servers[normLang].push({ type: 'vidara', code: embed.split('/e/')[1], url: embed, cyberlocker: 'vidara', quality: s.quality || 'HD' });
+                } else if (embed.indexOf('vidhide') >= 0 || embed.indexOf('callistanise') >= 0 || embed.indexOf('filelions') >= 0) {
+                  const parts = embed.split('/v/');
+                  servers[normLang].push({ type: 'vidhide', code: parts[1] || '', url: embed, cyberlocker: 'vidhide', quality: s.quality || 'HD' });
+                }
+              }).catch(() => {})
+            );
+          }
+        });
+      }
+
+      return Promise.all(extractPromises).then(() => servers);
+    } catch (e) {
+      return null;
+    }
+  }).catch(() => null);
+}
+
 /**
  * Resolutor universal con cascada de servidores:
  * Devuelve un array de URLs funcionales [primaria, respaldo] ordenadas por salud y preferencia.
@@ -313,50 +363,63 @@ export function resolveSingleDescriptor(target, timeoutMs) {
 export function resolvePoseidonUrls(movieOrServers, preferredLang) {
   if (!movieOrServers) return Promise.reject(new Error('No hay contenido'));
 
-  const serversMap = movieOrServers.servers || (movieOrServers.latino || movieOrServers.spanish ? movieOrServers : null);
-  if (serversMap && typeof serversMap === 'object') {
-    const lang = (preferredLang || 'latino').toLowerCase();
-    const primaryList = serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || [];
-    const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
+  const needsLiveFetch = typeof movieOrServers === 'object' && movieOrServers.slug &&
+    (!movieOrServers.servers || Object.keys(movieOrServers.servers).length === 0);
 
-    let p = Promise.reject(new Error('Sin servidor inicial'));
-    primaryList.forEach(candidate => {
-      p = p.catch(() => resolveSingleDescriptor(candidate, 3800));
-    });
+  const getServersPromise = needsLiveFetch
+    ? fetchLiveServers(movieOrServers.slug, 5000).then(fetched => {
+        if (fetched && Object.keys(fetched).length > 0) {
+          movieOrServers.servers = fetched;
+        }
+        return movieOrServers.servers;
+      })
+    : Promise.resolve(movieOrServers.servers || (movieOrServers.latino || movieOrServers.spanish ? movieOrServers : null));
 
-    return p.then(primaryUrl => {
-      const altCandidates = [];
-      otherLangs.forEach(altKey => {
-        const altList = serversMap[altKey] || [];
-        if (altList.length > 0) altCandidates.push(altList[0]);
+  return getServersPromise.then(serversMap => {
+    if (serversMap && typeof serversMap === 'object' && Object.keys(serversMap).length > 0) {
+      const lang = (preferredLang || 'latino').toLowerCase();
+      const primaryList = serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || [];
+      const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
+
+      let p = Promise.reject(new Error('Sin servidor inicial'));
+      primaryList.forEach(candidate => {
+        p = p.catch(() => resolveSingleDescriptor(candidate, 3800));
       });
-      if (!altCandidates.length) return [primaryUrl];
 
-      let altP = Promise.reject(new Error('Sin alt'));
-      altCandidates.forEach(cand => {
-        altP = altP.catch(() => resolveSingleDescriptor(cand, 2500));
-      });
-      return altP.then(altUrl => {
-        return (altUrl && altUrl !== primaryUrl) ? [primaryUrl, altUrl] : [primaryUrl];
-      }).catch(() => [primaryUrl]);
-    }).catch(() => {
-      let fallbackP = Promise.reject(new Error('Probando idiomas alternativos'));
-      otherLangs.forEach(altKey => {
-        const altList = serversMap[altKey] || [];
-        altList.forEach(cand => {
-          fallbackP = fallbackP.catch(() => resolveSingleDescriptor(cand, 3800));
+      return p.then(primaryUrl => {
+        const altCandidates = [];
+        otherLangs.forEach(altKey => {
+          const altList = serversMap[altKey] || [];
+          if (altList.length > 0) altCandidates.push(altList[0]);
         });
-      });
-      return fallbackP.then(fallbackUrl => [fallbackUrl]);
-    }).catch(() => {
-      const direct = movieOrServers.stream || movieOrServers.url;
-      if (direct) return resolveSingleDescriptor(direct, 4500).then(u => [u]);
-      return Promise.reject(new Error('Ningún servidor respondió'));
-    });
-  }
+        if (!altCandidates.length) return [primaryUrl];
 
-  const target = (typeof movieOrServers === 'object' ? (movieOrServers.stream || movieOrServers.url) : movieOrServers) || '';
-  return resolveSingleDescriptor(target).then(u => [u]);
+        let altP = Promise.reject(new Error('Sin alt'));
+        altCandidates.forEach(cand => {
+          altP = altP.catch(() => resolveSingleDescriptor(cand, 2500));
+        });
+        return altP.then(altUrl => {
+          return (altUrl && altUrl !== primaryUrl) ? [primaryUrl, altUrl] : [primaryUrl];
+        }).catch(() => [primaryUrl]);
+      }).catch(() => {
+        let fallbackP = Promise.reject(new Error('Probando idiomas alternativos'));
+        otherLangs.forEach(altKey => {
+          const altList = serversMap[altKey] || [];
+          altList.forEach(cand => {
+            fallbackP = fallbackP.catch(() => resolveSingleDescriptor(cand, 3800));
+          });
+        });
+        return fallbackP.then(fallbackUrl => [fallbackUrl]);
+      }).catch(() => {
+        const direct = movieOrServers.stream || movieOrServers.url;
+        if (direct) return resolveSingleDescriptor(direct, 4500).then(u => [u]);
+        return Promise.reject(new Error('Ningún servidor respondió'));
+      });
+    }
+
+    const target = (typeof movieOrServers === 'object' ? (movieOrServers.stream || movieOrServers.url) : movieOrServers) || '';
+    return resolveSingleDescriptor(target).then(u => [u]);
+  });
 }
 
 export function resolvePoseidon(movieOrServers, preferredLang) {
