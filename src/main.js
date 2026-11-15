@@ -358,11 +358,19 @@ app.playEpisode = function (ep, list, index, startAt, preferredLang) {
 let seriesLoading = null;
 let seriesRaw = [];
 function publishSeries() {
-  const rows = kidsOn() ? seriesRaw.map(r => Object.assign({}, r, { items: r.items.filter(s => s.kids) })).filter(r => r.items.length >= 3) : seriesRaw.slice();
+  const poseidonSeries = (getPoseidonMoviesSync() || []).filter(m => m.type === 'series');
+  let rows = kidsOn() ? seriesRaw.map(r => Object.assign({}, r, { items: r.items.filter(s => s.kids) })).filter(r => r.items.length >= 3) : seriesRaw.slice();
+  if (poseidonSeries.length) {
+    rows = [{
+      id: 'series:poseidon_top',
+      title: '🔥 Series de Estreno · Películas Edwin (' + poseidonSeries.length + ')',
+      items: poseidonSeries
+    }].concat(rows);
+  }
   app.data.seriesRows = rows;
   const byKey = {};
   const all = [];
-  seriesRaw.forEach(r => r.items.forEach(s => { if (!byKey[s.key]) { byKey[s.key] = s; all.push(s); } }));
+  rows.forEach(r => r.items.forEach(s => { if (!byKey[s.key]) { byKey[s.key] = s; all.push(s); } }));
   app.data.seriesByKey = byKey;
   app.data.seriesAll = kidsOn() ? all.filter(s => s.kids) : all;
   screens.series.dirty = true;
