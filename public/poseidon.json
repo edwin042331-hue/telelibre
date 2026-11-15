@@ -1481,15 +1481,23 @@
     "subs": true,
     "languages": [
       "latino",
+      "castellano",
       "english"
     ],
     "servers": {
       "latino": [
         {
           "type": "vidhide",
-          "code": "utjn5qblgave",
-          "url": "https://vidhidepre.com/v/utjn5qblgave",
+          "code": "qao9ldp92lvl",
+          "url": "https://vidhidepro.com/v/qao9ldp92lvl",
           "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "zeju9laqdp33",
+          "url": "https://streamwish.to/e/zeju9laqdp33",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         },
         {
@@ -1500,19 +1508,21 @@
           "quality": "HD"
         }
       ],
+      "castellano": [
+        {
+          "type": "vidhide",
+          "code": "twh90wsubjuj",
+          "url": "https://vidhidepro.com/v/twh90wsubjuj",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        }
+      ],
       "english": [
         {
           "type": "vidhide",
-          "code": "utjn5qblgave",
-          "url": "https://vidhidepre.com/v/utjn5qblgave",
+          "code": "fnxkwpalubwm",
+          "url": "https://vidhidepro.com/v/fnxkwpalubwm",
           "cyberlocker": "vidhide",
-          "quality": "HD"
-        },
-        {
-          "type": "vidara",
-          "code": "7k5Db4K1O3TJ3",
-          "url": "https://vidara.to/e/7k5Db4K1O3TJ3",
-          "cyberlocker": "vidara",
           "quality": "HD"
         }
       ]
@@ -1523,8 +1533,8 @@
     "overview": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "summary": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "src": "poseidon",
-    "stream": "vidhide:utjn5qblgave",
-    "url": "vidhide:utjn5qblgave",
+    "stream": "vidhide:qao9ldp92lvl",
+    "url": "vidhide:qao9ldp92lvl",
     "lang": "es"
   },
   {
