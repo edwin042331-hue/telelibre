@@ -13,3 +13,4 @@ platforms/android/app/src/main/assets/
 platforms/android/local.properties
 
 out-*/
+apk_out/
