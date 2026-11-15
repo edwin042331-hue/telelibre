@@ -300,6 +300,7 @@ app.openGrid = function (title, items) {
 };
 
 app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) {
+  if (preferredLang) movie._preferredLang = preferredLang;
   if (resolved) {
     if (!resolved.urls.length) { app.toast('Esta película no tiene un video compatible'); return; }
     player.playMovie(movie, resolved, startAt);

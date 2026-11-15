@@ -428,13 +428,20 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
     if (serversMap && typeof serversMap === 'object' && Object.keys(serversMap).length > 0) {
       const lang = (preferredLang || 'latino').toLowerCase();
       const primaryList = (serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || []).slice();
-      // Priorizar VidHide (CDN de mayor estabilidad y sin throttling)
+      // Priorizar en cascada: 1) VidHide (estable, 36h) -> 2) Vidara -> 3) StreamWish -> 4) Voe -> 5) Dood
       primaryList.sort((a, b) => {
-        const typeA = typeof a === 'object' ? (a.type || a.cyberlocker) : (typeof a === 'string' && a.indexOf('vidhide') >= 0 ? 'vidhide' : '');
-        const typeB = typeof b === 'object' ? (b.type || b.cyberlocker) : (typeof b === 'string' && b.indexOf('vidhide') >= 0 ? 'vidhide' : '');
-        if (typeA === 'vidhide' && typeB !== 'vidhide') return -1;
-        if (typeB === 'vidhide' && typeA !== 'vidhide') return 1;
-        return 0;
+        function getPriority(c) {
+          const t = typeof c === 'object'
+            ? ((c.type || '') + ' ' + (c.cyberlocker || '') + ' ' + (c.url || '')).toLowerCase()
+            : (typeof c === 'string' ? c.toLowerCase() : '');
+          if (t.indexOf('vidhide') >= 0 || t.indexOf('callistanise') >= 0) return 0;
+          if (t.indexOf('vidara') >= 0) return 1;
+          if (t.indexOf('streamwish') >= 0) return 2;
+          if (t.indexOf('voe') >= 0) return 3;
+          if (t.indexOf('dood') >= 0) return 4;
+          return 5;
+        }
+        return getPriority(a) - getPriority(b);
       });
       const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
 

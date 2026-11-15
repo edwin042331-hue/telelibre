@@ -459,6 +459,16 @@ export function createPlayer(app) {
     menuOptions() {
       const fav = isFavorite(item.key);
       const tracks = video.textTracks && video.textTracks.length;
+
+      const availableLangs = (item && item.servers && typeof item.servers === 'object')
+        ? Object.keys(item.servers).filter(k => Array.isArray(item.servers[k]) && item.servers[k].length > 0)
+        : (item && Array.isArray(item.languages) ? item.languages : []);
+      const canSwitchLang = mode === 'movie' && availableLangs.length > 1;
+      const currentLang = (item && item._preferredLang) || 'latino';
+      const nextLangIndex = (availableLangs.indexOf(currentLang) + 1) % availableLangs.length;
+      const nextLangName = availableLangs[nextLangIndex] || '';
+      const nextLangDisplay = nextLangName === 'latino' ? 'Latino' : (nextLangName === 'english' ? 'Inglés' : (nextLangName === 'castellano' || nextLangName === 'spanish' ? 'Castellano' : nextLangName));
+
       const items = mode === 'live' ? [
         { label: 'Lista de canales', icon: 'live', action: openList },
         prevIndex >= 0 && list[prevIndex] ? { label: 'Canal anterior: ' + list[prevIndex].name, icon: 'prev', action: () => tune(prevIndex) } : null,
@@ -467,6 +477,16 @@ export function createPlayer(app) {
         { label: 'Salir del canal', icon: 'home', action: close }
       ] : [
         { label: video.paused ? 'Seguir viendo' : 'Pausa', icon: video.paused ? 'play' : 'pause', action: togglePause },
+        canSwitchLang ? {
+          label: 'Cambiar audio a ' + nextLangDisplay,
+          icon: 'globe',
+          action: () => {
+            const curTime = video.currentTime || 0;
+            app.toast('Cambiando a audio ' + nextLangDisplay + '…');
+            item._preferredLang = nextLangName;
+            app.playMovie(item, list, index, null, curTime, nextLangName);
+          }
+        } : null,
         tracks ? { label: subtitlesOn ? 'Quitar subtítulos' : 'Poner subtítulos', icon: 'check', action: toggleSubtitles } : null,
         { label: 'Volver al inicio de la película', icon: 'restart', action: () => { try { video.currentTime = 0; } catch (e) { /* sin seek */ } } },
         { label: fav ? 'Quitar de Mi lista' : 'Agregar a Mi lista', icon: fav ? 'check' : 'plus', action: () => this.onAction('red') },

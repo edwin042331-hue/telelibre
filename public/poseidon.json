@@ -248,13 +248,6 @@
     "servers": {
       "english": [
         {
-          "type": "streamwish",
-          "code": "xq4jnofcdep1",
-          "url": "https://streamwish.to/e/xq4jnofcdep1",
-          "cyberlocker": "streamwish",
-          "quality": "CAM"
-        },
-        {
           "type": "vidhide",
           "code": "ywyw3fvb9ukw",
           "url": "https://vidhidepro.com/v/ywyw3fvb9ukw",
@@ -266,6 +259,13 @@
           "code": "PqUBLYb45wfK7",
           "url": "https://vidara.to/e/PqUBLYb45wfK7",
           "cyberlocker": "vidara",
+          "quality": "CAM"
+        },
+        {
+          "type": "streamwish",
+          "code": "xq4jnofcdep1",
+          "url": "https://streamwish.to/e/xq4jnofcdep1",
+          "cyberlocker": "streamwish",
           "quality": "CAM"
         }
       ]
@@ -339,13 +339,6 @@
     "servers": {
       "english": [
         {
-          "type": "streamwish",
-          "code": "cdb8gtd9q94q",
-          "url": "https://streamwish.to/e/cdb8gtd9q94q",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
           "type": "vidhide",
           "code": "dev9rmtg7o4x",
           "url": "https://vidhidepro.com/v/dev9rmtg7o4x",
@@ -357,6 +350,13 @@
           "code": "KjJeds0WmFIMf",
           "url": "https://vidara.to/e/KjJeds0WmFIMf",
           "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "cdb8gtd9q94q",
+          "url": "https://streamwish.to/e/cdb8gtd9q94q",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
@@ -394,13 +394,6 @@
     "servers": {
       "latino": [
         {
-          "type": "streamwish",
-          "code": "om6znm1picgl",
-          "url": "https://streamwish.to/e/om6znm1picgl",
-          "cyberlocker": "streamwish",
-          "quality": "CAM"
-        },
-        {
           "type": "vidhide",
           "code": "9aj72gslfov9",
           "url": "https://vidhidepro.com/v/9aj72gslfov9",
@@ -413,16 +406,16 @@
           "url": "https://vidara.to/e/WXIt4EPXoANfX",
           "cyberlocker": "vidara",
           "quality": "CAM"
+        },
+        {
+          "type": "streamwish",
+          "code": "om6znm1picgl",
+          "url": "https://streamwish.to/e/om6znm1picgl",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
         }
       ],
       "english": [
-        {
-          "type": "streamwish",
-          "code": "7im1g4z65yms",
-          "url": "https://streamwish.to/e/7im1g4z65yms",
-          "cyberlocker": "streamwish",
-          "quality": "CAM"
-        },
         {
           "type": "vidhide",
           "code": "bgu7jt8qblo9",
@@ -435,6 +428,13 @@
           "code": "AVviWT7M2N9gR",
           "url": "https://vidara.to/e/AVviWT7M2N9gR",
           "cyberlocker": "vidara",
+          "quality": "CAM"
+        },
+        {
+          "type": "streamwish",
+          "code": "7im1g4z65yms",
+          "url": "https://streamwish.to/e/7im1g4z65yms",
+          "cyberlocker": "streamwish",
           "quality": "CAM"
         }
       ]
@@ -470,13 +470,6 @@
     "servers": {
       "latino": [
         {
-          "type": "streamwish",
-          "code": "liiebe2ulw2v",
-          "url": "https://streamwish.to/e/liiebe2ulw2v",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
           "type": "vidhide",
           "code": "w7xww3j4mpoy",
           "url": "https://vidhidepro.com/v/w7xww3j4mpoy",
@@ -489,16 +482,16 @@
           "url": "https://vidara.to/e/WVpSjA466EXfl",
           "cyberlocker": "vidara",
           "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "liiebe2ulw2v",
+          "url": "https://streamwish.to/e/liiebe2ulw2v",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
         }
       ],
       "english": [
-        {
-          "type": "streamwish",
-          "code": "xgg60ckxlm41",
-          "url": "https://streamwish.to/e/xgg60ckxlm41",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
         {
           "type": "vidhide",
           "code": "5816pjkslqit",
@@ -511,6 +504,13 @@
           "code": "qm2n3nCtObcQj",
           "url": "https://vidara.to/e/qm2n3nCtObcQj",
           "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "xgg60ckxlm41",
+          "url": "https://streamwish.to/e/xgg60ckxlm41",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ]
@@ -975,17 +975,17 @@
       ],
       "english": [
         {
-          "type": "vidara",
-          "code": "pc0B3zGPie4rC",
-          "url": "https://vidara.to/e/pc0B3zGPie4rC",
-          "cyberlocker": "vidara",
-          "quality": "HD"
-        },
-        {
           "type": "vidhide",
           "code": "noeew9rv9kzn",
           "url": "https://vidhidepre.com/v/noeew9rv9kzn",
           "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "vidara",
+          "code": "pc0B3zGPie4rC",
+          "url": "https://vidara.to/e/pc0B3zGPie4rC",
+          "cyberlocker": "vidara",
           "quality": "HD"
         }
       ]
@@ -1494,17 +1494,17 @@
           "quality": "HD"
         },
         {
-          "type": "streamwish",
-          "code": "zeju9laqdp33",
-          "url": "https://streamwish.to/e/zeju9laqdp33",
-          "cyberlocker": "streamwish",
-          "quality": "HD"
-        },
-        {
           "type": "vidara",
           "code": "q7qIyEuH2S69t",
           "url": "https://vidara.to/e/q7qIyEuH2S69t",
           "cyberlocker": "vidara",
+          "quality": "HD"
+        },
+        {
+          "type": "streamwish",
+          "code": "zeju9laqdp33",
+          "url": "https://streamwish.to/e/zeju9laqdp33",
+          "cyberlocker": "streamwish",
           "quality": "HD"
         }
       ],
@@ -22706,14 +22706,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "pEITbYoRcgD5q",
-                  "url": "https://vidara.to/e/pEITbYoRcgD5q"
-                },
-                {
                   "type": "vidhide",
                   "code": "m4uey8m55ok9",
                   "url": "https://vidhidepro.com/v/m4uey8m55ok9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "pEITbYoRcgD5q",
+                  "url": "https://vidara.to/e/pEITbYoRcgD5q"
                 },
                 {
                   "type": "streamwish",
@@ -22880,14 +22880,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "j7RGR5PgxyEin",
-                  "url": "https://vidara.to/e/j7RGR5PgxyEin"
-                },
-                {
                   "type": "vidhide",
                   "code": "gmax6iwychir",
                   "url": "https://vidhidepro.com/v/gmax6iwychir"
+                },
+                {
+                  "type": "vidara",
+                  "code": "j7RGR5PgxyEin",
+                  "url": "https://vidara.to/e/j7RGR5PgxyEin"
                 },
                 {
                   "type": "streamwish",
@@ -22897,14 +22897,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "iPHs7RhpnRClA",
-                  "url": "https://vidara.to/e/iPHs7RhpnRClA"
-                },
-                {
                   "type": "vidhide",
                   "code": "qz74qw811t7g",
                   "url": "https://vidhidepro.com/v/qz74qw811t7g"
+                },
+                {
+                  "type": "vidara",
+                  "code": "iPHs7RhpnRClA",
+                  "url": "https://vidara.to/e/iPHs7RhpnRClA"
                 },
                 {
                   "type": "streamwish",
@@ -22937,14 +22937,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "iX2grssczMv4R",
-                  "url": "https://vidara.to/e/iX2grssczMv4R"
-                },
-                {
                   "type": "vidhide",
                   "code": "psm1nlmhcgbs",
                   "url": "https://vidhidepro.com/v/psm1nlmhcgbs"
+                },
+                {
+                  "type": "vidara",
+                  "code": "iX2grssczMv4R",
+                  "url": "https://vidara.to/e/iX2grssczMv4R"
                 },
                 {
                   "type": "streamwish",
@@ -22954,14 +22954,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "4hvXbnJdKHan4",
-                  "url": "https://vidara.to/e/4hvXbnJdKHan4"
-                },
-                {
                   "type": "vidhide",
                   "code": "0jd72a8vdla7",
                   "url": "https://vidhidepro.com/v/0jd72a8vdla7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "4hvXbnJdKHan4",
+                  "url": "https://vidara.to/e/4hvXbnJdKHan4"
                 },
                 {
                   "type": "streamwish",
@@ -22994,14 +22994,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "KSy8ACWW2xAnL",
-                  "url": "https://vidara.to/e/KSy8ACWW2xAnL"
-                },
-                {
                   "type": "vidhide",
                   "code": "bt48ev2tv20o",
                   "url": "https://vidhidepro.com/v/bt48ev2tv20o"
+                },
+                {
+                  "type": "vidara",
+                  "code": "KSy8ACWW2xAnL",
+                  "url": "https://vidara.to/e/KSy8ACWW2xAnL"
                 },
                 {
                   "type": "streamwish",
@@ -23011,14 +23011,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "xkbvCE1McSxUS",
-                  "url": "https://vidara.to/e/xkbvCE1McSxUS"
-                },
-                {
                   "type": "vidhide",
                   "code": "0m40qtd4vg9c",
                   "url": "https://vidhidepro.com/v/0m40qtd4vg9c"
+                },
+                {
+                  "type": "vidara",
+                  "code": "xkbvCE1McSxUS",
+                  "url": "https://vidara.to/e/xkbvCE1McSxUS"
                 },
                 {
                   "type": "streamwish",
@@ -23051,14 +23051,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "dElRmkGKeDMEU",
-                  "url": "https://vidara.to/e/dElRmkGKeDMEU"
-                },
-                {
                   "type": "vidhide",
                   "code": "8m0oufvj2rqa",
                   "url": "https://vidhidepro.com/v/8m0oufvj2rqa"
+                },
+                {
+                  "type": "vidara",
+                  "code": "dElRmkGKeDMEU",
+                  "url": "https://vidara.to/e/dElRmkGKeDMEU"
                 },
                 {
                   "type": "streamwish",
@@ -23068,14 +23068,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "Jwh3iUmdzCdk0",
-                  "url": "https://vidara.to/e/Jwh3iUmdzCdk0"
-                },
-                {
                   "type": "vidhide",
                   "code": "81uj6a2ydz6r",
                   "url": "https://vidhidepro.com/v/81uj6a2ydz6r"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Jwh3iUmdzCdk0",
+                  "url": "https://vidara.to/e/Jwh3iUmdzCdk0"
                 },
                 {
                   "type": "streamwish",
@@ -23108,14 +23108,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "4mb0aGMMoiGrm",
-                  "url": "https://vidara.to/e/4mb0aGMMoiGrm"
-                },
-                {
                   "type": "vidhide",
                   "code": "b01i3le9tu11",
                   "url": "https://vidhidepro.com/v/b01i3le9tu11"
+                },
+                {
+                  "type": "vidara",
+                  "code": "4mb0aGMMoiGrm",
+                  "url": "https://vidara.to/e/4mb0aGMMoiGrm"
                 },
                 {
                   "type": "streamwish",
@@ -23125,14 +23125,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "XrgXVq1fLojxP",
-                  "url": "https://vidara.to/e/XrgXVq1fLojxP"
-                },
-                {
                   "type": "vidhide",
                   "code": "47947kqml4mz",
                   "url": "https://vidhidepro.com/v/47947kqml4mz"
+                },
+                {
+                  "type": "vidara",
+                  "code": "XrgXVq1fLojxP",
+                  "url": "https://vidara.to/e/XrgXVq1fLojxP"
                 },
                 {
                   "type": "streamwish",
@@ -23629,14 +23629,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "np2mUcxZMvYKF",
-                  "url": "https://vidara.to/e/np2mUcxZMvYKF"
-                },
-                {
                   "type": "vidhide",
                   "code": "ebp9xb5kcobw",
                   "url": "https://vidhidepro.com/v/ebp9xb5kcobw"
+                },
+                {
+                  "type": "vidara",
+                  "code": "np2mUcxZMvYKF",
+                  "url": "https://vidara.to/e/np2mUcxZMvYKF"
                 },
                 {
                   "type": "streamwish",
@@ -23646,14 +23646,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "B8tRURAMrZunc",
-                  "url": "https://vidara.to/e/B8tRURAMrZunc"
-                },
-                {
                   "type": "vidhide",
                   "code": "vqdwt69608dp",
                   "url": "https://vidhidepro.com/v/vqdwt69608dp"
+                },
+                {
+                  "type": "vidara",
+                  "code": "B8tRURAMrZunc",
+                  "url": "https://vidara.to/e/B8tRURAMrZunc"
                 },
                 {
                   "type": "streamwish",
@@ -23686,14 +23686,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "66r0DoeVcYyvx",
-                  "url": "https://vidara.to/e/66r0DoeVcYyvx"
-                },
-                {
                   "type": "vidhide",
                   "code": "ud5ndau8bgak",
                   "url": "https://vidhidepro.com/v/ud5ndau8bgak"
+                },
+                {
+                  "type": "vidara",
+                  "code": "66r0DoeVcYyvx",
+                  "url": "https://vidara.to/e/66r0DoeVcYyvx"
                 },
                 {
                   "type": "streamwish",
@@ -23703,14 +23703,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "BUn91PFPFlU2f",
-                  "url": "https://vidara.to/e/BUn91PFPFlU2f"
-                },
-                {
                   "type": "vidhide",
                   "code": "hp446sy3xf8l",
                   "url": "https://vidhidepro.com/v/hp446sy3xf8l"
+                },
+                {
+                  "type": "vidara",
+                  "code": "BUn91PFPFlU2f",
+                  "url": "https://vidara.to/e/BUn91PFPFlU2f"
                 },
                 {
                   "type": "streamwish",
@@ -23766,14 +23766,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "Dg68EEwtCFCIf",
-                  "url": "https://vidara.to/e/Dg68EEwtCFCIf"
-                },
-                {
                   "type": "vidhide",
                   "code": "vie1ecrqw7mv",
                   "url": "https://vidhidepro.com/v/vie1ecrqw7mv"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Dg68EEwtCFCIf",
+                  "url": "https://vidara.to/e/Dg68EEwtCFCIf"
                 },
                 {
                   "type": "streamwish",
@@ -23805,14 +23805,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "blwFekpBU7ZRg",
-                  "url": "https://vidara.to/e/blwFekpBU7ZRg"
-                },
-                {
                   "type": "vidhide",
                   "code": "npxayxqb114m",
                   "url": "https://vidhidepro.com/v/npxayxqb114m"
+                },
+                {
+                  "type": "vidara",
+                  "code": "blwFekpBU7ZRg",
+                  "url": "https://vidara.to/e/blwFekpBU7ZRg"
                 },
                 {
                   "type": "streamwish",
@@ -23844,14 +23844,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "MqmJvr8CtLf9M",
-                  "url": "https://vidara.to/e/MqmJvr8CtLf9M"
-                },
-                {
                   "type": "vidhide",
                   "code": "bteook5lrm6m",
                   "url": "https://vidhidepro.com/v/bteook5lrm6m"
+                },
+                {
+                  "type": "vidara",
+                  "code": "MqmJvr8CtLf9M",
+                  "url": "https://vidara.to/e/MqmJvr8CtLf9M"
                 },
                 {
                   "type": "streamwish",
@@ -23883,14 +23883,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "zZb1y618GIpiE",
-                  "url": "https://vidara.to/e/zZb1y618GIpiE"
-                },
-                {
                   "type": "vidhide",
                   "code": "g6zc7dxka3lu",
                   "url": "https://vidhidepro.com/v/g6zc7dxka3lu"
+                },
+                {
+                  "type": "vidara",
+                  "code": "zZb1y618GIpiE",
+                  "url": "https://vidara.to/e/zZb1y618GIpiE"
                 },
                 {
                   "type": "streamwish",
@@ -23922,14 +23922,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "OmnPWkaDPSygM",
-                  "url": "https://vidara.to/e/OmnPWkaDPSygM"
-                },
-                {
                   "type": "vidhide",
                   "code": "g3loyyb0gwyp",
                   "url": "https://vidhidepro.com/v/g3loyyb0gwyp"
+                },
+                {
+                  "type": "vidara",
+                  "code": "OmnPWkaDPSygM",
+                  "url": "https://vidara.to/e/OmnPWkaDPSygM"
                 },
                 {
                   "type": "streamwish",
@@ -23961,14 +23961,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "Ugwu9TZIWoOiQ",
-                  "url": "https://vidara.to/e/Ugwu9TZIWoOiQ"
-                },
-                {
                   "type": "vidhide",
                   "code": "6lut90596n0o",
                   "url": "https://vidhidepro.com/v/6lut90596n0o"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Ugwu9TZIWoOiQ",
+                  "url": "https://vidara.to/e/Ugwu9TZIWoOiQ"
                 },
                 {
                   "type": "streamwish",
@@ -24000,14 +24000,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "qk6GcZScUITeg",
-                  "url": "https://vidara.to/e/qk6GcZScUITeg"
-                },
-                {
                   "type": "vidhide",
                   "code": "oxn1rfb3xtqv",
                   "url": "https://vidhidepro.com/v/oxn1rfb3xtqv"
+                },
+                {
+                  "type": "vidara",
+                  "code": "qk6GcZScUITeg",
+                  "url": "https://vidara.to/e/qk6GcZScUITeg"
                 },
                 {
                   "type": "streamwish",
@@ -24039,14 +24039,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "YL3KevXPZi8rs",
-                  "url": "https://vidara.to/e/YL3KevXPZi8rs"
-                },
-                {
                   "type": "vidhide",
                   "code": "n613d6mrvack",
                   "url": "https://vidhidepro.com/v/n613d6mrvack"
+                },
+                {
+                  "type": "vidara",
+                  "code": "YL3KevXPZi8rs",
+                  "url": "https://vidara.to/e/YL3KevXPZi8rs"
                 },
                 {
                   "type": "streamwish",
@@ -24083,14 +24083,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "CL9vipfbTWFvf",
-                  "url": "https://vidara.to/e/CL9vipfbTWFvf"
-                },
-                {
                   "type": "vidhide",
                   "code": "wojhdflpts4j",
                   "url": "https://vidhidepro.com/v/wojhdflpts4j"
+                },
+                {
+                  "type": "vidara",
+                  "code": "CL9vipfbTWFvf",
+                  "url": "https://vidara.to/e/CL9vipfbTWFvf"
                 },
                 {
                   "type": "streamwish",
@@ -24122,14 +24122,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "YKp6utGZI22xP",
-                  "url": "https://vidara.to/e/YKp6utGZI22xP"
-                },
-                {
                   "type": "vidhide",
                   "code": "75y67f78owy2",
                   "url": "https://vidhidepro.com/v/75y67f78owy2"
+                },
+                {
+                  "type": "vidara",
+                  "code": "YKp6utGZI22xP",
+                  "url": "https://vidara.to/e/YKp6utGZI22xP"
                 },
                 {
                   "type": "streamwish",
@@ -24161,14 +24161,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "0yYc25H0GA5EX",
-                  "url": "https://vidara.to/e/0yYc25H0GA5EX"
-                },
-                {
                   "type": "vidhide",
                   "code": "i0pk3iukw3fu",
                   "url": "https://vidhidepro.com/v/i0pk3iukw3fu"
+                },
+                {
+                  "type": "vidara",
+                  "code": "0yYc25H0GA5EX",
+                  "url": "https://vidara.to/e/0yYc25H0GA5EX"
                 },
                 {
                   "type": "streamwish",
@@ -24200,14 +24200,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "gmKskF5iZBuqk",
-                  "url": "https://vidara.to/e/gmKskF5iZBuqk"
-                },
-                {
                   "type": "vidhide",
                   "code": "wmegear5nq9e",
                   "url": "https://vidhidepro.com/v/wmegear5nq9e"
+                },
+                {
+                  "type": "vidara",
+                  "code": "gmKskF5iZBuqk",
+                  "url": "https://vidara.to/e/gmKskF5iZBuqk"
                 },
                 {
                   "type": "streamwish",
@@ -24239,14 +24239,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "XRZGNTVbGz37S",
-                  "url": "https://vidara.to/e/XRZGNTVbGz37S"
-                },
-                {
                   "type": "vidhide",
                   "code": "u5zgyr2rhzm9",
                   "url": "https://vidhidepro.com/v/u5zgyr2rhzm9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "XRZGNTVbGz37S",
+                  "url": "https://vidara.to/e/XRZGNTVbGz37S"
                 },
                 {
                   "type": "streamwish",
@@ -24278,14 +24278,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "CZc9UZHgIf4bN",
-                  "url": "https://vidara.to/e/CZc9UZHgIf4bN"
-                },
-                {
                   "type": "vidhide",
                   "code": "r2d399h9wi3v",
                   "url": "https://vidhidepro.com/v/r2d399h9wi3v"
+                },
+                {
+                  "type": "vidara",
+                  "code": "CZc9UZHgIf4bN",
+                  "url": "https://vidara.to/e/CZc9UZHgIf4bN"
                 },
                 {
                   "type": "streamwish",
@@ -24317,14 +24317,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "EmNCnnyWb93A1",
-                  "url": "https://vidara.to/e/EmNCnnyWb93A1"
-                },
-                {
                   "type": "vidhide",
                   "code": "sf4shcl6cx1n",
                   "url": "https://vidhidepro.com/v/sf4shcl6cx1n"
+                },
+                {
+                  "type": "vidara",
+                  "code": "EmNCnnyWb93A1",
+                  "url": "https://vidara.to/e/EmNCnnyWb93A1"
                 },
                 {
                   "type": "streamwish",
@@ -24356,14 +24356,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "F8t7YZimPczhG",
-                  "url": "https://vidara.to/e/F8t7YZimPczhG"
-                },
-                {
                   "type": "vidhide",
                   "code": "r9tcilm63rhf",
                   "url": "https://vidhidepro.com/v/r9tcilm63rhf"
+                },
+                {
+                  "type": "vidara",
+                  "code": "F8t7YZimPczhG",
+                  "url": "https://vidara.to/e/F8t7YZimPczhG"
                 },
                 {
                   "type": "streamwish",
@@ -24420,14 +24420,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "KFO4cGJE54tlS",
-                  "url": "https://vidara.to/e/KFO4cGJE54tlS"
-                },
-                {
                   "type": "vidhide",
                   "code": "ba9woa2ps2do",
                   "url": "https://vidhidepro.com/v/ba9woa2ps2do"
+                },
+                {
+                  "type": "vidara",
+                  "code": "KFO4cGJE54tlS",
+                  "url": "https://vidara.to/e/KFO4cGJE54tlS"
                 },
                 {
                   "type": "streamwish",
@@ -24460,14 +24460,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "6STALQJKeCtgQ",
-                  "url": "https://vidara.to/e/6STALQJKeCtgQ"
-                },
-                {
                   "type": "vidhide",
                   "code": "rspqtwhql92n",
                   "url": "https://vidhidepro.com/v/rspqtwhql92n"
+                },
+                {
+                  "type": "vidara",
+                  "code": "6STALQJKeCtgQ",
+                  "url": "https://vidara.to/e/6STALQJKeCtgQ"
                 },
                 {
                   "type": "streamwish",
@@ -24500,14 +24500,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "br13bqVKuzfXr",
-                  "url": "https://vidara.to/e/br13bqVKuzfXr"
-                },
-                {
                   "type": "vidhide",
                   "code": "bje6ppl0ytrm",
                   "url": "https://vidhidepro.com/v/bje6ppl0ytrm"
+                },
+                {
+                  "type": "vidara",
+                  "code": "br13bqVKuzfXr",
+                  "url": "https://vidara.to/e/br13bqVKuzfXr"
                 },
                 {
                   "type": "streamwish",
@@ -24540,14 +24540,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "TcQoQCcXPnIDO",
-                  "url": "https://vidara.to/e/TcQoQCcXPnIDO"
-                },
-                {
                   "type": "vidhide",
                   "code": "cy4iij59uupp",
                   "url": "https://vidhidepro.com/v/cy4iij59uupp"
+                },
+                {
+                  "type": "vidara",
+                  "code": "TcQoQCcXPnIDO",
+                  "url": "https://vidara.to/e/TcQoQCcXPnIDO"
                 },
                 {
                   "type": "streamwish",
@@ -24580,14 +24580,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "Yi4DfGKFrYg65",
-                  "url": "https://vidara.to/e/Yi4DfGKFrYg65"
-                },
-                {
                   "type": "vidhide",
                   "code": "h5v02dzsogpp",
                   "url": "https://vidhidepro.com/v/h5v02dzsogpp"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Yi4DfGKFrYg65",
+                  "url": "https://vidara.to/e/Yi4DfGKFrYg65"
                 },
                 {
                   "type": "streamwish",
@@ -24620,14 +24620,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "uizGgyYi8UyjZ",
-                  "url": "https://vidara.to/e/uizGgyYi8UyjZ"
-                },
-                {
                   "type": "vidhide",
                   "code": "lbgl3znttkbp",
                   "url": "https://vidhidepro.com/v/lbgl3znttkbp"
+                },
+                {
+                  "type": "vidara",
+                  "code": "uizGgyYi8UyjZ",
+                  "url": "https://vidara.to/e/uizGgyYi8UyjZ"
                 },
                 {
                   "type": "streamwish",
@@ -24660,14 +24660,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "soo6MEsYfInpJ",
-                  "url": "https://vidara.to/e/soo6MEsYfInpJ"
-                },
-                {
                   "type": "vidhide",
                   "code": "0ovpdoziux3i",
                   "url": "https://vidhidepro.com/v/0ovpdoziux3i"
+                },
+                {
+                  "type": "vidara",
+                  "code": "soo6MEsYfInpJ",
+                  "url": "https://vidara.to/e/soo6MEsYfInpJ"
                 },
                 {
                   "type": "streamwish",
@@ -24700,14 +24700,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "cY10V64WbgdX5",
-                  "url": "https://vidara.to/e/cY10V64WbgdX5"
-                },
-                {
                   "type": "vidhide",
                   "code": "8jlaac5mgk7b",
                   "url": "https://vidhidepro.com/v/8jlaac5mgk7b"
+                },
+                {
+                  "type": "vidara",
+                  "code": "cY10V64WbgdX5",
+                  "url": "https://vidara.to/e/cY10V64WbgdX5"
                 },
                 {
                   "type": "streamwish",
@@ -24764,14 +24764,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "swsSXVz0jvUwq",
-                  "url": "https://vidara.to/e/swsSXVz0jvUwq"
-                },
-                {
                   "type": "vidhide",
                   "code": "97aqncfo15kd",
                   "url": "https://vidhidepro.com/v/97aqncfo15kd"
+                },
+                {
+                  "type": "vidara",
+                  "code": "swsSXVz0jvUwq",
+                  "url": "https://vidara.to/e/swsSXVz0jvUwq"
                 },
                 {
                   "type": "streamwish",
@@ -24781,14 +24781,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "ObOiV7q2LnR1C",
-                  "url": "https://vidara.to/e/ObOiV7q2LnR1C"
-                },
-                {
                   "type": "vidhide",
                   "code": "pmjv5y2ek243",
                   "url": "https://vidhidepro.com/v/pmjv5y2ek243"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ObOiV7q2LnR1C",
+                  "url": "https://vidara.to/e/ObOiV7q2LnR1C"
                 },
                 {
                   "type": "streamwish",
@@ -24821,14 +24821,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "ExzMGPC7yiA63",
-                  "url": "https://vidara.to/e/ExzMGPC7yiA63"
-                },
-                {
                   "type": "vidhide",
                   "code": "opdnkcz88l0s",
                   "url": "https://vidhidepro.com/v/opdnkcz88l0s"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ExzMGPC7yiA63",
+                  "url": "https://vidara.to/e/ExzMGPC7yiA63"
                 },
                 {
                   "type": "streamwish",
@@ -24838,14 +24838,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "PjTg8Zu0G8ZYD",
-                  "url": "https://vidara.to/e/PjTg8Zu0G8ZYD"
-                },
-                {
                   "type": "vidhide",
                   "code": "xh9v1iysvuvm",
                   "url": "https://vidhidepro.com/v/xh9v1iysvuvm"
+                },
+                {
+                  "type": "vidara",
+                  "code": "PjTg8Zu0G8ZYD",
+                  "url": "https://vidara.to/e/PjTg8Zu0G8ZYD"
                 },
                 {
                   "type": "streamwish",
@@ -24878,14 +24878,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "sJSWzMzZN8GQL",
-                  "url": "https://vidara.to/e/sJSWzMzZN8GQL"
-                },
-                {
                   "type": "vidhide",
                   "code": "3a8auizmxgcz",
                   "url": "https://vidhidepro.com/v/3a8auizmxgcz"
+                },
+                {
+                  "type": "vidara",
+                  "code": "sJSWzMzZN8GQL",
+                  "url": "https://vidara.to/e/sJSWzMzZN8GQL"
                 },
                 {
                   "type": "streamwish",
@@ -24895,14 +24895,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "2MKWqb0pTyXZh",
-                  "url": "https://vidara.to/e/2MKWqb0pTyXZh"
-                },
-                {
                   "type": "vidhide",
                   "code": "eg8ght54bkdh",
                   "url": "https://vidhidepro.com/v/eg8ght54bkdh"
+                },
+                {
+                  "type": "vidara",
+                  "code": "2MKWqb0pTyXZh",
+                  "url": "https://vidara.to/e/2MKWqb0pTyXZh"
                 },
                 {
                   "type": "streamwish",
@@ -24935,14 +24935,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "oExVL5mRdTnwo",
-                  "url": "https://vidara.to/e/oExVL5mRdTnwo"
-                },
-                {
                   "type": "vidhide",
                   "code": "j6jne6tgocvc",
                   "url": "https://vidhidepro.com/v/j6jne6tgocvc"
+                },
+                {
+                  "type": "vidara",
+                  "code": "oExVL5mRdTnwo",
+                  "url": "https://vidara.to/e/oExVL5mRdTnwo"
                 },
                 {
                   "type": "streamwish",
@@ -24952,14 +24952,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "BTdcFfERMGeJa",
-                  "url": "https://vidara.to/e/BTdcFfERMGeJa"
-                },
-                {
                   "type": "vidhide",
                   "code": "cf2qme9gwtm9",
                   "url": "https://vidhidepro.com/v/cf2qme9gwtm9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "BTdcFfERMGeJa",
+                  "url": "https://vidara.to/e/BTdcFfERMGeJa"
                 },
                 {
                   "type": "streamwish",
@@ -24992,14 +24992,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "JxZnb8prWDD4K",
-                  "url": "https://vidara.to/e/JxZnb8prWDD4K"
-                },
-                {
                   "type": "vidhide",
                   "code": "hj2jidlwblhe",
                   "url": "https://vidhidepro.com/v/hj2jidlwblhe"
+                },
+                {
+                  "type": "vidara",
+                  "code": "JxZnb8prWDD4K",
+                  "url": "https://vidara.to/e/JxZnb8prWDD4K"
                 },
                 {
                   "type": "streamwish",
@@ -25009,14 +25009,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "rtPzVYHNcwU4X",
-                  "url": "https://vidara.to/e/rtPzVYHNcwU4X"
-                },
-                {
                   "type": "vidhide",
                   "code": "ebb9ccxubx2s",
                   "url": "https://vidhidepro.com/v/ebb9ccxubx2s"
+                },
+                {
+                  "type": "vidara",
+                  "code": "rtPzVYHNcwU4X",
+                  "url": "https://vidara.to/e/rtPzVYHNcwU4X"
                 },
                 {
                   "type": "streamwish",
@@ -25049,14 +25049,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "eAMHt9DPoVXXE",
-                  "url": "https://vidara.to/e/eAMHt9DPoVXXE"
-                },
-                {
                   "type": "vidhide",
                   "code": "rhb0now3s63v",
                   "url": "https://vidhidepro.com/v/rhb0now3s63v"
+                },
+                {
+                  "type": "vidara",
+                  "code": "eAMHt9DPoVXXE",
+                  "url": "https://vidara.to/e/eAMHt9DPoVXXE"
                 },
                 {
                   "type": "streamwish",
@@ -25066,14 +25066,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "tqcfEWq9S91zY",
-                  "url": "https://vidara.to/e/tqcfEWq9S91zY"
-                },
-                {
                   "type": "vidhide",
                   "code": "eys4d87xbla9",
                   "url": "https://vidhidepro.com/v/eys4d87xbla9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "tqcfEWq9S91zY",
+                  "url": "https://vidara.to/e/tqcfEWq9S91zY"
                 },
                 {
                   "type": "streamwish",
@@ -25106,14 +25106,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "UMAtUIZqRWMON",
-                  "url": "https://vidara.to/e/UMAtUIZqRWMON"
-                },
-                {
                   "type": "vidhide",
                   "code": "qb2joungcd4r",
                   "url": "https://vidhidepro.com/v/qb2joungcd4r"
+                },
+                {
+                  "type": "vidara",
+                  "code": "UMAtUIZqRWMON",
+                  "url": "https://vidara.to/e/UMAtUIZqRWMON"
                 },
                 {
                   "type": "streamwish",
@@ -25123,14 +25123,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "ic6ya3EUxeGDN",
-                  "url": "https://vidara.to/e/ic6ya3EUxeGDN"
-                },
-                {
                   "type": "vidhide",
                   "code": "ivhjq0tocdxy",
                   "url": "https://vidhidepro.com/v/ivhjq0tocdxy"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ic6ya3EUxeGDN",
+                  "url": "https://vidara.to/e/ic6ya3EUxeGDN"
                 },
                 {
                   "type": "streamwish",
@@ -25163,14 +25163,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "QujGNcD4ksJlR",
-                  "url": "https://vidara.to/e/QujGNcD4ksJlR"
-                },
-                {
                   "type": "vidhide",
                   "code": "6vjeqatsvq9k",
                   "url": "https://vidhidepro.com/v/6vjeqatsvq9k"
+                },
+                {
+                  "type": "vidara",
+                  "code": "QujGNcD4ksJlR",
+                  "url": "https://vidara.to/e/QujGNcD4ksJlR"
                 },
                 {
                   "type": "streamwish",
@@ -25180,14 +25180,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "7nAs6RMX0y6OK",
-                  "url": "https://vidara.to/e/7nAs6RMX0y6OK"
-                },
-                {
                   "type": "vidhide",
                   "code": "8ez9gb2b9lmn",
                   "url": "https://vidhidepro.com/v/8ez9gb2b9lmn"
+                },
+                {
+                  "type": "vidara",
+                  "code": "7nAs6RMX0y6OK",
+                  "url": "https://vidara.to/e/7nAs6RMX0y6OK"
                 },
                 {
                   "type": "streamwish",
@@ -25838,14 +25838,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "dkeSblPwppByW",
-                  "url": "https://vidara.to/e/dkeSblPwppByW"
-                },
-                {
                   "type": "vidhide",
                   "code": "omyhyozl4jsx",
                   "url": "https://vidhidepro.com/v/omyhyozl4jsx"
+                },
+                {
+                  "type": "vidara",
+                  "code": "dkeSblPwppByW",
+                  "url": "https://vidara.to/e/dkeSblPwppByW"
                 },
                 {
                   "type": "streamwish",
@@ -25855,14 +25855,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "xxCNTBoPI57Om",
-                  "url": "https://vidara.to/e/xxCNTBoPI57Om"
-                },
-                {
                   "type": "vidhide",
                   "code": "e5qb82gitmgt",
                   "url": "https://vidhidepro.com/v/e5qb82gitmgt"
+                },
+                {
+                  "type": "vidara",
+                  "code": "xxCNTBoPI57Om",
+                  "url": "https://vidara.to/e/xxCNTBoPI57Om"
                 },
                 {
                   "type": "streamwish",
@@ -25895,14 +25895,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "ISMeOLhTgktl3",
-                  "url": "https://vidara.to/e/ISMeOLhTgktl3"
-                },
-                {
                   "type": "vidhide",
                   "code": "pk9ua9fva3tj",
                   "url": "https://vidhidepro.com/v/pk9ua9fva3tj"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ISMeOLhTgktl3",
+                  "url": "https://vidara.to/e/ISMeOLhTgktl3"
                 },
                 {
                   "type": "streamwish",
@@ -25912,14 +25912,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "FNN0tQPH6Of2u",
-                  "url": "https://vidara.to/e/FNN0tQPH6Of2u"
-                },
-                {
                   "type": "vidhide",
                   "code": "8fvvd0ze0fn4",
                   "url": "https://vidhidepro.com/v/8fvvd0ze0fn4"
+                },
+                {
+                  "type": "vidara",
+                  "code": "FNN0tQPH6Of2u",
+                  "url": "https://vidara.to/e/FNN0tQPH6Of2u"
                 },
                 {
                   "type": "streamwish",
@@ -26306,14 +26306,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "Gvo7c8CV6dx1z",
-                  "url": "https://vidara.to/e/Gvo7c8CV6dx1z"
-                },
-                {
                   "type": "vidhide",
                   "code": "afehxig9u01m",
                   "url": "https://vidhidepro.com/v/afehxig9u01m"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Gvo7c8CV6dx1z",
+                  "url": "https://vidara.to/e/Gvo7c8CV6dx1z"
                 },
                 {
                   "type": "streamwish",
@@ -26323,14 +26323,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "YygsvBMCGAJ4V",
-                  "url": "https://vidara.to/e/YygsvBMCGAJ4V"
-                },
-                {
                   "type": "vidhide",
                   "code": "5a53rplhtdnj",
                   "url": "https://vidhidepro.com/v/5a53rplhtdnj"
+                },
+                {
+                  "type": "vidara",
+                  "code": "YygsvBMCGAJ4V",
+                  "url": "https://vidara.to/e/YygsvBMCGAJ4V"
                 },
                 {
                   "type": "streamwish",
@@ -26363,14 +26363,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "PJlHTbjbDu53y",
-                  "url": "https://vidara.to/e/PJlHTbjbDu53y"
-                },
-                {
                   "type": "vidhide",
                   "code": "h51din0ie7jh",
                   "url": "https://vidhidepro.com/v/h51din0ie7jh"
+                },
+                {
+                  "type": "vidara",
+                  "code": "PJlHTbjbDu53y",
+                  "url": "https://vidara.to/e/PJlHTbjbDu53y"
                 },
                 {
                   "type": "streamwish",
@@ -26380,14 +26380,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "xNQkwKsei4xfm",
-                  "url": "https://vidara.to/e/xNQkwKsei4xfm"
-                },
-                {
                   "type": "vidhide",
                   "code": "qz840fnguiv7",
                   "url": "https://vidhidepro.com/v/qz840fnguiv7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "xNQkwKsei4xfm",
+                  "url": "https://vidara.to/e/xNQkwKsei4xfm"
                 },
                 {
                   "type": "streamwish",
@@ -26420,14 +26420,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "FpLr4m7rl0m5w",
-                  "url": "https://vidara.to/e/FpLr4m7rl0m5w"
-                },
-                {
                   "type": "vidhide",
                   "code": "y6u2z0vq380t",
                   "url": "https://vidhidepro.com/v/y6u2z0vq380t"
+                },
+                {
+                  "type": "vidara",
+                  "code": "FpLr4m7rl0m5w",
+                  "url": "https://vidara.to/e/FpLr4m7rl0m5w"
                 },
                 {
                   "type": "streamwish",
@@ -26437,14 +26437,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "eBOCYxwGo84El",
-                  "url": "https://vidara.to/e/eBOCYxwGo84El"
-                },
-                {
                   "type": "vidhide",
                   "code": "r77tt0xewbt9",
                   "url": "https://vidhidepro.com/v/r77tt0xewbt9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "eBOCYxwGo84El",
+                  "url": "https://vidara.to/e/eBOCYxwGo84El"
                 },
                 {
                   "type": "streamwish",
@@ -26477,14 +26477,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "3YMz1mZk0RkTN",
-                  "url": "https://vidara.to/e/3YMz1mZk0RkTN"
-                },
-                {
                   "type": "vidhide",
                   "code": "mwaal67b8n71",
                   "url": "https://vidhidepro.com/v/mwaal67b8n71"
+                },
+                {
+                  "type": "vidara",
+                  "code": "3YMz1mZk0RkTN",
+                  "url": "https://vidara.to/e/3YMz1mZk0RkTN"
                 },
                 {
                   "type": "streamwish",
@@ -26494,14 +26494,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "Jt3i3f4N77jDG",
-                  "url": "https://vidara.to/e/Jt3i3f4N77jDG"
-                },
-                {
                   "type": "vidhide",
                   "code": "306lnyiohb81",
                   "url": "https://vidhidepro.com/v/306lnyiohb81"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Jt3i3f4N77jDG",
+                  "url": "https://vidara.to/e/Jt3i3f4N77jDG"
                 },
                 {
                   "type": "streamwish",
@@ -27095,14 +27095,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "P0TPq9iDuyW60",
-                  "url": "https://vidara.to/e/P0TPq9iDuyW60"
-                },
-                {
                   "type": "vidhide",
                   "code": "gy6xpz0nkrj0",
                   "url": "https://vidhidepro.com/v/gy6xpz0nkrj0"
+                },
+                {
+                  "type": "vidara",
+                  "code": "P0TPq9iDuyW60",
+                  "url": "https://vidara.to/e/P0TPq9iDuyW60"
                 },
                 {
                   "type": "streamwish",
@@ -27112,14 +27112,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "vmTKy9yVW4lGJ",
-                  "url": "https://vidara.to/e/vmTKy9yVW4lGJ"
-                },
-                {
                   "type": "vidhide",
                   "code": "v6z5cchn5jma",
                   "url": "https://vidhidepro.com/v/v6z5cchn5jma"
+                },
+                {
+                  "type": "vidara",
+                  "code": "vmTKy9yVW4lGJ",
+                  "url": "https://vidara.to/e/vmTKy9yVW4lGJ"
                 },
                 {
                   "type": "streamwish",
@@ -27152,14 +27152,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "i0bm07r2ST5pw",
-                  "url": "https://vidara.to/e/i0bm07r2ST5pw"
-                },
-                {
                   "type": "vidhide",
                   "code": "jcdiu524ggcq",
                   "url": "https://vidhidepro.com/v/jcdiu524ggcq"
+                },
+                {
+                  "type": "vidara",
+                  "code": "i0bm07r2ST5pw",
+                  "url": "https://vidara.to/e/i0bm07r2ST5pw"
                 },
                 {
                   "type": "streamwish",
@@ -27169,14 +27169,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "6CoNC2Iuuyqk7",
-                  "url": "https://vidara.to/e/6CoNC2Iuuyqk7"
-                },
-                {
                   "type": "vidhide",
                   "code": "n7ussibntk73",
                   "url": "https://vidhidepro.com/v/n7ussibntk73"
+                },
+                {
+                  "type": "vidara",
+                  "code": "6CoNC2Iuuyqk7",
+                  "url": "https://vidara.to/e/6CoNC2Iuuyqk7"
                 },
                 {
                   "type": "streamwish",
@@ -28173,14 +28173,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "toLMA2Q2iNIwI",
-                  "url": "https://vidara.to/e/toLMA2Q2iNIwI"
-                },
-                {
                   "type": "vidhide",
                   "code": "pa0v0oo244od",
                   "url": "https://vidhidepro.com/v/pa0v0oo244od"
+                },
+                {
+                  "type": "vidara",
+                  "code": "toLMA2Q2iNIwI",
+                  "url": "https://vidara.to/e/toLMA2Q2iNIwI"
                 },
                 {
                   "type": "streamwish",
@@ -28190,14 +28190,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "vKaGqv5CYepFx",
-                  "url": "https://vidara.to/e/vKaGqv5CYepFx"
-                },
-                {
                   "type": "vidhide",
                   "code": "8zh3w416u86x",
                   "url": "https://vidhidepro.com/v/8zh3w416u86x"
+                },
+                {
+                  "type": "vidara",
+                  "code": "vKaGqv5CYepFx",
+                  "url": "https://vidara.to/e/vKaGqv5CYepFx"
                 },
                 {
                   "type": "streamwish",
@@ -28230,14 +28230,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "tfJOcp8pEieX4",
-                  "url": "https://vidara.to/e/tfJOcp8pEieX4"
-                },
-                {
                   "type": "vidhide",
                   "code": "0cc8mo0cml8y",
                   "url": "https://vidhidepro.com/v/0cc8mo0cml8y"
+                },
+                {
+                  "type": "vidara",
+                  "code": "tfJOcp8pEieX4",
+                  "url": "https://vidara.to/e/tfJOcp8pEieX4"
                 },
                 {
                   "type": "streamwish",
@@ -28247,14 +28247,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "25sxxYImV9r6g",
-                  "url": "https://vidara.to/e/25sxxYImV9r6g"
-                },
-                {
                   "type": "vidhide",
                   "code": "8l14ci88b7hi",
                   "url": "https://vidhidepro.com/v/8l14ci88b7hi"
+                },
+                {
+                  "type": "vidara",
+                  "code": "25sxxYImV9r6g",
+                  "url": "https://vidara.to/e/25sxxYImV9r6g"
                 },
                 {
                   "type": "streamwish",
@@ -28310,14 +28310,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "u4eFbhH3Z5dvp",
-                  "url": "https://vidara.to/e/u4eFbhH3Z5dvp"
-                },
-                {
                   "type": "vidhide",
                   "code": "oszxp6htztzi",
                   "url": "https://vidhidepro.com/v/oszxp6htztzi"
+                },
+                {
+                  "type": "vidara",
+                  "code": "u4eFbhH3Z5dvp",
+                  "url": "https://vidara.to/e/u4eFbhH3Z5dvp"
                 },
                 {
                   "type": "streamwish",
@@ -28349,14 +28349,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "4kBSMZ79DC3Jx",
-                  "url": "https://vidara.to/e/4kBSMZ79DC3Jx"
-                },
-                {
                   "type": "vidhide",
                   "code": "5nfall3xttt7",
                   "url": "https://vidhidepro.com/v/5nfall3xttt7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "4kBSMZ79DC3Jx",
+                  "url": "https://vidara.to/e/4kBSMZ79DC3Jx"
                 },
                 {
                   "type": "streamwish",
@@ -28388,14 +28388,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "wfvUob5RXMIgB",
-                  "url": "https://vidara.to/e/wfvUob5RXMIgB"
-                },
-                {
                   "type": "vidhide",
                   "code": "zo6ni92khit6",
                   "url": "https://vidhidepro.com/v/zo6ni92khit6"
+                },
+                {
+                  "type": "vidara",
+                  "code": "wfvUob5RXMIgB",
+                  "url": "https://vidara.to/e/wfvUob5RXMIgB"
                 },
                 {
                   "type": "streamwish",
@@ -28427,14 +28427,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "9YkEnlOTIrrvc",
-                  "url": "https://vidara.to/e/9YkEnlOTIrrvc"
-                },
-                {
                   "type": "vidhide",
                   "code": "svvtopymznuv",
                   "url": "https://vidhidepro.com/v/svvtopymznuv"
+                },
+                {
+                  "type": "vidara",
+                  "code": "9YkEnlOTIrrvc",
+                  "url": "https://vidara.to/e/9YkEnlOTIrrvc"
                 },
                 {
                   "type": "streamwish",
@@ -28466,14 +28466,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "vE0DtIZn1rfCP",
-                  "url": "https://vidara.to/e/vE0DtIZn1rfCP"
-                },
-                {
                   "type": "vidhide",
                   "code": "1tttrc83yegf",
                   "url": "https://vidhidepro.com/v/1tttrc83yegf"
+                },
+                {
+                  "type": "vidara",
+                  "code": "vE0DtIZn1rfCP",
+                  "url": "https://vidara.to/e/vE0DtIZn1rfCP"
                 },
                 {
                   "type": "streamwish",
@@ -28505,14 +28505,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "lMYDGNvMnVXg1",
-                  "url": "https://vidara.to/e/lMYDGNvMnVXg1"
-                },
-                {
                   "type": "vidhide",
                   "code": "q71gqgmtd932",
                   "url": "https://vidhidepro.com/v/q71gqgmtd932"
+                },
+                {
+                  "type": "vidara",
+                  "code": "lMYDGNvMnVXg1",
+                  "url": "https://vidara.to/e/lMYDGNvMnVXg1"
                 },
                 {
                   "type": "streamwish",
@@ -28544,14 +28544,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "rDY7Rodp0xtVY",
-                  "url": "https://vidara.to/e/rDY7Rodp0xtVY"
-                },
-                {
                   "type": "vidhide",
                   "code": "gn64yb8565pe",
                   "url": "https://vidhidepro.com/v/gn64yb8565pe"
+                },
+                {
+                  "type": "vidara",
+                  "code": "rDY7Rodp0xtVY",
+                  "url": "https://vidara.to/e/rDY7Rodp0xtVY"
                 },
                 {
                   "type": "streamwish",
@@ -28583,14 +28583,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "fFOvUlotWsYLi",
-                  "url": "https://vidara.to/e/fFOvUlotWsYLi"
-                },
-                {
                   "type": "vidhide",
                   "code": "edpqe38a27wb",
                   "url": "https://vidhidepro.com/v/edpqe38a27wb"
+                },
+                {
+                  "type": "vidara",
+                  "code": "fFOvUlotWsYLi",
+                  "url": "https://vidara.to/e/fFOvUlotWsYLi"
                 },
                 {
                   "type": "streamwish",
@@ -28622,14 +28622,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "77TmA7DErUa2L",
-                  "url": "https://vidara.to/e/77TmA7DErUa2L"
-                },
-                {
                   "type": "vidhide",
                   "code": "uugmzvvmpc9m",
                   "url": "https://vidhidepro.com/v/uugmzvvmpc9m"
+                },
+                {
+                  "type": "vidara",
+                  "code": "77TmA7DErUa2L",
+                  "url": "https://vidara.to/e/77TmA7DErUa2L"
                 },
                 {
                   "type": "streamwish",
@@ -28661,14 +28661,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "3A6GXtZ8n3Z8r",
-                  "url": "https://vidara.to/e/3A6GXtZ8n3Z8r"
-                },
-                {
                   "type": "vidhide",
                   "code": "7oweozturwk8",
                   "url": "https://vidhidepro.com/v/7oweozturwk8"
+                },
+                {
+                  "type": "vidara",
+                  "code": "3A6GXtZ8n3Z8r",
+                  "url": "https://vidara.to/e/3A6GXtZ8n3Z8r"
                 },
                 {
                   "type": "streamwish",
@@ -29036,14 +29036,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "Ka9bKuhTY4o75",
-                  "url": "https://vidara.to/e/Ka9bKuhTY4o75"
-                },
-                {
                   "type": "vidhide",
                   "code": "na74dy8j4al5",
                   "url": "https://vidhidepro.com/v/na74dy8j4al5"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Ka9bKuhTY4o75",
+                  "url": "https://vidara.to/e/Ka9bKuhTY4o75"
                 },
                 {
                   "type": "streamwish",
@@ -29053,14 +29053,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "JqDvsdRf4WPzY",
-                  "url": "https://vidara.to/e/JqDvsdRf4WPzY"
-                },
-                {
                   "type": "vidhide",
                   "code": "easjid74e28e",
                   "url": "https://vidhidepro.com/v/easjid74e28e"
+                },
+                {
+                  "type": "vidara",
+                  "code": "JqDvsdRf4WPzY",
+                  "url": "https://vidara.to/e/JqDvsdRf4WPzY"
                 },
                 {
                   "type": "streamwish",
@@ -29093,14 +29093,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "GGUKUljEJTrqj",
-                  "url": "https://vidara.to/e/GGUKUljEJTrqj"
-                },
-                {
                   "type": "vidhide",
                   "code": "sgx2lxd1rw6v",
                   "url": "https://vidhidepro.com/v/sgx2lxd1rw6v"
+                },
+                {
+                  "type": "vidara",
+                  "code": "GGUKUljEJTrqj",
+                  "url": "https://vidara.to/e/GGUKUljEJTrqj"
                 },
                 {
                   "type": "streamwish",
@@ -29110,14 +29110,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "MClWunpJim9Gz",
-                  "url": "https://vidara.to/e/MClWunpJim9Gz"
-                },
-                {
                   "type": "vidhide",
                   "code": "os1m7jprajp4",
                   "url": "https://vidhidepro.com/v/os1m7jprajp4"
+                },
+                {
+                  "type": "vidara",
+                  "code": "MClWunpJim9Gz",
+                  "url": "https://vidara.to/e/MClWunpJim9Gz"
                 },
                 {
                   "type": "streamwish",
@@ -29174,14 +29174,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "aZRySoDb9lPo2",
-                  "url": "https://vidara.to/e/aZRySoDb9lPo2"
-                },
-                {
                   "type": "vidhide",
                   "code": "ibjopesf4iw3",
                   "url": "https://vidhidepro.com/v/ibjopesf4iw3"
+                },
+                {
+                  "type": "vidara",
+                  "code": "aZRySoDb9lPo2",
+                  "url": "https://vidara.to/e/aZRySoDb9lPo2"
                 },
                 {
                   "type": "streamwish",
@@ -29214,14 +29214,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "KripFhpsqzXzh",
-                  "url": "https://vidara.to/e/KripFhpsqzXzh"
-                },
-                {
                   "type": "vidhide",
                   "code": "3rgymznhxf7g",
                   "url": "https://vidhidepro.com/v/3rgymznhxf7g"
+                },
+                {
+                  "type": "vidara",
+                  "code": "KripFhpsqzXzh",
+                  "url": "https://vidara.to/e/KripFhpsqzXzh"
                 },
                 {
                   "type": "streamwish",
@@ -29254,14 +29254,14 @@
             "servers": {
               "castellano": [
                 {
-                  "type": "vidara",
-                  "code": "oIP8o66RPxj1b",
-                  "url": "https://vidara.to/e/oIP8o66RPxj1b"
-                },
-                {
                   "type": "vidhide",
                   "code": "q54rfw4nahsb",
                   "url": "https://vidhidepro.com/v/q54rfw4nahsb"
+                },
+                {
+                  "type": "vidara",
+                  "code": "oIP8o66RPxj1b",
+                  "url": "https://vidara.to/e/oIP8o66RPxj1b"
                 },
                 {
                   "type": "streamwish",
@@ -29593,14 +29593,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "aWbNpHqDyZPm8",
-                  "url": "https://vidara.to/e/aWbNpHqDyZPm8"
-                },
-                {
                   "type": "vidhide",
                   "code": "5gr8bgaoeav3",
                   "url": "https://vidhidepro.com/v/5gr8bgaoeav3"
+                },
+                {
+                  "type": "vidara",
+                  "code": "aWbNpHqDyZPm8",
+                  "url": "https://vidara.to/e/aWbNpHqDyZPm8"
                 },
                 {
                   "type": "streamwish",
@@ -29610,14 +29610,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "DZQ5MwtJCguuh",
-                  "url": "https://vidara.to/e/DZQ5MwtJCguuh"
-                },
-                {
                   "type": "vidhide",
                   "code": "7e2j8nq8xtz4",
                   "url": "https://vidhidepro.com/v/7e2j8nq8xtz4"
+                },
+                {
+                  "type": "vidara",
+                  "code": "DZQ5MwtJCguuh",
+                  "url": "https://vidara.to/e/DZQ5MwtJCguuh"
                 },
                 {
                   "type": "streamwish",
@@ -29650,14 +29650,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "6eutVGay9novr",
-                  "url": "https://vidara.to/e/6eutVGay9novr"
-                },
-                {
                   "type": "vidhide",
                   "code": "uz3zjr2jppqt",
                   "url": "https://vidhidepro.com/v/uz3zjr2jppqt"
+                },
+                {
+                  "type": "vidara",
+                  "code": "6eutVGay9novr",
+                  "url": "https://vidara.to/e/6eutVGay9novr"
                 },
                 {
                   "type": "streamwish",
@@ -29667,14 +29667,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "oiB2VQKfGuP6Q",
-                  "url": "https://vidara.to/e/oiB2VQKfGuP6Q"
-                },
-                {
                   "type": "vidhide",
                   "code": "0w2hw4bheloi",
                   "url": "https://vidhidepro.com/v/0w2hw4bheloi"
+                },
+                {
+                  "type": "vidara",
+                  "code": "oiB2VQKfGuP6Q",
+                  "url": "https://vidara.to/e/oiB2VQKfGuP6Q"
                 },
                 {
                   "type": "streamwish",
@@ -29707,14 +29707,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "DqI09SR4qrVE3",
-                  "url": "https://vidara.to/e/DqI09SR4qrVE3"
-                },
-                {
                   "type": "vidhide",
                   "code": "hng7zm36ykmw",
                   "url": "https://vidhidepro.com/v/hng7zm36ykmw"
+                },
+                {
+                  "type": "vidara",
+                  "code": "DqI09SR4qrVE3",
+                  "url": "https://vidara.to/e/DqI09SR4qrVE3"
                 },
                 {
                   "type": "streamwish",
@@ -29724,14 +29724,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "yX0eJerNQ4JCU",
-                  "url": "https://vidara.to/e/yX0eJerNQ4JCU"
-                },
-                {
                   "type": "vidhide",
                   "code": "oyx4sv3xjvyj",
                   "url": "https://vidhidepro.com/v/oyx4sv3xjvyj"
+                },
+                {
+                  "type": "vidara",
+                  "code": "yX0eJerNQ4JCU",
+                  "url": "https://vidara.to/e/yX0eJerNQ4JCU"
                 },
                 {
                   "type": "streamwish",
@@ -29788,14 +29788,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "aZ3lLEnvUUXyI",
-                  "url": "https://vidara.to/e/aZ3lLEnvUUXyI"
-                },
-                {
                   "type": "vidhide",
                   "code": "fo8zembzg87y",
                   "url": "https://vidhidepro.com/v/fo8zembzg87y"
+                },
+                {
+                  "type": "vidara",
+                  "code": "aZ3lLEnvUUXyI",
+                  "url": "https://vidara.to/e/aZ3lLEnvUUXyI"
                 },
                 {
                   "type": "streamwish",
@@ -29805,14 +29805,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "sB1SKFJiPyPmY",
-                  "url": "https://vidara.to/e/sB1SKFJiPyPmY"
-                },
-                {
                   "type": "vidhide",
                   "code": "58flk51p5mfl",
                   "url": "https://vidhidepro.com/v/58flk51p5mfl"
+                },
+                {
+                  "type": "vidara",
+                  "code": "sB1SKFJiPyPmY",
+                  "url": "https://vidara.to/e/sB1SKFJiPyPmY"
                 },
                 {
                   "type": "streamwish",
@@ -29845,14 +29845,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "ICYfp5aSOjkcy",
-                  "url": "https://vidara.to/e/ICYfp5aSOjkcy"
-                },
-                {
                   "type": "vidhide",
                   "code": "kfo9p8czehud",
                   "url": "https://vidhidepro.com/v/kfo9p8czehud"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ICYfp5aSOjkcy",
+                  "url": "https://vidara.to/e/ICYfp5aSOjkcy"
                 },
                 {
                   "type": "streamwish",
@@ -29862,14 +29862,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "IunKRrdp3lNmg",
-                  "url": "https://vidara.to/e/IunKRrdp3lNmg"
-                },
-                {
                   "type": "vidhide",
                   "code": "onwreb00zj5n",
                   "url": "https://vidhidepro.com/v/onwreb00zj5n"
+                },
+                {
+                  "type": "vidara",
+                  "code": "IunKRrdp3lNmg",
+                  "url": "https://vidara.to/e/IunKRrdp3lNmg"
                 },
                 {
                   "type": "streamwish",
@@ -29902,14 +29902,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "jxOU1N0c3ru1q",
-                  "url": "https://vidara.to/e/jxOU1N0c3ru1q"
-                },
-                {
                   "type": "vidhide",
                   "code": "l049bf0ejce1",
                   "url": "https://vidhidepro.com/v/l049bf0ejce1"
+                },
+                {
+                  "type": "vidara",
+                  "code": "jxOU1N0c3ru1q",
+                  "url": "https://vidara.to/e/jxOU1N0c3ru1q"
                 },
                 {
                   "type": "streamwish",
@@ -29919,14 +29919,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "nMgi9ikM9MtMI",
-                  "url": "https://vidara.to/e/nMgi9ikM9MtMI"
-                },
-                {
                   "type": "vidhide",
                   "code": "9jdb4pm4sdoa",
                   "url": "https://vidhidepro.com/v/9jdb4pm4sdoa"
+                },
+                {
+                  "type": "vidara",
+                  "code": "nMgi9ikM9MtMI",
+                  "url": "https://vidara.to/e/nMgi9ikM9MtMI"
                 },
                 {
                   "type": "streamwish",
@@ -29959,14 +29959,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "KDPh72leqtp0L",
-                  "url": "https://vidara.to/e/KDPh72leqtp0L"
-                },
-                {
                   "type": "vidhide",
                   "code": "u7r29zajcdzv",
                   "url": "https://vidhidepro.com/v/u7r29zajcdzv"
+                },
+                {
+                  "type": "vidara",
+                  "code": "KDPh72leqtp0L",
+                  "url": "https://vidara.to/e/KDPh72leqtp0L"
                 },
                 {
                   "type": "streamwish",
@@ -29976,14 +29976,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "q8Ie1zTInaEqy",
-                  "url": "https://vidara.to/e/q8Ie1zTInaEqy"
-                },
-                {
                   "type": "vidhide",
                   "code": "3npypmjj1gpq",
                   "url": "https://vidhidepro.com/v/3npypmjj1gpq"
+                },
+                {
+                  "type": "vidara",
+                  "code": "q8Ie1zTInaEqy",
+                  "url": "https://vidara.to/e/q8Ie1zTInaEqy"
                 },
                 {
                   "type": "streamwish",
@@ -30016,14 +30016,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "IPK5Dzr7bhnQD",
-                  "url": "https://vidara.to/e/IPK5Dzr7bhnQD"
-                },
-                {
                   "type": "vidhide",
                   "code": "rdbnbw0ohtpq",
                   "url": "https://vidhidepro.com/v/rdbnbw0ohtpq"
+                },
+                {
+                  "type": "vidara",
+                  "code": "IPK5Dzr7bhnQD",
+                  "url": "https://vidara.to/e/IPK5Dzr7bhnQD"
                 },
                 {
                   "type": "streamwish",
@@ -30033,14 +30033,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "YtVlAyS5oUP80",
-                  "url": "https://vidara.to/e/YtVlAyS5oUP80"
-                },
-                {
                   "type": "vidhide",
                   "code": "3h0a05ypy6k7",
                   "url": "https://vidhidepro.com/v/3h0a05ypy6k7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "YtVlAyS5oUP80",
+                  "url": "https://vidara.to/e/YtVlAyS5oUP80"
                 },
                 {
                   "type": "streamwish",
@@ -30073,14 +30073,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "ZQU4rrbGP13AM",
-                  "url": "https://vidara.to/e/ZQU4rrbGP13AM"
-                },
-                {
                   "type": "vidhide",
                   "code": "f27e2gbwpo3f",
                   "url": "https://vidhidepro.com/v/f27e2gbwpo3f"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ZQU4rrbGP13AM",
+                  "url": "https://vidara.to/e/ZQU4rrbGP13AM"
                 },
                 {
                   "type": "streamwish",
@@ -30090,14 +30090,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "w0rXCLLiijkCH",
-                  "url": "https://vidara.to/e/w0rXCLLiijkCH"
-                },
-                {
                   "type": "vidhide",
                   "code": "yjn0efkil4h6",
                   "url": "https://vidhidepro.com/v/yjn0efkil4h6"
+                },
+                {
+                  "type": "vidara",
+                  "code": "w0rXCLLiijkCH",
+                  "url": "https://vidara.to/e/w0rXCLLiijkCH"
                 },
                 {
                   "type": "streamwish",
@@ -30154,14 +30154,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "XjbyfXHqssehh",
-                  "url": "https://vidara.to/e/XjbyfXHqssehh"
-                },
-                {
                   "type": "vidhide",
                   "code": "k9okfskl4azr",
                   "url": "https://vidhidepro.com/v/k9okfskl4azr"
+                },
+                {
+                  "type": "vidara",
+                  "code": "XjbyfXHqssehh",
+                  "url": "https://vidara.to/e/XjbyfXHqssehh"
                 },
                 {
                   "type": "streamwish",
@@ -30171,14 +30171,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "2YIFIRRorUBr5",
-                  "url": "https://vidara.to/e/2YIFIRRorUBr5"
-                },
-                {
                   "type": "vidhide",
                   "code": "iw659zrjxeem",
                   "url": "https://vidhidepro.com/v/iw659zrjxeem"
+                },
+                {
+                  "type": "vidara",
+                  "code": "2YIFIRRorUBr5",
+                  "url": "https://vidara.to/e/2YIFIRRorUBr5"
                 },
                 {
                   "type": "streamwish",
@@ -30211,14 +30211,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "OASH2zi6otmnz",
-                  "url": "https://vidara.to/e/OASH2zi6otmnz"
-                },
-                {
                   "type": "vidhide",
                   "code": "kytbw43a3ya8",
                   "url": "https://vidhidepro.com/v/kytbw43a3ya8"
+                },
+                {
+                  "type": "vidara",
+                  "code": "OASH2zi6otmnz",
+                  "url": "https://vidara.to/e/OASH2zi6otmnz"
                 },
                 {
                   "type": "streamwish",
@@ -30228,14 +30228,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "yAcw4BOiZ6s1d",
-                  "url": "https://vidara.to/e/yAcw4BOiZ6s1d"
-                },
-                {
                   "type": "vidhide",
                   "code": "bd279j9t02b7",
                   "url": "https://vidhidepro.com/v/bd279j9t02b7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "yAcw4BOiZ6s1d",
+                  "url": "https://vidara.to/e/yAcw4BOiZ6s1d"
                 },
                 {
                   "type": "streamwish",
@@ -30291,14 +30291,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "ukx7Fi09xYYb2",
-                  "url": "https://vidara.to/e/ukx7Fi09xYYb2"
-                },
-                {
                   "type": "vidhide",
                   "code": "qfrpfrq69dg7",
                   "url": "https://vidhidepro.com/v/qfrpfrq69dg7"
+                },
+                {
+                  "type": "vidara",
+                  "code": "ukx7Fi09xYYb2",
+                  "url": "https://vidara.to/e/ukx7Fi09xYYb2"
                 },
                 {
                   "type": "streamwish",
@@ -30330,14 +30330,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "TCl8VhAdHn4YQ",
-                  "url": "https://vidara.to/e/TCl8VhAdHn4YQ"
-                },
-                {
                   "type": "vidhide",
                   "code": "xlmebr5wk4th",
                   "url": "https://vidhidepro.com/v/xlmebr5wk4th"
+                },
+                {
+                  "type": "vidara",
+                  "code": "TCl8VhAdHn4YQ",
+                  "url": "https://vidara.to/e/TCl8VhAdHn4YQ"
                 },
                 {
                   "type": "streamwish",
@@ -30369,14 +30369,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "uprPC4l3f8JO0",
-                  "url": "https://vidara.to/e/uprPC4l3f8JO0"
-                },
-                {
                   "type": "vidhide",
                   "code": "xrxfl0652iim",
                   "url": "https://vidhidepro.com/v/xrxfl0652iim"
+                },
+                {
+                  "type": "vidara",
+                  "code": "uprPC4l3f8JO0",
+                  "url": "https://vidara.to/e/uprPC4l3f8JO0"
                 },
                 {
                   "type": "streamwish",
@@ -30432,14 +30432,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "hk3n29s0gTbL9",
-                  "url": "https://vidara.to/e/hk3n29s0gTbL9"
-                },
-                {
                   "type": "vidhide",
                   "code": "6ln458z1trpu",
                   "url": "https://vidhidepro.com/v/6ln458z1trpu"
+                },
+                {
+                  "type": "vidara",
+                  "code": "hk3n29s0gTbL9",
+                  "url": "https://vidara.to/e/hk3n29s0gTbL9"
                 },
                 {
                   "type": "streamwish",
@@ -30471,14 +30471,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "LE76FEwqJSi10",
-                  "url": "https://vidara.to/e/LE76FEwqJSi10"
-                },
-                {
                   "type": "vidhide",
                   "code": "kkoad14fxmtv",
                   "url": "https://vidhidepro.com/v/kkoad14fxmtv"
+                },
+                {
+                  "type": "vidara",
+                  "code": "LE76FEwqJSi10",
+                  "url": "https://vidara.to/e/LE76FEwqJSi10"
                 },
                 {
                   "type": "streamwish",
@@ -30510,14 +30510,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "K9OGcl8Kiaac5",
-                  "url": "https://vidara.to/e/K9OGcl8Kiaac5"
-                },
-                {
                   "type": "vidhide",
                   "code": "9zmirnkiti78",
                   "url": "https://vidhidepro.com/v/9zmirnkiti78"
+                },
+                {
+                  "type": "vidara",
+                  "code": "K9OGcl8Kiaac5",
+                  "url": "https://vidara.to/e/K9OGcl8Kiaac5"
                 },
                 {
                   "type": "streamwish",
@@ -30549,14 +30549,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "WKHj00eGmy6Ni",
-                  "url": "https://vidara.to/e/WKHj00eGmy6Ni"
-                },
-                {
                   "type": "vidhide",
                   "code": "lg8012tg9ei9",
                   "url": "https://vidhidepro.com/v/lg8012tg9ei9"
+                },
+                {
+                  "type": "vidara",
+                  "code": "WKHj00eGmy6Ni",
+                  "url": "https://vidara.to/e/WKHj00eGmy6Ni"
                 },
                 {
                   "type": "streamwish",
@@ -30588,14 +30588,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "wHrKMe6RdwuWW",
-                  "url": "https://vidara.to/e/wHrKMe6RdwuWW"
-                },
-                {
                   "type": "vidhide",
                   "code": "vxkttliwg4cl",
                   "url": "https://vidhidepro.com/v/vxkttliwg4cl"
+                },
+                {
+                  "type": "vidara",
+                  "code": "wHrKMe6RdwuWW",
+                  "url": "https://vidara.to/e/wHrKMe6RdwuWW"
                 },
                 {
                   "type": "streamwish",
@@ -30627,14 +30627,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "v7xFy4byomi2h",
-                  "url": "https://vidara.to/e/v7xFy4byomi2h"
-                },
-                {
                   "type": "vidhide",
                   "code": "obq4z0gqkm4s",
                   "url": "https://vidhidepro.com/v/obq4z0gqkm4s"
+                },
+                {
+                  "type": "vidara",
+                  "code": "v7xFy4byomi2h",
+                  "url": "https://vidara.to/e/v7xFy4byomi2h"
                 },
                 {
                   "type": "streamwish",
@@ -30666,14 +30666,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "t0k4PBABmPOyo",
-                  "url": "https://vidara.to/e/t0k4PBABmPOyo"
-                },
-                {
                   "type": "vidhide",
                   "code": "7xb1qyy4xu48",
                   "url": "https://vidhidepro.com/v/7xb1qyy4xu48"
+                },
+                {
+                  "type": "vidara",
+                  "code": "t0k4PBABmPOyo",
+                  "url": "https://vidara.to/e/t0k4PBABmPOyo"
                 },
                 {
                   "type": "streamwish",
@@ -30705,14 +30705,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "HHoG23AuDr1ai",
-                  "url": "https://vidara.to/e/HHoG23AuDr1ai"
-                },
-                {
                   "type": "vidhide",
                   "code": "9lsow5gm934y",
                   "url": "https://vidhidepro.com/v/9lsow5gm934y"
+                },
+                {
+                  "type": "vidara",
+                  "code": "HHoG23AuDr1ai",
+                  "url": "https://vidara.to/e/HHoG23AuDr1ai"
                 },
                 {
                   "type": "streamwish",
@@ -30750,14 +30750,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "2QklTf1wRH8lY",
-                  "url": "https://vidara.to/e/2QklTf1wRH8lY"
-                },
-                {
                   "type": "vidhide",
                   "code": "isv0udw6427u",
                   "url": "https://vidhidepro.com/v/isv0udw6427u"
+                },
+                {
+                  "type": "vidara",
+                  "code": "2QklTf1wRH8lY",
+                  "url": "https://vidara.to/e/2QklTf1wRH8lY"
                 },
                 {
                   "type": "streamwish",
@@ -30767,14 +30767,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "kSnOajDEQOvJJ",
-                  "url": "https://vidara.to/e/kSnOajDEQOvJJ"
-                },
-                {
                   "type": "vidhide",
                   "code": "lec0nwi67qvf",
                   "url": "https://vidhidepro.com/v/lec0nwi67qvf"
+                },
+                {
+                  "type": "vidara",
+                  "code": "kSnOajDEQOvJJ",
+                  "url": "https://vidara.to/e/kSnOajDEQOvJJ"
                 },
                 {
                   "type": "streamwish",
@@ -30807,14 +30807,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "RGZuh9yGG0qMf",
-                  "url": "https://vidara.to/e/RGZuh9yGG0qMf"
-                },
-                {
                   "type": "vidhide",
                   "code": "rc61vqha49ck",
                   "url": "https://vidhidepro.com/v/rc61vqha49ck"
+                },
+                {
+                  "type": "vidara",
+                  "code": "RGZuh9yGG0qMf",
+                  "url": "https://vidara.to/e/RGZuh9yGG0qMf"
                 },
                 {
                   "type": "streamwish",
@@ -30824,14 +30824,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "42SIQLVQmXkEz",
-                  "url": "https://vidara.to/e/42SIQLVQmXkEz"
-                },
-                {
                   "type": "vidhide",
                   "code": "asiwartqr7qk",
                   "url": "https://vidhidepro.com/v/asiwartqr7qk"
+                },
+                {
+                  "type": "vidara",
+                  "code": "42SIQLVQmXkEz",
+                  "url": "https://vidara.to/e/42SIQLVQmXkEz"
                 },
                 {
                   "type": "streamwish",
@@ -30864,14 +30864,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "pKvaX2BOnRJb8",
-                  "url": "https://vidara.to/e/pKvaX2BOnRJb8"
-                },
-                {
                   "type": "vidhide",
                   "code": "v2cpm6twmotl",
                   "url": "https://vidhidepro.com/v/v2cpm6twmotl"
+                },
+                {
+                  "type": "vidara",
+                  "code": "pKvaX2BOnRJb8",
+                  "url": "https://vidara.to/e/pKvaX2BOnRJb8"
                 },
                 {
                   "type": "streamwish",
@@ -30881,14 +30881,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "wS9DpPkqRATOp",
-                  "url": "https://vidara.to/e/wS9DpPkqRATOp"
-                },
-                {
                   "type": "vidhide",
                   "code": "qboo73buwnl5",
                   "url": "https://vidhidepro.com/v/qboo73buwnl5"
+                },
+                {
+                  "type": "vidara",
+                  "code": "wS9DpPkqRATOp",
+                  "url": "https://vidara.to/e/wS9DpPkqRATOp"
                 },
                 {
                   "type": "streamwish",
@@ -30921,14 +30921,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "820KSiZX2kPj3",
-                  "url": "https://vidara.to/e/820KSiZX2kPj3"
-                },
-                {
                   "type": "vidhide",
                   "code": "4cze7ixmfuk0",
                   "url": "https://vidhidepro.com/v/4cze7ixmfuk0"
+                },
+                {
+                  "type": "vidara",
+                  "code": "820KSiZX2kPj3",
+                  "url": "https://vidara.to/e/820KSiZX2kPj3"
                 },
                 {
                   "type": "streamwish",
@@ -30938,14 +30938,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "lrgLWv4Gt5FVs",
-                  "url": "https://vidara.to/e/lrgLWv4Gt5FVs"
-                },
-                {
                   "type": "vidhide",
                   "code": "845ney7az8r1",
                   "url": "https://vidhidepro.com/v/845ney7az8r1"
+                },
+                {
+                  "type": "vidara",
+                  "code": "lrgLWv4Gt5FVs",
+                  "url": "https://vidara.to/e/lrgLWv4Gt5FVs"
                 },
                 {
                   "type": "streamwish",
@@ -31112,14 +31112,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "Gi5r1jqXlz157",
-                  "url": "https://vidara.to/e/Gi5r1jqXlz157"
-                },
-                {
                   "type": "vidhide",
                   "code": "20cgtt7deu1b",
                   "url": "https://vidhidepro.com/v/20cgtt7deu1b"
+                },
+                {
+                  "type": "vidara",
+                  "code": "Gi5r1jqXlz157",
+                  "url": "https://vidara.to/e/Gi5r1jqXlz157"
                 },
                 {
                   "type": "streamwish",
@@ -31129,14 +31129,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "NjsEr63mH2qPI",
-                  "url": "https://vidara.to/e/NjsEr63mH2qPI"
-                },
-                {
                   "type": "vidhide",
                   "code": "rfdoawcokw63",
                   "url": "https://vidhidepro.com/v/rfdoawcokw63"
+                },
+                {
+                  "type": "vidara",
+                  "code": "NjsEr63mH2qPI",
+                  "url": "https://vidara.to/e/NjsEr63mH2qPI"
                 },
                 {
                   "type": "streamwish",
@@ -31169,14 +31169,14 @@
             "servers": {
               "latino": [
                 {
-                  "type": "vidara",
-                  "code": "sisjgLsciF90I",
-                  "url": "https://vidara.to/e/sisjgLsciF90I"
-                },
-                {
                   "type": "vidhide",
                   "code": "yrye5638xpam",
                   "url": "https://vidhidepro.com/v/yrye5638xpam"
+                },
+                {
+                  "type": "vidara",
+                  "code": "sisjgLsciF90I",
+                  "url": "https://vidara.to/e/sisjgLsciF90I"
                 },
                 {
                   "type": "streamwish",
@@ -31186,14 +31186,14 @@
               ],
               "english": [
                 {
-                  "type": "vidara",
-                  "code": "sTuSaBUWJYWzV",
-                  "url": "https://vidara.to/e/sTuSaBUWJYWzV"
-                },
-                {
                   "type": "vidhide",
                   "code": "z4x84iywhoi5",
                   "url": "https://vidhidepro.com/v/z4x84iywhoi5"
+                },
+                {
+                  "type": "vidara",
+                  "code": "sTuSaBUWJYWzV",
+                  "url": "https://vidara.to/e/sTuSaBUWJYWzV"
                 },
                 {
                   "type": "streamwish",

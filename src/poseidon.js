@@ -1,6 +1,6 @@
 // Catálogo y filas para la sección Poseidon (Estrenos de Cine HD y CAM)
 import { getText } from './net.js';
-import { state } from './store.js';
+import { state, continueWatching } from './store.js';
 
 // Normaliza las propiedades para asegurar compatibilidad total con el motor de filas y fichas
 export function formatPoseidonMovie(m) {
@@ -57,33 +57,33 @@ export const INITIAL_POSEIDON_MOVIES = [
     "servers": {
       "latino": [
         {
+          "type": "vidhide",
+          "code": "qao9ldp92lvl",
+          "url": "https://vidhidepre.com/v/qao9ldp92lvl",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
           "type": "vidara",
           "code": "q7qIyEuH2S69t",
           "url": "https://vidara.to/e/q7qIyEuH2S69t",
           "cyberlocker": "vidara",
           "quality": "HD"
-        },
-        {
-          "type": "vidhide",
-          "code": "utjn5qblgave",
-          "url": "https://vidhidepre.com/v/utjn5qblgave",
-          "cyberlocker": "vidhide",
-          "quality": "HD"
         }
       ],
       "english": [
+        {
+          "type": "vidhide",
+          "code": "fnxkwpalubwm",
+          "url": "https://vidhidepre.com/v/fnxkwpalubwm",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
         {
           "type": "vidara",
           "code": "7k5Db4K1O3TJ3",
           "url": "https://vidara.to/e/7k5Db4K1O3TJ3",
           "cyberlocker": "vidara",
-          "quality": "HD"
-        },
-        {
-          "type": "vidhide",
-          "code": "utjn5qblgave",
-          "url": "https://vidhidepre.com/v/utjn5qblgave",
-          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ]
@@ -94,8 +94,8 @@ export const INITIAL_POSEIDON_MOVIES = [
     "overview": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "summary": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "src": "poseidon",
-    "stream": "vidara:q7qIyEuH2S69t",
-    "url": "vidara:q7qIyEuH2S69t",
+    "stream": "vidhide:qao9ldp92lvl",
+    "url": "vidhide:qao9ldp92lvl",
     "lang": "es"
   },
   {
@@ -1802,6 +1802,16 @@ export function buildPoseidonRows(movies, filterGenre, searchQuery) {
       rows.push({ id: 'ps:hd_all', title: '💎 Todas las Películas en HD 1080p (' + hd.length + ')', items: hd });
       return rows;
     }
+  }
+
+  // Fila Prioritaria: Continuar Viendo (Películas y Series empezadas)
+  const cw = continueWatching();
+  if (cw && cw.length > 0) {
+    rows.push({
+      id: 'ps:continue',
+      title: '▶️ Continuar Viendo (' + cw.length + ')',
+      items: cw
+    });
   }
 
   // Fila 0: Cartelera Estelar Edwin (Tendencias oficiales de la portada)
