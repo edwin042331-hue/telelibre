@@ -427,7 +427,15 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
   return getServersPromise.then(serversMap => {
     if (serversMap && typeof serversMap === 'object' && Object.keys(serversMap).length > 0) {
       const lang = (preferredLang || 'latino').toLowerCase();
-      const primaryList = serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || [];
+      const primaryList = (serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || []).slice();
+      // Priorizar VidHide (CDN de mayor estabilidad y sin throttling)
+      primaryList.sort((a, b) => {
+        const typeA = typeof a === 'object' ? (a.type || a.cyberlocker) : (typeof a === 'string' && a.indexOf('vidhide') >= 0 ? 'vidhide' : '');
+        const typeB = typeof b === 'object' ? (b.type || b.cyberlocker) : (typeof b === 'string' && b.indexOf('vidhide') >= 0 ? 'vidhide' : '');
+        if (typeA === 'vidhide' && typeB !== 'vidhide') return -1;
+        if (typeB === 'vidhide' && typeA !== 'vidhide') return 1;
+        return 0;
+      });
       const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
 
       let p = Promise.reject(new Error('Sin servidor inicial'));

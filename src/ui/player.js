@@ -184,7 +184,16 @@ export function createPlayer(app) {
     loadHls().then(Hls => {
       if (my !== token) return;
       if (!Hls.isSupported()) { fail(); return; }
-      hls = new Hls({ enableWorker: true, manifestLoadingTimeOut: 12000, fragLoadingTimeOut: 20000, backBufferLength: 30 });
+      hls = new Hls({
+        enableWorker: true,
+        manifestLoadingTimeOut: 15000,
+        fragLoadingTimeOut: 25000,
+        backBufferLength: 30,
+        maxBufferLength: 60,
+        maxMaxBufferLength: 120,
+        maxBufferSize: 60 * 1000 * 1000,
+        lowLatencyMode: false
+      });
       let recovered = false;
       hls.on(Hls.Events.ERROR, (evt, data) => {
         if (my !== token || !data.fatal) return;

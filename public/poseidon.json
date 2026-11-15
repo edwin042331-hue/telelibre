@@ -1486,33 +1486,33 @@
     "servers": {
       "latino": [
         {
+          "type": "vidhide",
+          "code": "utjn5qblgave",
+          "url": "https://vidhidepre.com/v/utjn5qblgave",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
           "type": "vidara",
           "code": "q7qIyEuH2S69t",
           "url": "https://vidara.to/e/q7qIyEuH2S69t",
           "cyberlocker": "vidara",
           "quality": "HD"
-        },
+        }
+      ],
+      "english": [
         {
           "type": "vidhide",
           "code": "utjn5qblgave",
           "url": "https://vidhidepre.com/v/utjn5qblgave",
           "cyberlocker": "vidhide",
           "quality": "HD"
-        }
-      ],
-      "english": [
+        },
         {
           "type": "vidara",
           "code": "7k5Db4K1O3TJ3",
           "url": "https://vidara.to/e/7k5Db4K1O3TJ3",
           "cyberlocker": "vidara",
-          "quality": "HD"
-        },
-        {
-          "type": "vidhide",
-          "code": "utjn5qblgave",
-          "url": "https://vidhidepre.com/v/utjn5qblgave",
-          "cyberlocker": "vidhide",
           "quality": "HD"
         }
       ]
@@ -1523,8 +1523,8 @@
     "overview": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "summary": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
     "src": "poseidon",
-    "stream": "vidara:q7qIyEuH2S69t",
-    "url": "vidara:q7qIyEuH2S69t",
+    "stream": "vidhide:utjn5qblgave",
+    "url": "vidhide:utjn5qblgave",
     "lang": "es"
   },
   {
@@ -15778,17 +15778,17 @@
     "servers": {
       "latino": [
         {
-          "type": "vidara",
-          "code": "f5sVfNo4K9NiF",
-          "url": "https://vidara.to/e/f5sVfNo4K9NiF",
-          "cyberlocker": "vidara",
-          "quality": "HD"
-        },
-        {
           "type": "vidhide",
           "code": "wgck50vrn6vk",
           "url": "https://vidhidepro.com/v/wgck50vrn6vk",
           "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "vidara",
+          "code": "f5sVfNo4K9NiF",
+          "url": "https://vidara.to/e/f5sVfNo4K9NiF",
+          "cyberlocker": "vidara",
           "quality": "HD"
         }
       ]
@@ -15799,8 +15799,8 @@
     "overview": "Siete mujeres son obligadas a probar la comida de Hitler para detectar posible veneno. Entre ellas surgen relaciones de solidaridad y traición en un ambiente de tensión y desconfianza.",
     "summary": "Siete mujeres son obligadas a probar la comida de Hitler para detectar posible veneno. Entre ellas surgen relaciones de solidaridad y traición en un ambiente de tensión y desconfianza.",
     "src": "poseidon",
-    "stream": "vidara:f5sVfNo4K9NiF",
-    "url": "vidara:f5sVfNo4K9NiF",
+    "stream": "vidhide:wgck50vrn6vk",
+    "url": "vidhide:wgck50vrn6vk",
     "lang": "es",
     "slug": "movies/268690/la-leyenda-de-las-momias-de-guanajuato"
   },
