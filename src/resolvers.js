@@ -377,9 +377,9 @@ export function fetchLiveServers(slug, timeoutMs) {
         servers[normLang] = [];
 
         streamList.forEach(s => {
-          if (s.cyberlocker === 'vidhide' || s.cyberlocker === 'vidara') {
+          if (s.result) {
             extractPromises.push(
-              requestGetText(s.result, 3500).then(pHtml => {
+              requestGetText(s.result, 4000).then(pHtml => {
                 const pMatch = pHtml && pHtml.match(/var\s+url\s*=\s*['"]([^'"]+)['"]/);
                 const embed = pMatch ? pMatch[1] : null;
                 if (!embed) return;
@@ -388,6 +388,9 @@ export function fetchLiveServers(slug, timeoutMs) {
                 } else if (embed.indexOf('vidhide') >= 0 || embed.indexOf('callistanise') >= 0 || embed.indexOf('filelions') >= 0) {
                   const parts = embed.split('/v/');
                   servers[normLang].push({ type: 'vidhide', code: parts[1] || '', url: embed, cyberlocker: 'vidhide', quality: s.quality || 'HD' });
+                } else if (embed.indexOf('streamwish') >= 0 || embed.indexOf('strwish') >= 0 || embed.indexOf('wish') >= 0) {
+                  const parts = embed.split('/e/');
+                  servers[normLang].push({ type: 'streamwish', code: parts[1] || '', url: embed, cyberlocker: 'streamwish', quality: s.quality || 'HD' });
                 }
               }).catch(() => {})
             );

@@ -242,8 +242,34 @@
     ],
     "regions": [],
     "subs": false,
-    "languages": [],
-    "servers": {},
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "xq4jnofcdep1",
+          "url": "https://streamwish.to/e/xq4jnofcdep1",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidhide",
+          "code": "ywyw3fvb9ukw",
+          "url": "https://vidhidepro.com/v/ywyw3fvb9ukw",
+          "cyberlocker": "vidhide",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidara",
+          "code": "PqUBLYb45wfK7",
+          "url": "https://vidara.to/e/PqUBLYb45wfK7",
+          "cyberlocker": "vidara",
+          "quality": "CAM"
+        }
+      ]
+    },
     "poster": "https://image.tmdb.org/t/p/original/iHqjtNxzLmfWei4poUdckHmsBBz.jpg",
     "art": "https://image.tmdb.org/t/p/original/iHqjtNxzLmfWei4poUdckHmsBBz.jpg",
     "img": "https://image.tmdb.org/t/p/original/iHqjtNxzLmfWei4poUdckHmsBBz.jpg",
@@ -251,8 +277,8 @@
     "summary": "Una banda de ladrones expertos en redes sociales transmite en vivo sus audaces robos bancarios, sin darse cuenta de que la fama viral que están ganando los ha puesto en la mira de un veterano agente del FBI y una brillante ingeniera de software. A pesar de que este dúo fuera de lo común los sigue cada vez más de cerca, la organización criminal lleva sus límites al extremo, arriesgándolo todo por sus ideales y por el golpe más ambicioso de sus vidas hasta ahora.",
     "src": "poseidon",
     "slug": "movies/1437511/como-robar-un-banco",
-    "stream": "",
-    "url": "",
+    "stream": "vidhide:ywyw3fvb9ukw",
+    "url": "vidhide:ywyw3fvb9ukw",
     "lang": "es"
   },
   {
@@ -307,16 +333,42 @@
     ],
     "regions": [],
     "subs": false,
-    "languages": [],
-    "servers": {},
+    "languages": [
+      "english"
+    ],
+    "servers": {
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "cdb8gtd9q94q",
+          "url": "https://streamwish.to/e/cdb8gtd9q94q",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "vidhide",
+          "code": "dev9rmtg7o4x",
+          "url": "https://vidhidepro.com/v/dev9rmtg7o4x",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "vidara",
+          "code": "KjJeds0WmFIMf",
+          "url": "https://vidara.to/e/KjJeds0WmFIMf",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        }
+      ]
+    },
     "poster": "https://image.tmdb.org/t/p/original/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
     "art": "https://image.tmdb.org/t/p/original/sEsMwSDUWGIx9EfNxzM6KzVSsSQ.jpg",
     "img": "https://image.tmdb.org/t/p/original/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
     "overview": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
     "summary": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
     "src": "poseidon",
-    "stream": "",
-    "url": "",
+    "stream": "vidhide:dev9rmtg7o4x",
+    "url": "vidhide:dev9rmtg7o4x",
     "lang": "es",
     "slug": "movies/1375441/primetime"
   },
@@ -335,16 +387,66 @@
     ],
     "regions": [],
     "subs": false,
-    "languages": [],
-    "servers": {},
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "streamwish",
+          "code": "om6znm1picgl",
+          "url": "https://streamwish.to/e/om6znm1picgl",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidhide",
+          "code": "9aj72gslfov9",
+          "url": "https://vidhidepro.com/v/9aj72gslfov9",
+          "cyberlocker": "vidhide",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidara",
+          "code": "WXIt4EPXoANfX",
+          "url": "https://vidara.to/e/WXIt4EPXoANfX",
+          "cyberlocker": "vidara",
+          "quality": "CAM"
+        }
+      ],
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "7im1g4z65yms",
+          "url": "https://streamwish.to/e/7im1g4z65yms",
+          "cyberlocker": "streamwish",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidhide",
+          "code": "bgu7jt8qblo9",
+          "url": "https://vidhidepro.com/v/bgu7jt8qblo9",
+          "cyberlocker": "vidhide",
+          "quality": "CAM"
+        },
+        {
+          "type": "vidara",
+          "code": "AVviWT7M2N9gR",
+          "url": "https://vidara.to/e/AVviWT7M2N9gR",
+          "cyberlocker": "vidara",
+          "quality": "CAM"
+        }
+      ]
+    },
     "poster": "https://image.tmdb.org/t/p/original/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
     "art": "https://image.tmdb.org/t/p/original/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
     "img": "https://image.tmdb.org/t/p/original/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
     "overview": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
     "summary": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
     "src": "poseidon",
-    "stream": "",
-    "url": "",
+    "stream": "vidhide:9aj72gslfov9",
+    "url": "vidhide:9aj72gslfov9",
     "lang": "es",
     "slug": "movies/1381071/godzilla-minus-zero"
   },
@@ -361,16 +463,66 @@
     ],
     "regions": [],
     "subs": false,
-    "languages": [],
-    "servers": {},
+    "languages": [
+      "latino",
+      "english"
+    ],
+    "servers": {
+      "latino": [
+        {
+          "type": "streamwish",
+          "code": "liiebe2ulw2v",
+          "url": "https://streamwish.to/e/liiebe2ulw2v",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "vidhide",
+          "code": "w7xww3j4mpoy",
+          "url": "https://vidhidepro.com/v/w7xww3j4mpoy",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "vidara",
+          "code": "WVpSjA466EXfl",
+          "url": "https://vidara.to/e/WVpSjA466EXfl",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        }
+      ],
+      "english": [
+        {
+          "type": "streamwish",
+          "code": "xgg60ckxlm41",
+          "url": "https://streamwish.to/e/xgg60ckxlm41",
+          "cyberlocker": "streamwish",
+          "quality": "HD"
+        },
+        {
+          "type": "vidhide",
+          "code": "5816pjkslqit",
+          "url": "https://vidhidepro.com/v/5816pjkslqit",
+          "cyberlocker": "vidhide",
+          "quality": "HD"
+        },
+        {
+          "type": "vidara",
+          "code": "qm2n3nCtObcQj",
+          "url": "https://vidara.to/e/qm2n3nCtObcQj",
+          "cyberlocker": "vidara",
+          "quality": "HD"
+        }
+      ]
+    },
     "poster": "https://image.tmdb.org/t/p/original/5yUwsjgWlYCIF5ck1NaUr5zEGg7.jpg",
     "art": "https://image.tmdb.org/t/p/original/ncm7djsVTHQQMX2HEbEVxMUFchG.jpg",
     "img": "https://image.tmdb.org/t/p/original/5yUwsjgWlYCIF5ck1NaUr5zEGg7.jpg",
     "overview": "Bela, una niña de 8 años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su clóset. La presencia, a quien llama “Otra Mamá”, se vuelve cada vez más amenazante para ella y su familia.",
     "summary": "Bela, una niña de 8 años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su clóset. La presencia, a quien llama “Otra Mamá”, se vuelve cada vez más amenazante para ella y su familia.",
     "src": "poseidon",
-    "stream": "",
-    "url": "",
+    "stream": "vidhide:w7xww3j4mpoy",
+    "url": "vidhide:w7xww3j4mpoy",
     "lang": "es",
     "slug": "movies/1400837/madre-siniestra"
   },
