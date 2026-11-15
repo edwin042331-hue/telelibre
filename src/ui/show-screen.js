@@ -5,6 +5,7 @@ import { focus } from './focus.js';
 import { formatTime, formatDuration } from './format.js';
 import { getProgress, isWatched, lastEpisodeOf, isFavorite, toggleFavorite } from '../store.js';
 import { loadSeasons } from '../pluto.js';
+import { loadPoseidonSeasons } from '../poseidon.js';
 
 export function createShowScreen(app) {
   const bg = h('div', { class: 'detail-bg' });
@@ -108,8 +109,8 @@ export function createShowScreen(app) {
   function load() {
     const my = ++token;
     status.textContent = 'Cargando episodios…';
-    const fetcher = (series.src === 'poseidon' && series.seasons && series.seasons.length)
-      ? Promise.resolve(series.seasons)
+    const fetcher = (series.src === 'poseidon')
+      ? (series.seasons && series.seasons.length ? Promise.resolve(series.seasons) : loadPoseidonSeasons(series))
       : loadSeasons(series);
 
     fetcher.then(list => {

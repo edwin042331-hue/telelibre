@@ -5,7 +5,7 @@ import { itemCard, moreCard, loadVisibleImages } from './card.js';
 import { itemTags, formatTime, formatClock } from './format.js';
 import { getProgress } from '../store.js';
 import { nowNext } from '../epg.js';
-import { EDWIN_GENRES, buildPoseidonRows, getPoseidonMoviesSync } from '../poseidon.js';
+import { EDWIN_GENRES, buildPoseidonRows, getPoseidonMoviesSync, searchPoseidonLive } from '../poseidon.js';
 import { createKeyboard, handlePhysicalKey } from './keyboard.js';
 import { icon } from './icons.js';
 
@@ -66,9 +66,28 @@ export function createPoseidonScreen(app) {
 
   let activeGenre = 'all';
   let searchQuery = '';
+  let liveResults = [];
+  let liveSearchTimer = null;
   let heroTimer = null;
   let heroKey = null;
   let searchKeyboard = null;
+
+  function doLiveSearch(q) {
+    clearTimeout(liveSearchTimer);
+    liveResults = [];
+    if (!q || q.trim().length < 2) return;
+    liveSearchTimer = setTimeout(() => {
+      searchPoseidonLive(q).then(results => {
+        if (!searchQuery || searchQuery.trim().toLowerCase() !== q.trim().toLowerCase()) return;
+        const localKeys = {};
+        (getPoseidonMoviesSync() || []).forEach(m => { localKeys[m.key] = true; });
+        liveResults = (results || []).filter(m => !localKeys[m.key]);
+        if (liveResults.length) {
+          render();
+        }
+      }).catch(() => {});
+    }, 400);
+  }
 
   function setHero(item, row) {
     if (!item || item.key === heroKey) return;
@@ -149,6 +168,7 @@ export function createPoseidonScreen(app) {
     if (searchKeyboard) searchKeyboard.setValue(searchQuery);
     searchStatus.textContent = searchQuery ? 'Filtrando por "' + searchQuery + '"' : 'Escribe para filtrar el catálogo';
     render();
+    doLiveSearch(searchQuery);
   });
 
   searchInputVal.addEventListener('keydown', e => {
@@ -181,6 +201,7 @@ export function createPoseidonScreen(app) {
         searchInputVal.value = val;
         searchStatus.textContent = val ? 'Filtrando por "' + val + '"' : 'Escribe para filtrar el catálogo';
         render();
+        doLiveSearch(searchQuery);
       });
       searchBox.appendChild(searchKeyboard.el);
     } else {
@@ -231,7 +252,7 @@ export function createPoseidonScreen(app) {
 
   function render() {
     buildGenrePills();
-    const rows = buildPoseidonRows(getPoseidonMoviesSync(), activeGenre, searchQuery);
+    const rows = buildPoseidonRows(getPoseidonMoviesSync(), activeGenre, searchQuery, liveResults);
     clear(rowsEl);
     rows.forEach(r => rowsEl.appendChild(renderRow(r)));
     el.classList.toggle('is-empty', !rows.length);

@@ -1629,6 +1629,68 @@ export function searchPoseidonLive(q) {
   }).catch(() => []);
 }
 
+// Carga bajo demanda todas las temporadas y episodios de una serie de PoseidonHD
+export function loadPoseidonSeasons(series) {
+  if (!series) return Promise.resolve([]);
+  if (series.seasons && series.seasons.length) return Promise.resolve(series.seasons);
+
+  let rawSlug = series.slug || '';
+  if (!rawSlug && series.key && series.key.indexOf('poseidon:serie:') === 0) {
+    const tmdbId = series.key.replace('poseidon:serie:', '');
+    rawSlug = tmdbId + '/' + encodeURIComponent((series.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+  }
+  const cleanSlug = rawSlug.replace(/^series\//, '').replace(/^serie\//, '');
+  if (!cleanSlug) return Promise.resolve([]);
+
+  const url = 'https://www.poseidonhd2.co/serie/' + cleanSlug;
+  return getText(url, 7000).then(html => {
+    if (!html) return [];
+    const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+    if (!match) return [];
+    try {
+      const data = JSON.parse(match[1]);
+      const ts = (data.props && data.props.pageProps && data.props.pageProps.thisSerie) || {};
+      const seasonsRaw = (ts.seasons || []).filter(s => s.number > 0 && s.episodes && s.episodes.length > 0);
+      const seriesTitle = (ts.titles && ts.titles.name) || series.name || '';
+      const tmdb = ts.TMDbId || series.key.replace('poseidon:serie:', '');
+      const poster = (ts.images && ts.images.poster) || series.poster || '';
+      const art = (ts.images && ts.images.backdrop) || series.art || poster;
+
+      const seasons = seasonsRaw.map(s => {
+        return {
+          number: s.number,
+          episodes: (s.episodes || []).map(ep => {
+            const epNum = ep.number || 1;
+            const szNum = s.number || 1;
+            const epSlug = (ep.url && ep.url.slug) ? ep.url.slug : '';
+            return {
+              type: 'episode',
+              key: 'poseidon:ep:' + (ep.TMDbId || (tmdb + '-' + szNum + '-' + epNum)),
+              seriesKey: 'poseidon:serie:' + tmdb,
+              seriesName: seriesTitle,
+              season: szNum,
+              number: epNum,
+              title: ep.title || ep.name || ('Episodio ' + epNum),
+              name: seriesTitle + ' · T' + szNum + ':E' + epNum,
+              description: ep.overview || ep.description || '',
+              runtime: (ep.runtime || 50) * 60,
+              poster: ep.image || poster,
+              art: art || ep.image || '',
+              src: 'poseidon',
+              slug: epSlug
+            };
+          })
+        };
+      });
+      series.seasons = seasons;
+      series.seasonsCount = seasons.length;
+      return seasons;
+    } catch (e) {
+      return [];
+    }
+  }).catch(() => []);
+}
+
 export const EDWIN_GENRES = [
   { id: 'all', label: '🎬 Todos' },
   { id: '2026', label: '🔥 Estrenos 2026' },
@@ -1646,7 +1708,7 @@ export const EDWIN_GENRES = [
 ];
 
 // Organiza las películas en filas temáticas por AÑO y por GÉNERO
-export function buildPoseidonRows(movies, filterGenre, searchQuery) {
+export function buildPoseidonRows(movies, filterGenre, searchQuery, extraLiveItems) {
   if (state.settings && state.settings.sources && state.settings.sources['poseidon'] === false) {
     return [];
   }
@@ -1667,6 +1729,15 @@ export function buildPoseidonRows(movies, filterGenre, searchQuery) {
       title: '🔍 Resultados para "' + searchQuery.trim() + '" (' + matches.length + ')',
       items: matches
     });
+
+    if (Array.isArray(extraLiveItems) && extraLiveItems.length > 0) {
+      rows.push({
+        id: 'ps:search_live',
+        title: '🌐 Encontrados en PoseidonHD en vivo (' + extraLiveItems.length + ')',
+        items: extraLiveItems
+      });
+    }
+
     const extra2026 = list.filter(m => m.year === 2026 && matches.indexOf(m) < 0).slice(0, 15);
     if (extra2026.length) {
       rows.push({

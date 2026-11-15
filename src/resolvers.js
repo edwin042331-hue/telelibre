@@ -352,19 +352,27 @@ export function resolveSingleDescriptor(target, timeoutMs) {
   return Promise.reject(new Error('Servidor no soportado: ' + JSON.stringify(target)));
 }
 
-/** Extrae servidores en vivo para películas encontradas en búsquedas de PoseidonHD */
+/** Extrae servidores en vivo para películas o episodios encontrados en búsquedas de PoseidonHD */
 export function fetchLiveServers(slug, timeoutMs) {
   if (!slug) return Promise.resolve(null);
-  const cleanSlug = slug.replace(/^movies\//, '').replace(/^series\//, '');
-  const url = 'https://www.poseidonhd2.co/pelicula/' + cleanSlug;
+  const isEpisode = slug.indexOf('seasons') >= 0 || slug.indexOf('episodes') >= 0 || slug.indexOf('temporada') >= 0 || slug.indexOf('episodio') >= 0;
+  let url = '';
+  if (isEpisode) {
+    const cleanEpPath = slug.replace(/^series\//, 'serie/').replace(/\/seasons\//, '/temporada/').replace(/\/episodes\//, '/episodio/');
+    url = 'https://www.poseidonhd2.co/' + cleanEpPath;
+  } else {
+    const cleanSlug = slug.replace(/^movies\//, '').replace(/^pelicula\//, '');
+    url = 'https://www.poseidonhd2.co/pelicula/' + cleanSlug;
+  }
   return requestGetText(url, timeoutMs || 5000).then(html => {
     if (!html) return null;
     const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
     if (!match) return null;
     try {
       const data = JSON.parse(match[1]);
-      const tm = data.props && data.props.pageProps && data.props.pageProps.thisMovie;
-      const vids = (tm && tm.videos) || {};
+      const pp = data.props && data.props.pageProps;
+      const mediaObj = isEpisode ? (pp && (pp.thisEpisode || pp.episode)) : (pp && pp.thisMovie);
+      const vids = (mediaObj && mediaObj.videos) || {};
       const servers = {};
       const langKeys = ['latino', 'spanish', 'english', 'subtitulado'];
       const extractPromises = [];
@@ -383,14 +391,18 @@ export function fetchLiveServers(slug, timeoutMs) {
                 const pMatch = pHtml && pHtml.match(/var\s+url\s*=\s*['"]([^'"]+)['"]/);
                 const embed = pMatch ? pMatch[1] : null;
                 if (!embed) return;
-                if (embed.indexOf('vidara.to/e/') >= 0) {
-                  servers[normLang].push({ type: 'vidara', code: embed.split('/e/')[1], url: embed, cyberlocker: 'vidara', quality: s.quality || 'HD' });
-                } else if (embed.indexOf('vidhide') >= 0 || embed.indexOf('callistanise') >= 0 || embed.indexOf('filelions') >= 0) {
+                if (embed.indexOf('vidhide') >= 0 || embed.indexOf('callistanise') >= 0 || embed.indexOf('filelions') >= 0) {
                   const parts = embed.split('/v/');
                   servers[normLang].push({ type: 'vidhide', code: parts[1] || '', url: embed, cyberlocker: 'vidhide', quality: s.quality || 'HD' });
+                } else if (embed.indexOf('vidara.to/e/') >= 0) {
+                  servers[normLang].push({ type: 'vidara', code: embed.split('/e/')[1], url: embed, cyberlocker: 'vidara', quality: s.quality || 'HD' });
                 } else if (embed.indexOf('streamwish') >= 0 || embed.indexOf('strwish') >= 0 || embed.indexOf('wish') >= 0) {
                   const parts = embed.split('/e/');
                   servers[normLang].push({ type: 'streamwish', code: parts[1] || '', url: embed, cyberlocker: 'streamwish', quality: s.quality || 'HD' });
+                } else if (embed.indexOf('voe.sx/e/') >= 0) {
+                  servers[normLang].push({ type: 'voe', url: embed, cyberlocker: 'voesx', quality: s.quality || 'HD' });
+                } else if (embed.indexOf('dood') >= 0) {
+                  servers[normLang].push({ type: 'dood', url: embed, cyberlocker: 'doodstream', quality: s.quality || 'HD' });
                 }
               }).catch(() => {})
             );
@@ -412,11 +424,12 @@ export function fetchLiveServers(slug, timeoutMs) {
 export function resolvePoseidonUrls(movieOrServers, preferredLang) {
   if (!movieOrServers) return Promise.reject(new Error('No hay contenido'));
 
-  const needsLiveFetch = typeof movieOrServers === 'object' && movieOrServers.slug &&
+  const rawSlug = typeof movieOrServers === 'object' ? (movieOrServers.slug || '') : '';
+  const needsLiveFetch = typeof movieOrServers === 'object' && rawSlug &&
     (!movieOrServers.servers || Object.keys(movieOrServers.servers).length === 0);
 
   const getServersPromise = needsLiveFetch
-    ? fetchLiveServers(movieOrServers.slug, 5000).then(fetched => {
+    ? fetchLiveServers(rawSlug, 5000).then(fetched => {
         if (fetched && Object.keys(fetched).length > 0) {
           movieOrServers.servers = fetched;
         }
@@ -425,9 +438,27 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
     : Promise.resolve(movieOrServers.servers || (movieOrServers.latino || movieOrServers.spanish ? movieOrServers : null));
 
   return getServersPromise.then(serversMap => {
-    if (serversMap && typeof serversMap === 'object' && Object.keys(serversMap).length > 0) {
+    function tryResolveFromMap(sMap) {
+      if (!sMap || typeof sMap !== 'object' || Object.keys(sMap).length === 0) {
+        return Promise.reject(new Error('Sin mapa de servidores'));
+      }
       const lang = (preferredLang || 'latino').toLowerCase();
-      const primaryList = (serversMap[lang] || serversMap['latino'] || serversMap['castellano'] || serversMap['spanish'] || serversMap['english'] || serversMap['subtitulado'] || []).slice();
+      const targetLangs = (lang === 'castellano' || lang === 'spanish')
+        ? ['castellano', 'spanish', 'latino', 'english', 'subtitulado']
+        : (lang === 'latino' ? ['latino', 'castellano', 'spanish', 'english', 'subtitulado'] : [lang, 'latino', 'castellano', 'spanish']);
+
+      let primaryList = [];
+      for (let i = 0; i < targetLangs.length; i++) {
+        const k = targetLangs[i];
+        if (Array.isArray(sMap[k]) && sMap[k].length > 0) {
+          primaryList = sMap[k].slice();
+          break;
+        }
+      }
+      if (!primaryList.length) {
+        primaryList = (sMap['latino'] || sMap['castellano'] || sMap['spanish'] || sMap['english'] || []).slice();
+      }
+
       // Priorizar en cascada: 1) VidHide (estable, 36h) -> 2) Vidara -> 3) StreamWish -> 4) Voe -> 5) Dood
       primaryList.sort((a, b) => {
         function getPriority(c) {
@@ -443,7 +474,7 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
         }
         return getPriority(a) - getPriority(b);
       });
-      const otherLangs = Object.keys(serversMap).filter(k => k !== lang);
+      const otherLangs = Object.keys(sMap).filter(k => k !== lang);
 
       let p = Promise.reject(new Error('Sin servidor inicial'));
       primaryList.forEach(candidate => {
@@ -453,7 +484,7 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
       return p.then(primaryUrl => {
         const altCandidates = [];
         otherLangs.forEach(altKey => {
-          const altList = serversMap[altKey] || [];
+          const altList = sMap[altKey] || [];
           if (altList.length > 0) altCandidates.push(altList[0]);
         });
         if (!altCandidates.length) return [primaryUrl];
@@ -465,7 +496,25 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
         return altP.then(altUrl => {
           return (altUrl && altUrl !== primaryUrl) ? [primaryUrl, altUrl] : [primaryUrl];
         }).catch(() => [primaryUrl]);
-      }).catch(() => {
+      });
+    }
+
+    return tryResolveFromMap(serversMap).catch(() => {
+      // Reintento en vivo si los servidores cacheados fallaron
+      if (rawSlug) {
+        return fetchLiveServers(rawSlug, 5000).then(fresh => {
+          if (fresh && Object.keys(fresh).length > 0) {
+            movieOrServers.servers = fresh;
+            return tryResolveFromMap(fresh);
+          }
+          throw new Error('Servidores frescos vacíos');
+        });
+      }
+      throw new Error('Sin slug para reintento');
+    }).catch(() => {
+      // Fallback a idiomas alternativos si el pedido no está disponible
+      if (serversMap && typeof serversMap === 'object') {
+        const otherLangs = Object.keys(serversMap);
         let fallbackP = Promise.reject(new Error('Probando idiomas alternativos'));
         otherLangs.forEach(altKey => {
           const altList = serversMap[altKey] || [];
@@ -474,15 +523,13 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
           });
         });
         return fallbackP.then(fallbackUrl => [fallbackUrl]);
-      }).catch(() => {
-        const direct = movieOrServers.stream || movieOrServers.url;
-        if (direct) return resolveSingleDescriptor(direct, 4500).then(u => [u]);
-        return Promise.reject(new Error('Ningún servidor respondió'));
-      });
-    }
-
-    const target = (typeof movieOrServers === 'object' ? (movieOrServers.stream || movieOrServers.url) : movieOrServers) || '';
-    return resolveSingleDescriptor(target).then(u => [u]);
+      }
+      throw new Error('Ningún servidor en mapa respondió');
+    }).catch(() => {
+      const direct = movieOrServers.stream || movieOrServers.url;
+      if (direct) return resolveSingleDescriptor(direct, 4500).then(u => [u]);
+      return Promise.reject(new Error('Ningún servidor respondió'));
+    });
   });
 }
 
