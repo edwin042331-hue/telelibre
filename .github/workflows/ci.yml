@@ -7,6 +7,7 @@ on:
   pull_request:
   # Revisión diaria: las listas de la comunidad cambian y conviene enterarse si una fuente se cae.
   schedule:
+    - cron: '0 0 * * *'
     - cron: '0 12 * * *'
   workflow_dispatch:
 
@@ -132,6 +133,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: web
@@ -149,6 +151,14 @@ jobs:
           cp packages/*.ipk site/TeleLibre-LG.ipk
           cp packages/*.wgt site/TeleLibre-Samsung.wgt
           ls -la site
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Catálogo TMDB paginado (credencial solo en Actions)
+        env:
+          TMDB_READ_TOKEN: ${{ secrets.TMDB_READ_TOKEN }}
+          TMDB_CATALOG_PAGES: ${{ vars.TMDB_CATALOG_PAGES }}
+        run: node scripts/sync-tmdb.mjs site/tmdb
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

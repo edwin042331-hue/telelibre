@@ -1,7 +1,7 @@
 // Pantalla de filas horizontales con panel superior (Inicio, TV en vivo, Películas).
 import { h, clear, closest, toArray } from './dom.js';
 import { focus } from './focus.js';
-import { itemCard, moreCard, loadVisibleImages } from './card.js';
+import { itemCard, moreCard, loadVisibleImages, isPosterItem } from './card.js';
 import { itemTags, formatTime } from './format.js';
 import { getProgress } from '../store.js';
 import { nowNext } from '../epg.js';
@@ -27,7 +27,7 @@ export function createRowsScreen(app, name, getRows, emptyText) {
   function setHero(item, row) {
     if (!item || item.key === heroKey) return;
     heroKey = item.key;
-    const isMovie = item.type === 'movie' || item.type === 'series' || item.type === 'episode';
+    const isMovie = isPosterItem(item);
     const art = isMovie ? (item.art || item.poster) : item.logo;
     el.classList.toggle('hero-movie', isMovie);
     heroBg.style.backgroundImage = art ? 'url("' + art.replace(/"/g, '%22') + '")' : 'none';
@@ -49,7 +49,7 @@ export function createRowsScreen(app, name, getRows, emptyText) {
   // Las tarjetas de cada fila se crean solo cuando el foco se acerca: con 60+ filas (TV en vivo)
   // pintar todo de golpe serían miles de nodos y la TV se pondría lenta.
   function renderRow(row) {
-    const kind = row.items[0] && row.items[0].type === 'movie' ? 'movie' : 'live';
+    const kind = isPosterItem(row.items[0]) ? 'movie' : 'live';
     const track = h('div', { class: 'track pending ' + kind, 'data-scroll': 'x', 'data-scroll-pad': '60' });
     const rowEl = h('div', { class: 'row', 'data-anchor': '', 'data-row': row.id }, [
       h('h2', { class: 'row-title' }, [row.title, h('span', { class: 'row-count', text: String(row.items.length) })]),
@@ -73,9 +73,14 @@ export function createRowsScreen(app, name, getRows, emptyText) {
       track.appendChild(card);
     });
     if (row.items.length > ROW_LIMIT) {
-      const more = moreCard(row.items.length, row.items[0].type === 'movie' ? 'movie' : 'live');
+      const more = moreCard(row.items.length, isPosterItem(row.items[0]) ? 'movie' : 'live');
       more._onEnter = () => app.openGrid(row.title, row.items);
       track.appendChild(more);
+    }
+    if (row.browseSection) {
+      const browse = moreCard(0, 'movie', 'Explorar todo');
+      browse._onEnter = () => app.openPoseidonBrowse(row.browseSection, row.title);
+      track.appendChild(browse);
     }
   }
 

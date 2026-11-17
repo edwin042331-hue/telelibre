@@ -25,19 +25,25 @@ export function formatClock(d) {
   return (h % 12 || 12) + ':' + pad(d.getMinutes()) + (h < 12 ? ' a. m.' : ' p. m.');
 }
 
+export function ratingLabel(rating) {
+  const n = Number(rating);
+  return isFinite(n) && n > 0 && n <= 10 ? '★ ' + n.toFixed(1).replace('.', ',') : '';
+}
+
 // Etiquetas cortas que se muestran como "chips" en el panel superior y en el detalle.
 export function itemTags(item) {
   if (item.type === 'series') {
     const sCount = Array.isArray(item.seasons) ? item.seasons.length : (item.seasons || 0);
-    const srcTag = item.src === 'poseidon' ? 'Películas Edwin' : 'Pluto TV';
-    return [item.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag].filter(Boolean);
+    const srcTag = item.src === 'poseidon' ? 'Películas Edwin' : item.src === 'tmdb' ? 'TMDB · ficha informativa' : 'Pluto TV';
+    return [item.year, ratingLabel(item.rating), item.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag].filter(Boolean);
   }
   if (item.type === 'episode') {
     return ['T' + item.season + ':E' + item.number, item.title, formatDuration(item.runtime)].filter(Boolean);
   }
   if (item.type === 'movie') {
-    return [item.year, item.quality ? item.quality.toUpperCase() : '', formatDuration(item.runtime)].concat((item.genres || []).slice(0, 3).map(genreLabel))
-      .concat(item.subs ? ['Subtitulada'] : []).concat(item.lang === 'en' ? ['Inglés'] : []).filter(Boolean);
+    return [item.year, ratingLabel(item.rating), item.quality ? item.quality.toUpperCase() : '', formatDuration(item.runtime)].concat((item.genres || []).slice(0, 3).map(genreLabel))
+      .concat(item.subs ? ['Subtitulada'] : []).concat(item.lang === 'en' ? ['Inglés'] : [])
+      .concat(item.src === 'tmdb' ? ['TMDB · ficha informativa'] : []).filter(Boolean);
   }
   return [countryName(item.country)].concat(item.cats.filter(c => c !== 'other').slice(0, 2).map(categoryLabel))
     .concat(item.quality ? [item.quality.toUpperCase()] : []).concat(item.not247 ? ['No 24/7'] : []).filter(Boolean);

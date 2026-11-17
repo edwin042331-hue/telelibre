@@ -19,7 +19,8 @@ import { keyAction, registerKeys, exitApp, platform } from './platform.js';
 import { state, toggleFavorite, continueWatching, isFavorite, profiles, activeProfile, useProfile, getProgress } from './store.js';
 import { activeSources, loadSources } from './sources.js';
 import { loadMovies, buildMovieRows, buildAnimeMovieRows, resolveMovie, VOD_SOURCES, isVodSourceOn } from './vod.js';
-import { loadPoseidonCatalog, buildPoseidonRows, getPoseidonMoviesSync, refreshPoseidonRemote } from './poseidon.js';
+import { loadPoseidonCatalog, loadPoseidonBrowsePage, buildPoseidonRows, getPoseidonMoviesSync, refreshPoseidonRemote, hasPoseidonSource } from './poseidon.js';
+import { loadTmdbBrowsePage } from './tmdb.js';
 import { resolvePoseidon, resolvePoseidonUrls } from './resolvers.js';
 import { applyFilters, buildRows, buildEnglishRows, buildWorldRows, sortChannels, indexByKey, resolveSaved, mergeChannels } from './catalog.js';
 import { orderForTime, recommendations, rankByHealth, isDead, greeting, resolveTheme, surprise, reloadTaste } from './smart.js';
@@ -37,7 +38,7 @@ import { formatClock } from './ui/format.js';
 const HTTPS_ONLY = location.protocol === 'https:';
 
 const app = {
-  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], poseidonRows: [], animeRows: [], rdRows: [], seriesRows: [], seriesAll: [], stats: {}, httpsHidden: 0 },
+  data: { channels: [], movies: [], byKey: {}, moviesByKey: {}, liveRows: [], movieRows: [], poseidonRows: [], animeRows: [], animeTrending: [], animeFilms: [], rdRows: [], seriesRows: [], seriesAll: [], stats: {}, httpsHidden: 0 },
   raw: []
 };
 
@@ -159,12 +160,14 @@ function homeRows() {
 }
 
 // Sección Anime: canales 24/7 (Naruto, One Piece, Dragon Ball, Crunchyroll…) y películas, español primero.
-function buildAnimeRows(spanish, english, movies) {
+function buildAnimeRows(spanish, english, movies, trending, films) {
   const isAnime = c => c.cats.indexOf('anime') >= 0;
   const rows = [];
   const es = sortChannels(spanish.filter(isAnime));
   const en = sortChannels(english.filter(isAnime));
   if (es.length) rows.push({ id: 'an:live:es', title: 'Anime en vivo · español', items: es });
+  if (trending.length) rows.push({ id: 'an:trending', title: 'Series de anime y animación · tendencia semanal', items: trending });
+  if (films.length) rows.push({ id: 'an:films', title: 'Películas de animación · recientes', items: films, browseSection: 'genero/animacion' });
   const movieRows = buildAnimeMovieRows(movies);
   if (movieRows[0]) rows.push(movieRows[0]);
   if (en.length) rows.push({ id: 'an:live:en', title: 'Anime 24/7 · en inglés', items: en });
@@ -253,6 +256,7 @@ function navigate(id) {
     }, 'mylist');
   } else {
     show(id);
+    if (id === 'anime') refreshAnimeTrending();
   }
 }
 
@@ -282,6 +286,7 @@ function refreshCurrent() {
 
 // ---------- Acciones de contenido ----------
 app.open = function (item, list, index) {
+  if (item.src === 'tmdb') { app.push('detail', { item, list, index }); return; }
   if (item.type === 'series') { app.push('show', { series: item }); return; }
   // Desde "Continuar viendo": abrir la ficha de su serie en ese episodio.
   if (item.type === 'episode') { openEpisode(item, false); return; }
@@ -299,23 +304,30 @@ app.openGrid = function (title, items) {
   app.push('grid', { title, items });
 };
 
+app.openPoseidonBrowse = function (section, title) {
+  app.push('grid', { title, loadPage: page => loadPoseidonBrowsePage(section, page) });
+};
+
+app.openTmdbBrowse = function (section, title) {
+  app.push('grid', { title, loadPage: page => loadTmdbBrowsePage(section, page) });
+};
+
 app.playMovie = function (movie, list, index, resolved, startAt, preferredLang) {
-  if (preferredLang) movie._preferredLang = preferredLang;
   if (resolved) {
     if (!resolved.urls.length) { app.toast('Esta película no tiene un video compatible'); return; }
+    if (preferredLang) movie._preferredLang = preferredLang;
     player.playMovie(movie, resolved, startAt);
     return;
   }
   // Películas de Poseidon (Vidara / VidHide / StreamWish / Doodstream / Multi-servidor)
   if (movie.src === 'poseidon' || movie.servers || (movie.url && (movie.url.indexOf('vidara:') === 0 || movie.url.indexOf('vidhide:') === 0 || movie.url.indexOf('streamwish:') === 0 || movie.url.indexOf('dood:') === 0)) || (movie.stream && (movie.stream.indexOf('vidara:') === 0 || movie.stream.indexOf('vidhide:') === 0 || movie.stream.indexOf('streamwish:') === 0 || movie.stream.indexOf('dood:') === 0))) {
-    const hasStream = (movie.servers && Object.keys(movie.servers).some(k => Array.isArray(movie.servers[k]) && movie.servers[k].length > 0)) ||
-      (movie.stream && movie.stream.length > 5) || (movie.url && movie.url.length > 5);
-    if (!hasStream) {
+    if (!hasPoseidonSource(movie)) {
       app.toast('Próximamente en PoseidonHD (sin enlaces de video aún)');
       return;
     }
     app.toast('Obteniendo video en HD…');
     resolvePoseidonUrls(movie, preferredLang).then(urls => {
+      if (preferredLang) movie._preferredLang = preferredLang;
       player.playMovie(movie, { urls: urls, subtitles: [], duration: movie.runtime || movie.duration || 7200 }, startAt);
     }).catch(() => {
       app.toast('El servidor de video no respondió. Intenta de nuevo.');
@@ -419,7 +431,8 @@ app.onPlayerOpened = function () {
 // autoplay: desde "Seguir viendo" de Google TV, el episodio arranca solo donde quedó.
 function openEpisode(item, autoplay) {
   const series = app.data.seriesByKey && app.data.seriesByKey[item.seriesKey] ||
-    { type: 'series', key: item.seriesKey, plutoId: item.seriesId, name: item.seriesName, poster: item.poster, art: item.art, genre: '', summary: '', seasons: 0 };
+    (item.src === 'poseidon' && getPoseidonMoviesSync().filter(s => s.key === item.seriesKey)[0]) ||
+    { type: 'series', key: item.seriesKey, src: item.src, slug: (item.slug || '').replace(/\/(?:seasons|temporada)\/.*$/, ''), plutoId: item.seriesId, name: item.seriesName, poster: item.poster, art: item.art, genre: '', summary: '', seasons: 0 };
   app.push('show', { series, resumeKey: item.key, autoplay });
 }
 
@@ -621,7 +634,7 @@ app.rebuild = function (quiet) {
   app.data.visibleMovies = movies;
   app.data.movieRows = buildMovieRows(movies);
   app.data.poseidonRows = buildPoseidonRows(getPoseidonMoviesSync());
-  app.data.animeRows = kidsOn() ? [] : buildAnimeRows(spanish, english, movies);
+  app.data.animeRows = kidsOn() ? [] : buildAnimeRows(spanish, english, movies, app.data.animeTrending, app.data.animeFilms);
   app.data.moviesByKey = indexByKey(app.data.movies);
   app.markDirty();
   if (!quiet) refreshCurrent();
@@ -747,6 +760,44 @@ function autoSyncPoseidon() {
 }
 setTimeout(autoSyncPoseidon, 10000);
 setInterval(autoSyncPoseidon, 4 * 60 * 60 * 1000);
+
+// Consulta las tendencias solo cuando se visita Anime y vuelve a hacerlo a las 12 horas.
+let animeUpdatedAt = 0;
+let animeLoading = false;
+function refreshAnimeTrending() {
+  if (animeLoading || kidsOn() || state.settings.sources.poseidon === false || Date.now() - animeUpdatedAt < 12 * 60 * 60 * 1000) return;
+  animeLoading = true;
+  const trending = loadPoseidonBrowsePage('series/tendencias/semana', 1).then(first => {
+    const pages = [Promise.resolve(first)];
+    for (let n = 2; n <= Math.min(first.totalPages, 5); n++) {
+      pages.push(loadPoseidonBrowsePage('series/tendencias/semana', n).catch(() => ({ items: [] })));
+    }
+    return Promise.all(pages).then(results => {
+      const seen = {};
+      return results.reduce((list, result) => {
+        result.items.forEach(item => {
+          if (item.genres.indexOf('animación') >= 0 && !seen[item.key]) {
+            seen[item.key] = true;
+            list.push(item);
+          }
+        });
+        return list;
+      }, []);
+    });
+  });
+  Promise.all([
+    trending.catch(() => null),
+    loadPoseidonBrowsePage('genero/animacion', 1).then(result => result.items).catch(() => null)
+  ]).then(results => {
+    animeLoading = false;
+    if (!results[0] && !results[1]) return;
+    if (results[0]) app.data.animeTrending = results[0];
+    if (results[1]) app.data.animeFilms = results[1];
+    if (results[0] && results[1]) animeUpdatedAt = Date.now();
+    if (started) app.rebuild(player.isOpen());
+  });
+}
+setInterval(() => { if (current() === screens.anime) refreshAnimeTrending(); }, 30 * 60 * 1000);
 
 // ---------- Control remoto ----------
 let lastBack = 0;

@@ -156,7 +156,7 @@ export function createShowScreen(app) {
       const srcTag = series.src === 'poseidon' ? 'Películas Edwin · Serie' : 'Pluto TV · gratis con anuncios';
       [series.genre, sCount ? sCount + (sCount === 1 ? ' temporada' : ' temporadas') : '', srcTag]
         .filter(Boolean).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
-      summary.textContent = series.summary || '';
+      summary.textContent = series.summary || series.overview || '';
       clear(actions);
       clear(seasonsEl);
       clear(episodesEl);

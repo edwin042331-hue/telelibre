@@ -6,6 +6,7 @@ import { pushRecent, saveProgress, toggleFavorite, isFavorite } from '../store.j
 import { formatTime, formatClock, itemTags } from './format.js';
 import { recordPlayback, isDead, learnFrom } from '../smart.js';
 import { nowNext } from '../epg.js';
+import { refreshPoseidonUrls } from '../resolvers.js';
 
 const LIVE_TIMEOUT = 20000;
 const MOVIE_TIMEOUT = 30000;
@@ -89,6 +90,8 @@ export function createPlayer(app) {
   let osdTimer = null;
   let lastSave = 0;
   let startAt = 0;
+  let recoveryTried = false;
+  let recovering = false;
   let subtitlesOn = true;
   // Momento en que empezó a verse el contenido actual (para aprender gustos por tiempo visto).
   let watchedSince = 0;
@@ -146,8 +149,7 @@ export function createPlayer(app) {
     try { video.load(); } catch (e) { /* algunos TV fallan al recargar vacío */ }
   }
 
-  function fail() {
-    if (attempt + 1 < attempts.length) { attempt++; startAttempt(); return; }
+  function showTerminalError() {
     if (mode === 'live') recordPlayback(item.key, false);
     teardown();
     setState('error');
@@ -155,6 +157,41 @@ export function createPlayer(app) {
       ? 'No se pudo reproducir esta película ahora. Prueba más tarde o elige otra.'
       : 'Este canal no está disponible ahora (la emisora lo cambió o lo limita por país). Usa ▲ ▼ para probar otro.';
     showOsd(true);
+  }
+
+  function fail() {
+    if (recovering) return;
+    // Un respaldo de URL también debe retomar donde iba la película.
+    if (mode === 'movie' && isFinite(video.currentTime) && video.currentTime > 0) {
+      startAt = Math.max(startAt, video.currentTime);
+    }
+    if (attempt + 1 < attempts.length) { attempt++; startAttempt(); return; }
+    if (mode === 'movie' && item && item.src === 'poseidon' && item.slug && !recoveryTried) {
+      recoveryTried = true;
+      recovering = true;
+      const failedItem = item;
+      const resumeAt = Math.max(startAt || 0, video.currentTime || 0);
+      const my = ++token;
+      teardown();
+      setState('loading');
+      app.toast('Buscando otro servidor para continuar…');
+      refreshPoseidonUrls(failedItem, failedItem._preferredLang).then(urls => {
+        if (!open || item !== failedItem || my !== token) return;
+        recovering = false;
+        failedItem._urls = urls;
+        startAt = resumeAt;
+        attempts = attemptsFor(urls);
+        attempt = 0;
+        if (!attempts.length) { showTerminalError(); return; }
+        startAttempt();
+      }).catch(() => {
+        if (!open || item !== failedItem || my !== token) return;
+        recovering = false;
+        showTerminalError();
+      });
+      return;
+    }
+    showTerminalError();
   }
 
   function startAttempt() {
@@ -188,10 +225,10 @@ export function createPlayer(app) {
         enableWorker: true,
         manifestLoadingTimeOut: 15000,
         fragLoadingTimeOut: 25000,
-        backBufferLength: 30,
+        backBufferLength: 15,
         maxBufferLength: 60,
         maxMaxBufferLength: 120,
-        maxBufferSize: 60 * 1000 * 1000,
+        maxBufferSize: 32 * 1000 * 1000,
         lowLatencyMode: false
       });
       let recovered = false;
@@ -231,6 +268,13 @@ export function createPlayer(app) {
     }
     if (video.textTracks) for (let i = 0; i < video.textTracks.length; i++) video.textTracks[i].mode = subtitlesOn && i === 0 ? 'showing' : 'hidden';
     renderInfo();
+  });
+  video.addEventListener('canplay', () => {
+    if (mode !== 'movie' || startAt <= 0 || !(startAt < video.duration - 10)) return;
+    try {
+      if (Math.abs(video.currentTime - startAt) > 1) video.currentTime = startAt;
+      if (Math.abs(video.currentTime - startAt) <= 1) startAt = 0;
+    } catch (e) { /* la TV aún no permite seek */ }
   });
   video.addEventListener('timeupdate', () => {
     if (mode !== 'movie') return;
@@ -421,6 +465,8 @@ export function createPlayer(app) {
     index = newIndex;
     item = list[index];
     startAt = (opts && opts.startAt) || 0;
+    recoveryTried = false;
+    recovering = false;
     attempts = attemptsFor(item._urls || item.urls || []);
     attempt = 0;
     open = true;
@@ -483,7 +529,6 @@ export function createPlayer(app) {
           action: () => {
             const curTime = video.currentTime || 0;
             app.toast('Cambiando a audio ' + nextLangDisplay + '…');
-            item._preferredLang = nextLangName;
             app.playMovie(item, list, index, null, curTime, nextLangName);
           }
         } : null,

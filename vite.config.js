@@ -23,6 +23,9 @@ function tvCompat() {
     async closeBundle() {
       const html = join(outDir, 'index.html');
       if (existsSync(html)) writeFileSync(html, readFileSync(html, 'utf8').replace(/\s+crossorigin(="[^"]*")?/g, ''));
+      // El JSON fuente sigue legible; el APK carga una copia compacta con idénticos datos.
+      const catalog = join(outDir, 'poseidon.json');
+      if (existsSync(catalog)) writeFileSync(catalog, JSON.stringify(JSON.parse(readFileSync(catalog, 'utf8'))));
       const assets = join(outDir, 'assets');
       if (!existsSync(assets)) return;
       for (const name of readdirSync(assets).filter(f => f.endsWith('.js'))) {

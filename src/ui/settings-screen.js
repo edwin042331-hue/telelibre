@@ -165,9 +165,11 @@ export function createSettingsScreen(app) {
     });
 
     section('Acerca de');
+    list.appendChild(h('img', { class: 'tmdb-logo', src: './icons/tmdb-logo.svg', alt: 'TMDB' }));
+    list.appendChild(h('p', { class: 'about', text: 'This product uses the TMDB API but is not endorsed or certified by TMDB. https://www.themoviedb.org' }));
     list.appendChild(h('p', { class: 'about', text:
-      'TeleLibre ' + __APP_VERSION__ + ' · ' + platformLabel + '. No aloja ningún contenido: reproduce listas públicas de iptv-org, Free-TV ' +
-      'y películas de dominio público de Internet Archive. Si un canal no carga, suele ser que la emisora lo cambió o lo restringe por país.' +
+      'TeleLibre ' + __APP_VERSION__ + ' · ' + platformLabel + '. No aloja videos: reúne canales de fuentes comunitarias, películas de Internet Archive y fichas de Películas Edwin. ' +
+      'Las fichas de TMDB son informativas; la disponibilidad de video se comprueba por separado. Si un canal no carga, puede haber cambiado o estar restringido por país.' +
       (app.data.httpsHidden ? ' En la versión web se ocultan ' + app.data.httpsHidden + ' canales http que el navegador bloquea; en la app de la TV sí aparecen.' : '')
     }));
 

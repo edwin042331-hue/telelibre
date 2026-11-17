@@ -3,6 +3,7 @@ import { h } from './dom.js';
 import { icon } from './icons.js';
 import { isFavorite, getProgress } from '../store.js';
 import { nowNext } from '../epg.js';
+import { ratingLabel } from './format.js';
 
 function hash(str) {
   let x = 5381;
@@ -65,9 +66,10 @@ export function movieCard(movie) {
   const p = getProgress(movie.key);
   if (p) poster.appendChild(h('div', { class: 'progress' }, h('div', { class: 'progress-fill', style: 'width:' + Math.round(100 * p.t / p.d) + '%' })));
   const numSeasons = Array.isArray(movie.seasons) ? movie.seasons.length : (movie.seasons || 0);
-  const meta = movie.type === 'series' ? (numSeasons ? numSeasons + (numSeasons === 1 ? ' temporada' : ' temporadas') : 'Serie')
+  const rating = ratingLabel(movie.rating);
+  const meta = movie.type === 'series' ? [rating, numSeasons ? numSeasons + (numSeasons === 1 ? ' temporada' : ' temporadas') : 'Serie'].filter(Boolean).join(' · ')
     : movie.type === 'episode' ? 'T' + movie.season + ':E' + movie.number + ' · ' + movie.title
-    : [movie.year, movie.quality ? movie.quality.toUpperCase() : '', movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
+    : [movie.year, rating, movie.quality ? movie.quality.toUpperCase() : '', movie.subs ? 'Subtitulada' : ''].filter(Boolean).join(' · ');
   const card = h('div', { class: 'card movie focusable', 'data-key': movie.key }, [
     poster,
     h('div', { class: 'card-name', text: movie.type === 'episode' ? movie.seriesName : movie.name }),
@@ -77,13 +79,17 @@ export function movieCard(movie) {
   return card;
 }
 
-export function itemCard(item) {
-  return item.type === 'movie' || item.type === 'series' || item.type === 'episode' ? movieCard(item) : liveCard(item);
+export function isPosterItem(item) {
+  return !!item && (item.type === 'movie' || item.type === 'series' || item.type === 'episode');
 }
 
-export function moreCard(count, kind) {
+export function itemCard(item) {
+  return isPosterItem(item) ? movieCard(item) : liveCard(item);
+}
+
+export function moreCard(count, kind, label) {
   const card = h('div', { class: 'card more focusable ' + kind }, [
-    h('div', { class: kind === 'movie' ? 'poster' : 'tile' }, [icon('plus', 'more-icon'), h('span', { class: 'more-text', text: 'Ver los ' + count })])
+    h('div', { class: kind === 'movie' ? 'poster' : 'tile' }, [icon('plus', 'more-icon'), h('span', { class: 'more-text', text: label || 'Ver los ' + count })])
   ]);
   return card;
 }

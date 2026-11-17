@@ -34,6 +34,14 @@ export function formatPoseidonMovie(m) {
   });
 }
 
+// Una ficha encontrada en vivo puede traer solo el slug; sus enlaces se obtienen al pulsar Ver.
+export function hasPoseidonSource(item) {
+  if (!item) return false;
+  if (item.slug) return true;
+  if (item.servers && Object.keys(item.servers).some(k => Array.isArray(item.servers[k]) && item.servers[k].length > 0)) return true;
+  return !!((item.stream && item.stream.length > 5) || (item.url && item.url.length > 5));
+}
+
 // Catálogo base de estrenos con servidores reales y calidades verificadas (HD / CAM)
 export const INITIAL_POSEIDON_MOVIES = [
   {
@@ -1533,6 +1541,17 @@ export const INITIAL_POSEIDON_MOVIES = [
 ];
 
 let cachedMovies = null;
+let cachedCatalogHash = null;
+
+// Comparar actualizaciones sin conservar otra copia del JSON de más de 1 MB en la TV.
+function catalogHash(text) {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return text.length + ':' + (hash >>> 0);
+}
 
 // Carga el catálogo de Poseidon (local en la app para arranque instantáneo, o remoto)
 export function loadPoseidonCatalog() {
@@ -1545,6 +1564,7 @@ export function loadPoseidonCatalog() {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed) && parsed.length) {
         cachedMovies = parsed.map(formatPoseidonMovie);
+        cachedCatalogHash = catalogHash(JSON.stringify(parsed));
         return cachedMovies;
       }
     } catch (e) {}
@@ -1581,15 +1601,86 @@ export function refreshPoseidonRemote(onUpdate) {
     try {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed) && parsed.length) {
-        if (!cachedMovies || parsed.length !== cachedMovies.length) {
-          cachedMovies = parsed.map(formatPoseidonMovie);
-          if (typeof onUpdate === 'function') onUpdate(cachedMovies);
-          return cachedMovies;
-        }
+        const nextHash = catalogHash(JSON.stringify(parsed));
+        if (nextHash === cachedCatalogHash) return null;
+        cachedMovies = parsed.map(formatPoseidonMovie);
+        cachedCatalogHash = nextHash;
+        if (typeof onUpdate === 'function') onUpdate(cachedMovies);
+        return cachedMovies;
       }
     } catch (e) {}
     return null;
   }).catch(() => null);
+}
+
+const LIVE_SECTIONS = {
+  peliculas: true,
+  series: true,
+  'genero/animacion': true,
+  'peliculas/tendencias/semana': true,
+  'series/tendencias/semana': true
+};
+
+function listingData(html) {
+  const match = html && html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!match) throw new Error('La página no contiene un catálogo válido');
+  const data = JSON.parse(match[1]);
+  const props = data.props && data.props.pageProps;
+  if (!props || !Array.isArray(props.movies)) throw new Error('El catálogo cambió de formato');
+  return props;
+}
+
+function smallImage(url, size) {
+  if (typeof url !== 'string' || !/^https:\/\/image\.tmdb\.org\/t\/p\/(original|w[0-9]+)\/[A-Za-z0-9._-]+$/.test(url)) return '';
+  return url.replace(/\/t\/p\/(original|w[0-9]+)\//, '/t/p/' + size + '/');
+}
+
+function liveListingItem(m) {
+  const slug = m && m.url && m.url.slug || '';
+  if (!/^(series|movies)\/[0-9]+\/[a-z0-9-]+$/i.test(slug)) return null;
+  const isSeries = slug.indexOf('series/') === 0;
+  const id = m.TMDbId || m.id || '';
+  const name = m.titles && m.titles.name || m.title || '';
+  if (!id || !name) return null;
+  const poster = smallImage(m.images && m.images.poster, 'w342');
+  const art = smallImage(m.images && m.images.backdrop, 'w780') || poster;
+  const score = Number(m.rate && m.rate.average);
+  const minutes = Number(m.runtime);
+  return {
+    key: 'poseidon:' + (isSeries ? 'serie:' : '') + id,
+    type: isSeries ? 'series' : 'movie',
+    src: 'poseidon',
+    name,
+    slug,
+    year: parseInt(String(m.releaseDate || '').slice(0, 4), 10) || 0,
+    rating: isFinite(score) && score > 0 && score <= 10 ? Math.round(score * 10) / 10 : 0,
+    runtime: isFinite(minutes) && minutes > 0 && minutes < 600 ? Math.round(minutes * 60) : 0,
+    poster,
+    art,
+    overview: String(m.overview || '').slice(0, 500),
+    genres: (m.genres || []).map(g => (g.name || '').toLowerCase()).filter(Boolean),
+    regions: [],
+    languages: [],
+    servers: {}
+  };
+}
+
+// Solo conserva 24 fichas por página; temporadas y servidores se consultan al abrir el título.
+export function loadPoseidonBrowsePage(section, page) {
+  if (!LIVE_SECTIONS[section]) return Promise.reject(new Error('Sección no admitida'));
+  const n = Number(page || 1);
+  if (Math.floor(n) !== n || n < 1 || n > 10000) return Promise.reject(new Error('Página no válida'));
+  const path = section + (n > 1 ? '/page/' + n : '');
+  return getText('https://www.poseidonhd2.co/' + path, 7000).then(html => {
+    const props = listingData(html);
+    const pages = Math.max(1, parseInt(props.pages, 10) || 1);
+    if (n > pages) throw new Error('Esa página ya no está disponible');
+    return {
+      page: n,
+      totalPages: pages,
+      items: props.movies.map(liveListingItem).filter(Boolean).slice(0, 24)
+    };
+  });
 }
 
 // Búsqueda en vivo en poseidonhd2.co para encontrar cualquier película o serie en tiempo real
@@ -1598,31 +1689,8 @@ export function searchPoseidonLive(q) {
   const url = 'https://www.poseidonhd2.co/search?q=' + encodeURIComponent(q.trim());
   return getText(url, 4500).then(html => {
     if (!html) return [];
-    const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-    if (!match) return [];
     try {
-      const data = JSON.parse(match[1]);
-      const pp = data.props && data.props.pageProps;
-      const list = (pp && pp.movies) || [];
-      return list.map(m => {
-        const isSeries = (m.url && m.url.slug && m.url.slug.indexOf('series/') === 0);
-        const poster = (m.images && (m.images.poster || m.images.backdrop)) || '';
-        const tmdbId = m.TMDbId || m.id || (m.url && m.url.slug ? m.url.slug.split('/')[1] : '');
-        return formatPoseidonMovie({
-          key: 'poseidon:' + (isSeries ? 'serie:' : '') + tmdbId,
-          type: isSeries ? 'series' : 'movie',
-          src: 'poseidon',
-          name: (m.titles && m.titles.name) || m.title || '',
-          slug: (m.url && m.url.slug) || '',
-          year: parseInt(((m.releaseDate || '') + '').slice(0, 4), 10) || 2026,
-          poster: poster,
-          art: (m.images && m.images.backdrop) || poster,
-          img: poster,
-          overview: m.overview || '',
-          summary: m.overview || '',
-          quality: 'HD'
-        });
-      });
+      return listingData(html).movies.map(liveListingItem).filter(Boolean);
     } catch (e) {
       return [];
     }
@@ -1707,6 +1775,13 @@ export const EDWIN_GENRES = [
   { id: 'hd', label: '💎 Solo HD' }
 ];
 
+function searchText(value) {
+  return String(value || '').toLowerCase()
+    .replace(/[áàäâ]/g, 'a').replace(/[éèëê]/g, 'e')
+    .replace(/[íìïî]/g, 'i').replace(/[óòöô]/g, 'o')
+    .replace(/[úùüû]/g, 'u');
+}
+
 // Organiza las películas en filas temáticas por AÑO y por GÉNERO
 export function buildPoseidonRows(movies, filterGenre, searchQuery, extraLiveItems) {
   if (state.settings && state.settings.sources && state.settings.sources['poseidon'] === false) {
@@ -1717,10 +1792,10 @@ export function buildPoseidonRows(movies, filterGenre, searchQuery, extraLiveIte
 
   // Búsqueda por texto dentro de Películas Edwin
   if (searchQuery && typeof searchQuery === 'string' && searchQuery.trim()) {
-    const q = searchQuery.trim().toLowerCase();
+    const q = searchText(searchQuery.trim());
     const matches = list.filter(m => {
-      const n = (m.name || '').toLowerCase();
-      const o = (m.overview || m.summary || '').toLowerCase();
+      const n = searchText(m.name);
+      const o = searchText(m.overview || m.summary);
       const y = String(m.year || '');
       return n.indexOf(q) >= 0 || o.indexOf(q) >= 0 || y === q;
     });
@@ -1876,7 +1951,7 @@ export function buildPoseidonRows(movies, filterGenre, searchQuery, extraLiveIte
   }
 
   // Fila Prioritaria: Continuar Viendo (Películas y Series empezadas)
-  const cw = continueWatching();
+  const cw = continueWatching().filter(item => item.src === 'poseidon');
   if (cw && cw.length > 0) {
     rows.push({
       id: 'ps:continue',

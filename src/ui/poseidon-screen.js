@@ -1,11 +1,12 @@
 // Pantalla de Películas Edwin: catálogo masivo de estrenos con selector interactivo de géneros
 import { h, clear, closest, toArray } from './dom.js';
-import { focus } from './focus.js';
-import { itemCard, moreCard, loadVisibleImages } from './card.js';
+import { focus, getFocused } from './focus.js';
+import { itemCard, moreCard, loadVisibleImages, isPosterItem } from './card.js';
 import { itemTags, formatTime, formatClock } from './format.js';
 import { getProgress } from '../store.js';
 import { nowNext } from '../epg.js';
 import { EDWIN_GENRES, buildPoseidonRows, getPoseidonMoviesSync, searchPoseidonLive } from '../poseidon.js';
+import { TMDB_SECTIONS, loadTmdbManifest } from '../tmdb.js';
 import { createKeyboard, handlePhysicalKey } from './keyboard.js';
 import { icon } from './icons.js';
 
@@ -71,6 +72,7 @@ export function createPoseidonScreen(app) {
   let heroTimer = null;
   let heroKey = null;
   let searchKeyboard = null;
+  let tmdbSections = [];
 
   function doLiveSearch(q) {
     clearTimeout(liveSearchTimer);
@@ -92,7 +94,7 @@ export function createPoseidonScreen(app) {
   function setHero(item, row) {
     if (!item || item.key === heroKey) return;
     heroKey = item.key;
-    const isMovie = item.type === 'movie' || item.type === 'series' || item.type === 'episode';
+    const isMovie = isPosterItem(item);
     const art = isMovie ? (item.art || item.poster) : item.logo;
     el.classList.toggle('hero-movie', isMovie);
     heroBg.style.backgroundImage = art ? 'url("' + art.replace(/"/g, '%22') + '")' : 'none';
@@ -109,7 +111,7 @@ export function createPoseidonScreen(app) {
   }
 
   function renderRow(row) {
-    const kind = row.items[0] && row.items[0].type === 'movie' ? 'movie' : 'live';
+    const kind = isPosterItem(row.items[0]) ? 'movie' : 'live';
     const track = h('div', { class: 'track pending ' + kind, 'data-scroll': 'x', 'data-scroll-pad': '60' });
     const rowEl = h('div', { class: 'row', 'data-anchor': '', 'data-row': row.id }, [
       h('h2', { class: 'row-title' }, [row.title, h('span', { class: 'row-count', text: String(row.items.length) })]),
@@ -133,7 +135,7 @@ export function createPoseidonScreen(app) {
       track.appendChild(card);
     });
     if (row.items.length > ROW_LIMIT) {
-      const more = moreCard(row.items.length, row.items[0].type === 'movie' ? 'movie' : 'live');
+      const more = moreCard(row.items.length, isPosterItem(row.items[0]) ? 'movie' : 'live');
       more._onEnter = () => app.openGrid(row.title, row.items);
       track.appendChild(more);
     }
@@ -167,8 +169,8 @@ export function createPoseidonScreen(app) {
     searchQuery = searchInputVal.value;
     if (searchKeyboard) searchKeyboard.setValue(searchQuery);
     searchStatus.textContent = searchQuery ? 'Filtrando por "' + searchQuery + '"' : 'Escribe para filtrar el catálogo';
-    render();
     doLiveSearch(searchQuery);
+    render();
   });
 
   searchInputVal.addEventListener('keydown', e => {
@@ -200,8 +202,8 @@ export function createPoseidonScreen(app) {
         searchQuery = val;
         searchInputVal.value = val;
         searchStatus.textContent = val ? 'Filtrando por "' + val + '"' : 'Escribe para filtrar el catálogo';
-        render();
         doLiveSearch(searchQuery);
+        render();
       });
       searchBox.appendChild(searchKeyboard.el);
     } else {
@@ -226,6 +228,24 @@ export function createPoseidonScreen(app) {
     ]);
     searchPill._onEnter = openSearchModal;
     genreBar.appendChild(searchPill);
+
+    [
+      ['peliculas/tendencias/semana', '🔥 Películas en tendencia'],
+      ['series/tendencias/semana', '📈 Series en tendencia'],
+      ['peliculas', '🌐 Todas las películas'],
+      ['series', '📺 Todas las series'],
+      ['genero/animacion', '🎌 Anime y animación']
+    ].forEach(entry => {
+      const pill = h('div', { class: 'genre-pill focusable', tabindex: '-1' }, h('span', { text: entry[1] }));
+      pill._onEnter = () => app.openPoseidonBrowse(entry[0], entry[1]);
+      genreBar.appendChild(pill);
+    });
+
+    tmdbSections.forEach(entry => {
+      const pill = h('div', { class: 'genre-pill focusable', tabindex: '-1' }, h('span', { text: entry.title }));
+      pill._onEnter = () => app.openTmdbBrowse(entry.id, entry.title);
+      genreBar.appendChild(pill);
+    });
 
     EDWIN_GENRES.forEach(g => {
       const isActive = (g.id === activeGenre && !searchQuery);
@@ -272,6 +292,17 @@ export function createPoseidonScreen(app) {
         render();
         screen.dirty = false;
       }
+      if (!tmdbSections.length) loadTmdbManifest().then(manifest => {
+        if (!manifest) return;
+        const available = TMDB_SECTIONS.filter(entry => manifest.sections[entry.id] && manifest.sections[entry.id].pages > 0);
+        if (!available.length || tmdbSections.length) return;
+        tmdbSections = available;
+        const current = getFocused();
+        const wasInBar = current && genreBar.contains(current);
+        const selectedGenre = wasInBar && current.getAttribute('data-genre');
+        buildGenrePills();
+        if (wasInBar) focus(selectedGenre ? genreBar.querySelector('[data-genre="' + selectedGenre + '"]') : genreBar.querySelector('.genre-search'));
+      });
     },
     firstFocus() {
       return rowsEl.querySelector('.focusable') || genreBar.querySelector('.genre-pill.active') || genreBar.querySelector('.focusable');
@@ -364,6 +395,7 @@ export function createPoseidonScreen(app) {
       if (searchInputVal) searchInputVal.value = text;
       if (searchKeyboard) searchKeyboard.setValue(text);
       closeSearchModal();
+      doLiveSearch(searchQuery);
       render();
       const first = rowsEl.querySelector('.focusable');
       if (first) focus(first);

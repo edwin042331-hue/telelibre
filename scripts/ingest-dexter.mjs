@@ -219,7 +219,7 @@ async function run() {
       {
         type: 'vidhide',
         code: 'rqkzgx2yzq23',
-        url: 'https://vidhidepro.com/v/rqkzgx2yzq23',
+        url: 'https://vidhidepre.com/v/rqkzgx2yzq23',
         cyberlocker: 'vidhide',
         quality: 'HD'
       }

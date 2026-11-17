@@ -111,17 +111,17 @@ async function processMovie(m) {
 
     // Mapear idiomas: latino, spanish (castellano), english, subtitulado
     const langKeys = ['latino', 'spanish', 'subtitulado', 'english'];
-    const CYBER_PRIORITY = { vidara: 1, vidhide: 2, streamwish: 3, doodstream: 4, voesx: 5 };
+    const CYBER_PRIORITY = { vidhide: 1, vidara: 2, streamwish: 3, voesx: 4, doodstream: 5 };
 
     for (const lk of langKeys) {
       const streamList = (vids[lk] || []).slice();
       if (!streamList.length) continue;
 
-      // Ordenar por calidad y estabilidad: Vidara (HLS) > VidHide (HLS) > StreamWish > Doodstream
+      // Mantener la misma prioridad que el resolutor de la TV.
       streamList.sort((a, b) => (CYBER_PRIORITY[a.cyberlocker] || 99) - (CYBER_PRIORITY[b.cyberlocker] || 99));
 
       const serverList = [];
-      for (const s of streamList.slice(0, 4)) { // Mejores 4 servidores por idioma
+      for (const s of streamList.slice(0, 5)) { // Incluir todos los lockers de la cascada
         const embed = await extractEmbed(s.result);
         const parsed = parseStreamTarget(embed);
         if (parsed) {

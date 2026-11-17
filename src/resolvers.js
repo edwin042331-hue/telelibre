@@ -124,13 +124,14 @@ function requestGetText(url, timeoutMs) {
 
 /** Desempaquetador Dean Edwards p,a,c,k,e,d */
 export function unpackDeanEdwards(packed) {
-  if (!packed || typeof packed !== 'string') return null;
+  if (!packed || typeof packed !== 'string' || packed.length > 1024 * 1024) return null;
   const match = packed.match(/}\s*\(\s*['"]([\s\S]+?)['"]\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*['"]([\s\S]+?)['"]\.split\('\|'\)/);
   if (!match) return null;
   let p = match[1];
   const a = parseInt(match[2], 10);
   let c = parseInt(match[3], 10);
   const k = match[4].split('|');
+  if (a < 2 || a > 62 || c < 0 || c > 4096 || c > k.length) return null;
   function e(val) {
     return (val < a ? '' : e(Math.floor(val / a))) + ((val = val % a) > 35 ? String.fromCharCode(val + 29) : val.toString(36));
   }
@@ -354,16 +355,13 @@ export function resolveSingleDescriptor(target, timeoutMs) {
 
 /** Extrae servidores en vivo para películas o episodios encontrados en búsquedas de PoseidonHD */
 export function fetchLiveServers(slug, timeoutMs) {
-  if (!slug) return Promise.resolve(null);
-  const isEpisode = slug.indexOf('seasons') >= 0 || slug.indexOf('episodes') >= 0 || slug.indexOf('temporada') >= 0 || slug.indexOf('episodio') >= 0;
-  let url = '';
-  if (isEpisode) {
-    const cleanEpPath = slug.replace(/^series\//, 'serie/').replace(/\/seasons\//, '/temporada/').replace(/\/episodes\//, '/episodio/');
-    url = 'https://www.poseidonhd2.co/' + cleanEpPath;
-  } else {
-    const cleanSlug = slug.replace(/^movies\//, '').replace(/^pelicula\//, '');
-    url = 'https://www.poseidonhd2.co/pelicula/' + cleanSlug;
-  }
+  if (!slug || typeof slug !== 'string') return Promise.resolve(null);
+  const path = slug.replace(/^\/+/, '').replace(/^movies\//, 'pelicula/').replace(/^series\//, 'serie/')
+    .replace(/\/seasons\//g, '/temporada/').replace(/\/episodes\//g, '/episodio/');
+  const isEpisode = /^serie\/[^/]+\/[^/]+\/temporada\/[^/]+\/episodio\/[^/]+$/.test(path);
+  const cleanPath = isEpisode || path.indexOf('pelicula/') === 0 ? path : 'pelicula/' + path;
+  if (/\.\.|[?#]/.test(cleanPath) || cleanPath.length > 300) return Promise.resolve(null);
+  const url = 'https://www.poseidonhd2.co/' + cleanPath;
   return requestGetText(url, timeoutMs || 5000).then(html => {
     if (!html) return null;
     const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
@@ -376,16 +374,19 @@ export function fetchLiveServers(slug, timeoutMs) {
       const servers = {};
       const langKeys = ['latino', 'spanish', 'english', 'subtitulado'];
       const extractPromises = [];
+      const priority = { vidhide: 0, vidara: 1, streamwish: 2, voesx: 3, doodstream: 4 };
 
       for (let i = 0; i < langKeys.length; i++) {
         const lk = langKeys[i];
-        const streamList = (vids[lk] || []).slice(0, 4);
+        const streamList = (vids[lk] || []).slice().sort((a, b) =>
+          (priority[(a.cyberlocker || '').toLowerCase()] ?? 5) - (priority[(b.cyberlocker || '').toLowerCase()] ?? 5)
+        ).slice(0, 5);
         if (!streamList.length) continue;
         const normLang = lk === 'spanish' ? 'castellano' : lk;
         servers[normLang] = [];
 
         streamList.forEach(s => {
-          if (s.result) {
+          if (s.result && /^https:\/\/player\.poseidonhd2\.co\/player\.php\?h=[A-Za-z0-9._-]+$/.test(s.result)) {
             extractPromises.push(
               requestGetText(s.result, 4000).then(pHtml => {
                 const pMatch = pHtml && pHtml.match(/var\s+url\s*=\s*['"]([^'"]+)['"]/);
@@ -474,15 +475,22 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
         }
         return getPriority(a) - getPriority(b);
       });
-      const otherLangs = Object.keys(sMap).filter(k => k !== lang);
+      const isSpanish = lang === 'latino' || lang === 'castellano' || lang === 'spanish';
+      const otherLangs = Object.keys(sMap).filter(k => k !== lang && isSpanish &&
+        (k === 'latino' || k === 'castellano' || k === 'spanish'));
 
       let p = Promise.reject(new Error('Sin servidor inicial'));
-      primaryList.forEach(candidate => {
-        p = p.catch(() => resolveSingleDescriptor(candidate, 3800));
+      let primaryIndex = -1;
+      primaryList.forEach((candidate, i) => {
+        p = p.catch(() => resolveSingleDescriptor(candidate, 3800).then(url => {
+          primaryIndex = i;
+          return url;
+        }));
       });
 
       return p.then(primaryUrl => {
-        const altCandidates = [];
+        // Ante una caída durante la reproducción, probar antes otro servidor del mismo audio.
+        const altCandidates = primaryList.slice(primaryIndex + 1);
         otherLangs.forEach(altKey => {
           const altList = sMap[altKey] || [];
           if (altList.length > 0) altCandidates.push(altList[0]);
@@ -501,7 +509,7 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
 
     return tryResolveFromMap(serversMap).catch(() => {
       // Reintento en vivo si los servidores cacheados fallaron
-      if (rawSlug) {
+      if (rawSlug && !needsLiveFetch) {
         return fetchLiveServers(rawSlug, 5000).then(fresh => {
           if (fresh && Object.keys(fresh).length > 0) {
             movieOrServers.servers = fresh;
@@ -535,4 +543,28 @@ export function resolvePoseidonUrls(movieOrServers, preferredLang) {
 
 export function resolvePoseidon(movieOrServers, preferredLang) {
   return resolvePoseidonUrls(movieOrServers, preferredLang).then(urls => urls[0]);
+}
+
+// Tras un fallo real del reproductor, obtener tokens nuevos aunque el código del locker sea el mismo.
+export function refreshPoseidonUrls(item, preferredLang) {
+  if (!item || !item.slug) return Promise.reject(new Error('Sin ruta para recuperar el video'));
+  return fetchLiveServers(item.slug, 5000).then(fresh => {
+    const hasServers = fresh && Object.keys(fresh).some(lang => Array.isArray(fresh[lang]) && fresh[lang].length);
+    if (!hasServers) throw new Error('Sin servidores nuevos');
+    const old = item.servers || {};
+    Object.keys(old).forEach(lang => {
+      (old[lang] || []).forEach(server => {
+        if (!server || typeof server !== 'object') return;
+        const kind = server.type || server.cyberlocker;
+        const code = server.code || server.filecode;
+        if (!code) return;
+        if (kind === 'vidhide') delete cache['vh_' + code];
+        else if (kind === 'vidara' || kind === 'streamwish') delete cache[code];
+      });
+    });
+    return resolvePoseidonUrls({ servers: fresh }, preferredLang).then(urls => {
+      item.servers = fresh;
+      return urls;
+    });
+  });
 }

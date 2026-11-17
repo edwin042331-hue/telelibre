@@ -5,6 +5,7 @@ import { focus } from './focus.js';
 import { itemTags, formatTime } from './format.js';
 import { getProgress, isFavorite, toggleFavorite } from '../store.js';
 import { resolveMovie } from '../vod.js';
+import { hasPoseidonSource, getPoseidonMoviesSync, searchPoseidonLive } from '../poseidon.js';
 
 export function createDetailScreen(app) {
   const bg = h('div', { class: 'detail-bg' });
@@ -26,6 +27,7 @@ export function createDetailScreen(app) {
   let resolved = null;
   let token = 0;
   let selectedLang = 'latino';
+  let lookupPending = false;
 
   function getAvailableLangs() {
     if (!movie) return [];
@@ -50,14 +52,33 @@ export function createDetailScreen(app) {
 
   function renderActions() {
     clear(actions);
-    const hasStream = (movie.src !== 'poseidon') || (
-      (movie.servers && Object.keys(movie.servers).some(k => Array.isArray(movie.servers[k]) && movie.servers[k].length > 0)) ||
-      (movie.stream && movie.stream.length > 5) ||
-      (movie.url && movie.url.length > 5)
-    );
+    const hasStream = movie.src !== 'tmdb' && (movie.src !== 'poseidon' || hasPoseidonSource(movie));
     const p = hasStream ? getProgress(movie.key) : null;
 
-    if (!hasStream) {
+    if (movie.src === 'tmdb') {
+      actions.appendChild(button('search', 'Buscar disponibilidad en Edwin', () => {
+        if (lookupPending) return;
+        lookupPending = true;
+        const selected = movie;
+        const key = 'poseidon:' + (selected.type === 'series' ? 'serie:' : '') + selected.tmdbId;
+        const local = getPoseidonMoviesSync().filter(item => item.key === key)[0];
+        if (local) { lookupPending = false; app.open(local, [local], 0); return; }
+        app.toast('Buscando una versión disponible…');
+        searchPoseidonLive(selected.name).then(results => {
+          const found = results.filter(item => item.key === key)[0];
+          if (found || !selected.originalName || selected.originalName === selected.name) return found;
+          return searchPoseidonLive(selected.originalName).then(extra => extra.filter(item => item.key === key)[0]);
+        }).then(found => {
+          lookupPending = false;
+          if (movie !== selected || !el.classList.contains('active')) return;
+          if (found) app.open(found, [found], 0);
+          else app.toast('Esta ficha aún no tiene video disponible en Edwin.');
+        }).catch(() => {
+          lookupPending = false;
+          if (movie === selected && el.classList.contains('active')) app.toast('No se pudo comprobar la disponibilidad.');
+        });
+      }, true));
+    } else if (!hasStream) {
       actions.appendChild(button('clock', 'Próximamente en Películas Edwin', () => {
         app.toast('Este título aún no tiene enlaces de video disponibles.');
       }, true));
@@ -102,6 +123,7 @@ export function createDetailScreen(app) {
       list = params.list || [movie];
       index = params.index || 0;
       resolved = null;
+      lookupPending = false;
       const available = getAvailableLangs();
       selectedLang = available.length > 0 ? available[0] : 'latino';
       const my = ++token;
@@ -112,9 +134,13 @@ export function createDetailScreen(app) {
       itemTags(movie).forEach(t => tags.appendChild(h('span', { class: 'tag', text: t })));
       renderActions();
       // Poseidon: catálogo de estrenos HD con sinopsis precargada.
+      if (movie.src === 'tmdb') {
+        desc.textContent = movie.overview || 'Ficha informativa de TMDB. Busca disponibilidad en Edwin para ver si existe video.';
+        return;
+      }
       if (movie.src === 'poseidon') {
         resolved = null;
-        desc.textContent = movie.overview || movie.summary || 'Estreno cinematográfico en alta definición.';
+        desc.textContent = movie.overview || movie.summary || 'Abre esta película para consultar los servidores disponibles.';
         return;
       }
       // Película del catálogo de la API de Pluto: la URL se arma con la sesión al reproducir.
