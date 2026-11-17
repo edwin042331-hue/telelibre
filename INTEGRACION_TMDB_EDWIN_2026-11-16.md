@@ -20,9 +20,9 @@ La credencial de esa APK pertenece a la app ajena. TeleLibre necesita una creden
 
 Edwin creó la credencial propia de TMDB y la entregó para configurar la integración. `TMDB_READ_TOKEN` quedó guardado como secreto de Actions en `edwin042331-hue/telelibre`; el valor no se escribe en el repositorio, en el APK ni en este informe. La API oficial respondió HTTP 200. Una sincronización local limitada a dos páginas por sección completó las seis secciones; la primera página de películas contiene 20 fichas normalizadas y el JSON generado no contiene marcadores de credenciales.
 
-La publicación depende del flujo `CI` con este código en `main`. Si se desea más profundidad, crear la variable de repositorio `TMDB_CATALOG_PAGES` con un entero de 1 a 500. La clave fue pegada en el chat antes de guardarse en GitHub; conviene regenerarla en TMDB y actualizar el secreto tras la puesta en marcha.
+El primer despliegue del flujo [`CI` 44005573955](https://github.com/edwin042331-hue/telelibre/actions/runs/44005573955) terminó correctamente. El [manifiesto público](https://edwin042331-hue.github.io/telelibre/tmdb/manifest.json) respondió con las seis secciones: 100 páginas de películas, 100 de series, 25 de anime de cine, 25 de anime en series y 5 de cada sección de tendencias. La primera página pública de películas respondió con 20 fichas. Si se desea más profundidad, crear la variable de repositorio `TMDB_CATALOG_PAGES` con un entero de 1 a 500. La clave fue pegada en el chat antes de guardarse en GitHub; conviene regenerarla en TMDB y actualizar el secreto tras la puesta en marcha.
 
-Las opciones TMDB permanecen ocultas hasta que exista el primer manifiesto público. Edwin conserva la exploración en vivo de PoseidonHD durante ese intervalo. No se instaló nada en la TV.
+Las opciones TMDB se habilitan cuando la app puede leer el manifiesto público. Edwin conserva la exploración en vivo de PoseidonHD si ese servicio falla. No se instaló nada en la TV.
 
 ## Validación local
 
@@ -31,4 +31,4 @@ Las opciones TMDB permanecen ocultas hasta que exista el primer manifiesto públ
 - `node scripts/check-es5.mjs`: los tres JavaScript de producción pasaron el análisis ES5.
 - Workflow `ci.yml`: sintaxis YAML analizada correctamente.
 - El bundle producido no contiene el nombre del secreto ni un token de prueba.
-- `node scripts/sync-tmdb.mjs site/tmdb` sin secreto: sale sin publicar un catálogo incompleto. El manifiesto público todavía devolvía HTTP 404 antes del primer despliegue.
+- `node scripts/sync-tmdb.mjs site/tmdb` sin secreto: sale sin publicar un catálogo incompleto. Antes del primer despliegue el manifiesto público devolvía HTTP 404; después respondió correctamente con las seis secciones.
